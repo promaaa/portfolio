@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Marc Duboc — Portfolio (promaa)</title>
+  <meta name="color-scheme" content="dark" />
+  <style>
+    :root{
+      --bg:#fafafa; --ink:#0a0a0a; --muted:#666666; --line:#e4e4e7;
+      --accent:#525252; --accent-h:0; /* hue for hsl() */
+      --surface:#ffffff; --surface-alt:#f4f4f5;
+      --radius:8px; --shadow:0 1px 3px rgba(0,0,0,.1);
+    }
+    
+    [data-theme="dark"]{
+      --bg:#0f0f0f; --ink:#fafafa; --muted:#a1a1aa; --line:#27272a;
+      --accent:#a1a1aa; --accent-h:0;
+      --surface:#18181b; --surface-alt:#1f1f23;
+      --shadow:0 1px 3px rgba(0,0,0,.3);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%;color:var(--ink);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,Roboto,Arial;background:var(--bg)}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:1200px;margin:0 auto;padding:60px 40px}
+
+    /* NAV */
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0;border-bottom:1px solid var(--line);margin-bottom:20px}
+    .brand{font-weight:600;font-size:1.1rem}
+    .brand .badge{margin-left:.8rem;font-size:.8rem;font-weight:500;padding:.3rem .8rem;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--muted)}
+    .links{display:flex;gap:32px;align-items:center}
+    .links a{position:relative;padding:8px 0;font-weight:400;transition:color .2s ease;color:var(--muted)}
+    .links a:hover{color:var(--ink)}
+    
+    /* Theme Toggle */
+    .theme-toggle{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px;font-size:12px;color:var(--muted);cursor:pointer;transition:all .2s ease;margin-left:16px;display:flex;align-items:center;justify-content:center}
+    .theme-toggle:hover{background:var(--surface-alt);color:var(--ink)}
+    .theme-toggle svg{width:16px;height:16px;fill:currentColor}
+
+    /* HERO */
+    .hero{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;margin-top:60px}
+    .hero h1{font-size:clamp(28px,4.5vw,52px);line-height:1.1;margin:0 0 20px;font-weight:600}
+    .spark{color:var(--ink)}
+    .hero p{color:var(--muted);margin:0 0 28px;font-size:1rem;line-height:1.6}
+    .btn{display:inline-block;padding:12px 20px;border-radius:6px;background:var(--surface);border:1px solid var(--line);font-size:14px;font-weight:400;transition:background .2s ease}
+    .btn:hover{background:var(--surface-alt)}
+    .btn + .btn{margin-left:12px}
+
+    /* ASCII */
+    .ascii-wrap{position:relative;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);background:var(--surface);min-height:320px}
+    #ascii{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:13px;letter-spacing:.5px;margin:0;padding:24px;white-space:pre;user-select:none;color:var(--muted)}
+    .overlay-tip{position:absolute;right:16px;bottom:16px;background:var(--surface-alt);border:1px solid var(--line);padding:6px 12px;border-radius:4px;color:var(--muted);font-size:11px}
+    .debug{position:absolute;left:16px;bottom:16px;font-size:11px;color:var(--muted);opacity:.6}
+
+    section{margin-top:100px}
+    h2{font-size:clamp(20px,3vw,28px);margin:0 0 24px;font-weight:600}
+
+    /* ===== Project cards – per your spec, adapted to palette ===== */
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:20px}
+    @media(min-width:880px){.grid>.col-6{grid-column:span 6}} .grid>.col-12{grid-column:span 12}
+    /* 3 colonnes pour les projets sur les écrans larges */
+    @media(min-width:1080px){#projects .grid>.col-6{grid-column:span 4}}
+    
+    /* 3 colonnes pour les livres sur les écrans larges */
+    @media(min-width:1080px){#reading .grid>.col-4{grid-column:span 4}}
+    @media(min-width:880px){.grid>.col-4{grid-column:span 6}}
+    .grid>.col-4{grid-column:span 12}
+
+    .card{position:relative;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;gap:16px;transition:border-color .2s ease}
+    .card:hover,.card:focus-within{border-color:var(--muted)}
+    
+    /* Remove animations for Education and Contact sections */
+    #education .card, #contact .card, #reading .card{transition:none}
+    #education .card:hover, #education .card:focus-within, #contact .card:hover, #contact .card:focus-within, #reading .card:hover, #reading .card:focus-within{border-color:var(--line);background:var(--surface);transform:none}
+    
+    @media (prefers-reduced-motion: reduce){.card{transition:border-color 160ms ease, background 160ms ease}.card:hover{transform:none}}
+    .card .thumb{aspect-ratio:16/9;width:100%;border-radius:8px;overflow:hidden;background:var(--bg);display:grid;place-items:center;font-size:.85rem;color:var(--muted)}
+    .card .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .card h3{font-size:18px;line-height:1.3;font-weight:600;margin:0;color:var(--ink)}
+    .card .blurb{font-size:14px;line-height:1.4;color:var(--muted);max-height:4em;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;line-clamp:3;-webkit-box-orient:vertical}
+    .card .tags{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:auto}
+    .tag{background:var(--surface-alt);color:var(--muted);padding:.2rem .6rem;border-radius:4px;font-size:.7rem;font-weight:400;border:1px solid var(--line)}
+    .card .actions{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:12px}
+    .card .actions a{color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:.2rem .5rem;font-size:.75rem;font-weight:400;transition:background .2s ease}
+    .card .actions a:hover{background:var(--surface-alt)}
+
+    /* Contact section buttons - different style */
+    #contact .actions a{color:var(--ink);border:1px solid var(--line);background:rgba(248,247,252,.05);border-radius:10px;padding:.4rem .8rem;font-size:.85rem;font-weight:500;transition:all .2s ease}
+    #contact .actions a:hover{background:rgba(248,247,252,.12);transform:translateY(-1px)}
+    
+    /* Education section buttons - no purple effect */
+    #education .card .actions a{color:var(--ink);border:1px solid var(--line);background:rgba(248,247,252,.05)}
+    #education .card .actions a:hover{background:rgba(248,247,252,.12);transform:translateY(-1px)}
+    
+    /* Reading section - special styling for book comments */
+    #reading .card .comment{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);font-style:italic}
+    #reading .card .comment p{margin:0;line-height:1.4}    /* Background Section - Complete redesign */
+    .background-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+    @media(max-width:768px){.background-grid{grid-template-columns:1fr}}
+    
+    .background-item{position:relative;padding:28px;border-radius:var(--radius);border:1px solid var(--line);background:var(--surface)}
+    .background-item::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--line)}
+    
+    .background-icon{font-size:20px;margin-bottom:16px;color:var(--muted)}
+    .background-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .background-type{font-size:12px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px}
+    .background-year{font-size:12px;color:var(--muted);font-weight:400}
+    
+    .background-item h3{margin:0 0 12px;font-size:18px;font-weight:500;color:var(--ink)}
+    .background-item p{margin:0 0 20px;font-size:14px;color:var(--muted);line-height:1.5}
+    .background-skills{display:flex;flex-wrap:wrap;gap:8px}
+    .background-skills span{font-size:12px;color:var(--muted);background:var(--surface-alt);padding:4px 8px;border-radius:4px;border:1px solid var(--line)}
+    
+    /* Connect Section - Modern design */
+    .connect-wrapper{max-width:600px;margin:0 auto}
+    .connect-intro{text-align:center;margin-bottom:40px}
+    .connect-intro p{margin:0 0 12px;font-size:16px;color:var(--muted);line-height:1.6}
+    .connect-intro p:last-child{margin-bottom:0;color:var(--ink);font-weight:500}
+    
+    .connect-methods{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    @media(max-width:640px){.connect-methods{grid-template-columns:1fr}}
+    
+    .connect-item{display:flex;align-items:center;gap:16px;padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);transition:background .2s ease;text-decoration:none}
+    .connect-item:hover{background:var(--surface-alt)}
+    
+    .connect-icon{font-size:14px;flex-shrink:0;font-weight:500;color:var(--muted);background:var(--surface-alt);width:32px;height:32px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,monospace;border:1px solid var(--line)}
+    .connect-details{flex:1;min-width:0}
+    .connect-label{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
+    .connect-value{display:block;font-size:14px;color:var(--ink);font-weight:500;overflow:hidden;text-overflow:ellipsis}
+
+    /* Footer */
+    .footer{margin:100px 0 40px;color:var(--muted);font-size:14px;opacity:.8;border-top:1px solid var(--line);padding-top:24px;text-align:center}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav class="nav">
+      <div class="brand">Marc Duboc <span class="badge">promaa</span></div>
+      <div class="links">
+        <a href="#projects">Projects</a>
+        <a href="#education">Education</a>
+        <a href="#reading">Reading</a>
+        <a href="#contact">Contact</a>
+        <button class="theme-toggle" id="theme-toggle">
+          <svg viewBox="0 0 16 16">
+            <!-- Simple round moon -->
+            <rect x="5" y="2" width="6" height="1" fill="var(--ink)"/>
+            <rect x="3" y="3" width="10" height="1" fill="var(--ink)"/>
+            <rect x="2" y="4" width="12" height="1" fill="var(--ink)"/>
+            <rect x="2" y="5" width="12" height="6" fill="var(--ink)"/>
+            <rect x="2" y="11" width="12" height="1" fill="var(--ink)"/>
+            <rect x="3" y="12" width="10" height="1" fill="var(--ink)"/>
+            <rect x="5" y="13" width="6" height="1" fill="var(--ink)"/>
+            <!-- White spots -->
+            <rect x="5" y="6" width="1" height="1" fill="var(--bg)"/>
+            <rect x="9" y="7" width="1" height="1" fill="var(--bg)"/>
+            <rect x="11" y="9" width="1" height="1" fill="var(--bg)"/>
+            <rect x="7" y="10" width="1" height="1" fill="var(--bg)"/>
+          </svg>
+        </button>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div>
+        <h1><span class="spark">engineer & builder</span>. I ship small, sharp systems.</h1>
+        <p>Clarity, freedom, creativity.</p>
+        <a class="btn" href="#projects">See projects ↓</a>
+        <a class="btn" href="https://github.com/promaaa" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="btn" href="https://www.youtube.com/watch?v=wIBkvQ6MfKQ" target="_blank" rel="noopener">YouTube ↗</a>
+      </div>
+      <div class="ascii-wrap">
+        <pre id="ascii" aria-label="Interactive ASCII field"></pre>
+        <div class="overlay-tip">Move your mouse • Click to switch mode</div>
+        <div class="debug" id="ascii-debug">init…</div>
+      </div>
+    </header>
+
+    <section id="projects">
+      <h2>Best Projects</h2>
+      <div class="grid">
+        <!-- Ball-Collecting Robots -->
+        <article class="card col-12 col-6" id="ball-collecting-robots">
+          <div class="thumb">
+            <img src="pictures/ball-collecting.jpg" alt="Ball-Collecting Robots" onerror="this.parentNode.textContent='(poster missing)';this.remove();">
+          </div>
+          <h3>ball-collecting robots — Hardware + Software + Mechatronics</h3>
+          <p class="blurb">Embedded control + mechanics + on-device logic. Short field demo that stands out.</p>
+          <div class="tags"><span class="tag">Mechatronics</span><span class="tag">Embedded</span><span class="tag">PID</span><span class="tag">C/C++</span></div>
+          <div class="actions"><a href="ball-collecting-writeup.html">Write‑up ↗</a><a href="https://github.com/promaaa/ball-collecting-robots" target="_blank" rel="noopener">Code ↗</a></div>
+        </article>
+
+        <!-- nand2cpu ALU -->
+        <article class="card col-12 col-6" id="nand2cpu-alu-verilog">
+          <div class="thumb"><img src="pictures/nand2cpu.jpg" alt="nand2cpu — ALU" onerror="this.parentNode.textContent='(poster missing)';this.remove();"></div>
+          <h3>nand2cpu — 8/16‑bit alu in verilog</h3>
+          <p class="blurb">Arithmetic/logic ops, flags, testbenches, timing. Real computer architecture chops.</p>
+          <div class="tags"><span class="tag">Verilog</span><span class="tag">ALU</span><span class="tag">Testbench</span><span class="tag">FPGA</span></div>
+          <div class="actions"><a href="https://www.youtube.com/watch?v=wIBkvQ6MfKQ" target="_blank" rel="noopener">Demo ↗</a><a href="nand2cpu-writeup.html">Write‑up ↗</a><a href="https://github.com/promaaa/nand2cpu" target="_blank" rel="noopener">Code ↗</a></div>
+        </article>
+
+        <!-- Smart Grid realtime -->
+        <article class="card col-12 col-6" id="smart-grid-realtime">
+          <div class="thumb"><img src="pictures/smart_grid.png" alt="Smart Grid — realtime" onerror="this.parentNode.textContent='(poster missing)';this.remove();"></div>
+          <h3>smart grid — real‑time data ingestion & apis</h3>
+          <p class="blurb">UDP ingestion, stream processing, metrics & REST APIs. Enterprise/IoT credibility.</p>
+          <div class="tags"><span class="tag">Python</span><span class="tag">FastAPI</span><span class="tag">Postgres</span><span class="tag">Streaming</span></div>
+          <div class="actions"><a href="smart-grid-writeup.html">Write‑up ↗</a><a href="https://github.com/promaaa/smart_grid_JPA" target="_blank" rel="noopener">Code ↗</a></div>
+        </article>
+
+        <!-- Chef‑Claude -->
+        <article class="card col-12 col-6" id="chef-claude">
+          <div class="thumb"><img src="pictures/chef-claude.png" alt="Chef‑Claude" onerror="this.parentNode.textContent='(poster missing)';this.remove();"></div>
+          <h3>chef‑claude — ai recipe generator</h3>
+          <p class="blurb">LLM prompts + API orchestration + clean UX. Trendy, useful, marketable.</p>
+          <div class="tags"><span class="tag">LLM</span><span class="tag">APIs</span><span class="tag">Next/React</span></div>
+          <div class="actions"><a href="chef-claude-writeup.html">Write‑up ↗</a><a href="https://github.com/promaaa/chef-claude" target="_blank" rel="noopener">Code ↗</a></div>
+        </article>
+
+        <!-- Evento -->
+        <article class="card col-12 col-6" id="evento-solana">
+          <div class="thumb"><img src="pictures/evento.jpeg" alt="Evento — Solana" onerror="this.parentNode.textContent='(poster missing)';this.remove();"></div>
+          <h3>evento — solana hackathon project</h3>
+          <p class="blurb">Teamwork + blockchain. Payments, tickets, simple on‑chain flows under pressure.</p>
+          <div class="tags"><span class="tag">Solana</span><span class="tag">Django</span><span class="tag">Solana Pay</span></div>
+          <div class="actions"><a href="evento-writeup.html">Write‑up ↗</a><a href="https://github.com/promaaa/evento" target="_blank" rel="noopener">Code ↗</a></div>
+        </article>
+
+        <!-- Tenzies -->
+        <article class="card col-12 col-6" id="tenzies-mini-game">
+          <div class="thumb"><img src="pictures/tenzies.png" alt="Tenzies" onerror="this.parentNode.textContent='(poster missing)';this.remove();"></div>
+          <h3>tenzies — mini game</h3>
+          <p class="blurb">Small, polished, fun. Highlights UX/UI details, animations, and state management.</p>
+          <div class="tags"><span class="tag">React</span><span class="tag">UI/UX</span><span class="tag">Animations</span></div>
+          <div class="actions"><a href="tenzies-writeup.html">Write‑up ↗</a><a href="https://github.com/promaaa/tenzies" target="_blank" rel="noopener">Code ↗</a></div>
+        </article>
+      </div>
+    </section>
+
+    <section id="education">
+      <h2>Background</h2>
+      <div class="background-grid">
+        <div class="background-item engineering">
+          <div class="background-icon">🎓</div>
+          <div class="background-content">
+            <div class="background-meta">
+              <span class="background-type">Engineering School</span>
+              <span class="background-year">2024–now</span>
+            </div>
+            <h3>IMT Atlantique</h3>
+            <p>Specializing in software engineering, AI systems, and distributed computing. Focus on practical implementation and system design.</p>
+            <div class="background-skills">
+              <span>Systems Programming</span>
+              <span>AI/ML</span>
+              <span>Software Architecture</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="background-item prep">
+          <div class="background-icon">⚡</div>
+          <div class="background-content">
+            <div class="background-meta">
+              <span class="background-type">Intensive Prep</span>
+              <span class="background-year">2022–2024</span>
+            </div>
+            <h3>CPGE Mathematics & Physics</h3>
+            <p>Two-year intensive program at Lycée Pierre Corneille. Rigorous training in analytical thinking, problem-solving under pressure.</p>
+            <div class="background-skills">
+              <span>Mathematical Modeling</span>
+              <span>Algorithm Design</span>
+              <span>Problem Solving</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="reading">
+      <h2>Current Reading</h2>
+      <div class="grid">
+        <!-- Superintelligence -->
+        <article class="card col-12 col-4" id="superintelligence-bostrom">
+          <div class="thumb">
+            <img src="pictures/superintelligence.jpg" alt="Superintelligence by Nick Bostrom" onerror="this.parentNode.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;font-size:12px;color:var(--muted);text-align:center;padding:20px;\'>Superintelligence<br>Nick Bostrom</div>';this.remove();">
+          </div>
+          <h3>Superintelligence — Nick Bostrom</h3>
+          <p class="blurb">Essential reading on AI alignment and existential risk. Rigorous analysis of what happens when machines surpass human intelligence.</p>
+          <div class="tags"><span class="tag">AI Ethics</span><span class="tag">Philosophy</span><span class="tag">Future Tech</span></div>
+          <div class="comment">
+            <p>Framed how I approach advanced AI: rigorous alignment thinking, modeling multipolar race dynamics, and baking governance + fail‑safe option value into architectures rather than chasing raw capability curves.</p>
+          </div>
+        </article>
+
+        <!-- Le Comte de Monte-Cristo -->
+        <article class="card col-12 col-4" id="monte-cristo">
+          <div class="thumb">
+            <img src="pictures/monteCristo.jpg" alt="Le Comte de Monte-Cristo par Alexandre Dumas" onerror="this.parentNode.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;font-size:12px;color:var(--muted);text-align:center;padding:20px;\'>Le Comte de<br>Monte-Cristo<br>A. Dumas</div>';this.remove();">
+          </div>
+          <h3>Le Comte de Monte-Cristo — Alexandre Dumas</h3>
+          <p class="blurb">Masterpiece of French literature. Revenge, justice, and redemption woven into an epic tale of transformation and strategy.</p>
+          <div class="tags"><span class="tag">Classic Literature</span><span class="tag">French</span><span class="tag">Strategy</span></div>
+          <div class="comment">
+            <p>A narrative masterclass in long‑horizon strategy: patient information gathering, principled leverage, protecting allies, timing inflection points; it reinforced my bias for deliberate architectures over reactive fixes and for channeling adversity into structured, value‑aligned execution.</p>
+          </div>
+        </article>
+
+        <!-- Manufacturing Consent -->
+        <article class="card col-12 col-4" id="manufacturing-consent">
+          <div class="thumb">
+            <img src="pictures/manufacturing-consent.jpg" alt="Manufacturing Consent by Chomsky & Herman" onerror="this.parentNode.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;font-size:12px;color:var(--muted);text-align:center;padding:20px;\'>Manufacturing<br>Consent<br>Chomsky & Herman</div>';this.remove();">
+          </div>
+          <h3>Manufacturing Consent — Chomsky & Herman</h3>
+          <p class="blurb">Critical analysis of mass media's role in shaping public opinion. Essential for understanding information systems and bias.</p>
+          <div class="tags"><span class="tag">Media Analysis</span><span class="tag">Critical Thinking</span><span class="tag">Politics</span></div>
+          <div class="comment">
+            <p>This book reshaped how I approach product and data ethics: it trained me to interrogate hidden filters (ownership, incentives, ad economics) before trusting engagement metrics or algorithmic "neutrality", and to design systems that surface marginalized signals instead of amplifying convenient noise.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2>Let's Connect</h2>
+      <div class="connect-wrapper">
+        <div class="connect-intro">
+          <p>Always interested in challenging projects, innovative collaborations, and meaningful conversations about technology.</p>
+          <p>Currently seeking <strong>internship opportunities</strong> for summer 2025.</p>
+        </div>
+        
+        <div class="connect-methods">
+          <a href="mailto:marc.duboc@pm.me" class="connect-item email">
+            <div class="connect-icon">@</div>
+            <div class="connect-details">
+              <span class="connect-label">Email</span>
+              <span class="connect-value">marc.duboc@pm.me</span>
+            </div>
+          </a>
+          
+          <a href="https://linkedin.com/in/marc-duboc-072932316" target="_blank" rel="noopener" class="connect-item linkedin">
+            <div class="connect-icon">in</div>
+            <div class="connect-details">
+              <span class="connect-label">LinkedIn</span>
+              <span class="connect-value">Professional profile</span>
+            </div>
+          </a>
+          
+          <a href="https://x.com/proma__" target="_blank" rel="noopener" class="connect-item twitter">
+            <div class="connect-icon">x</div>
+            <div class="connect-details">
+              <span class="connect-label">X (Twitter)</span>
+              <span class="connect-value">Tech thoughts & updates</span>
+            </div>
+          </a>
+          
+          <a href="https://github.com/promaaa" target="_blank" rel="noopener" class="connect-item github">
+            <div class="connect-icon">gh</div>
+            <div class="connect-details">
+              <span class="connect-label">GitHub</span>
+              <span class="connect-value">Code & projects</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">Built with plain HTML/CSS/JS. ASCII reveals “promaa”. © 2025 Marc Duboc.</footer>
+  </div>
+
+  <script>
+  // === SUPER‑SAFE ASCII (ES5 only, interval) — 7×7 font, centered ===
+  (function(){
+    var pre=document.getElementById('ascii'); var dbg=document.getElementById('ascii-debug'); if(!pre) return;
+    var chars=" .'`^,:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$";
+    var cols=90, rows=28, t=0, frames=0, timer=null; var pointerX=.5, pointerY=.5, mode=0;
+    var FONT={
+      'p':["######.","#.....#","#.....#","######.","#......","#......","#......"],
+      'r':["######.","#.....#","#.....#","######.","#.#....","#..#...","#...#.."],
+      'o':[".#####.","#.....#","#.....#","#.....#","#.....#","#.....#",".#####."],
+      'm':["#..#..#","##.##.#","#.#.#.#","#.#.#.#","#.#.#.#","#.....#","#.....#"],
+      'a':[".#####.","#.....#","#.....#","#######","#.....#","#.....#","#.....#"]
+    };
+    var WORD='promaa'; var glyphW=7, glyphH=7, space=1; var wordPixW=WORD.length*glyphW+(WORD.length-1)*space;
+    function on(x,y){ var scaleX=Math.floor(0.75*cols/wordPixW); var scaleY=Math.floor(0.50*rows/glyphH); var s=Math.max(1,Math.min(scaleX,scaleY)); var totalW=wordPixW*s,totalH=glyphH*s; var startX=Math.floor((cols-totalW)/10); var startY=Math.floor((rows-totalH)/2 + s*0.10); var rx=x-startX, ry=y-startY; if(rx<0||ry<0||rx>=totalW||ry>=totalH) return 0; var pixX=Math.floor(rx/s), pixY=Math.floor(ry/s); var acc=0; for(var i=0;i<WORD.length;i++){ var gStart=acc,gEnd=acc+glyphW; if(pixX>=gStart&&pixX<gEnd){ var row=FONT[WORD.charAt(i)][pixY]; return row.charAt(pixX-gStart)==='#'?1:0; } acc+=glyphW+(i<WORD.length-1?space:0);} return 0; }
+    function hash2d(x,y){ var n=(x*374761393 ^ y*668265263)>>>0; n=(n^(n>>>13))*1274126177>>>0; return (n&0xffff)/0xffff; }
+    function density(x,y,time){ var gx=x/cols,gy=y/rows; var base=0.15*gx+0.12*gy+0.08*Math.sin((gx+gy+time)*2.8); var noise=0.12*(hash2d(x+time*2.5,y-time*1.8)-0.5); var dx=gx-pointerX,dy=gy-pointerY,d2=dx*dx+dy*dy; var ripple=0; if(mode===0){ripple=0.35*Math.sin(15*Math.sqrt(d2)-time*5)*Math.exp(-12*d2);} else if(mode===1){ripple=0.48*Math.cos(22*Math.sqrt(d2)-time*7)*Math.exp(-15*d2);} else {var ang=Math.atan2(dy,dx); ripple=0.38*Math.sin(10*ang+time*4)*Math.exp(-11*d2);} var pulse=0.06*Math.sin(time*1.5); var v=base+noise+ripple+pulse; if(v<0)v=0; if(v>1)v=1; return v; }
+    function render(){ t+=0.08; frames++; var progress=Math.min(1,t/1.2); var out=''; for(var y=0;y<rows;y++){ for(var x=0;x<cols;x++){ var d=density(x,y,t), m=on(x,y), h=hash2d(x*13+y*7,12345); var v=d*0.38; if(m){ var reveal=progress-h*0.6; var r=reveal*1.8; if(r<0) r=0; if(r>1) r=1; v=Math.max(v,0.95*r+0.05);} var ci=Math.floor(v*(chars.length-1)); if(ci<0) ci=0; if(ci>=chars.length) ci=chars.length-1; out+=chars.charAt(ci);} if(y<rows-1) out+='\n'; } pre.textContent=out; }
+    function start(){ if(timer) clearInterval(timer); pre.textContent='loading…'; frames=0; t=0; render(); timer=setInterval(render,42); }
+    function setPointer(ev){ var r=pre.parentElement.getBoundingClientRect(); if(!r.width||!r.height) return; pointerX=Math.min(1,Math.max(0,(ev.clientX-r.left)/r.width)); pointerY=Math.min(1,Math.max(0,(ev.clientY-r.top)/r.height)); }
+    pre.parentElement.addEventListener('mousemove',setPointer); pre.parentElement.addEventListener('touchmove',function(e){ if(e.touches&&e.touches[0]) setPointer(e.touches[0]); },{passive:true}); pre.parentElement.addEventListener('click',function(){ mode=(mode+1)%3;});
+    start();
+  })();
+  
+  // Theme Toggle
+  (function(){
+    const toggle = document.getElementById('theme-toggle');
+    const html = document.documentElement;
+    
+    // Check for saved theme or default to light
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    html.setAttribute('data-theme', savedTheme);
+    updateToggleIcon(savedTheme);
+    
+    toggle.addEventListener('click', function(){
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateToggleIcon(newTheme);
+    });
+    
+    function updateToggleIcon(theme){
+      const sunSvg = `<svg viewBox="0 0 16 16">
+        <!-- Pixelated sun -->
+        <rect x="7" y="0" width="2" height="2"/>
+        <rect x="13" y="2" width="2" height="2"/>
+        <rect x="14" y="7" width="2" height="2"/>
+        <rect x="13" y="12" width="2" height="2"/>
+        <rect x="7" y="14" width="2" height="2"/>
+        <rect x="2" y="12" width="2" height="2"/>
+        <rect x="0" y="7" width="2" height="2"/>
+        <rect x="2" y="2" width="2" height="2"/>
+        <rect x="5" y="5" width="6" height="6"/>
+        <rect x="6" y="4" width="4" height="1"/>
+        <rect x="4" y="6" width="1" height="4"/>
+        <rect x="11" y="6" width="1" height="4"/>
+        <rect x="6" y="11" width="4" height="1"/>
+      </svg>`;
+      
+      const moonSvg = `<svg viewBox="0 0 16 16">
+        <!-- Moon with craters -->
+        <rect x="5" y="2" width="6" height="1"/>
+        <rect x="3" y="3" width="10" height="1"/>
+        <rect x="2" y="4" width="12" height="1"/>
+        <rect x="2" y="5" width="12" height="6"/>
+        <rect x="2" y="11" width="12" height="1"/>
+        <rect x="3" y="12" width="10" height="1"/>
+        <rect x="5" y="13" width="6" height="1"/>
+        <!-- Craters -->
+        <rect x="4" y="6" width="2" height="1"/>
+        <rect x="4" y="7" width="2" height="1"/>
+        <rect x="9" y="8" width="1" height="1"/>
+        <rect x="11" y="6" width="1" height="1"/>
+        <rect x="6" y="9" width="2" height="1"/>
+        <rect x="6" y="10" width="2" height="1"/>
+      </svg>`;
+      
+      toggle.innerHTML = theme === 'dark' ? sunSvg : moonSvg;
+      toggle.title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+    }
+  })();
+  </script>
+</body>
+</html>

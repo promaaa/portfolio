@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ball-Collecting Robots Write-up — Marc Duboc</title>
+    <style>
+        :root {
+            --bg: #fafafa;
+            --ink: #0a0a0a;
+            --muted: #666666;
+            --line: #e4e4e7;
+            --surface: #ffffff;
+            --radius: 8px;
+            --shadow: 0 1px 3px rgba(0,0,0,.1);
+        }
+        
+        [data-theme="dark"] {
+            --bg: #0f0f0f;
+            --ink: #fafafa;
+            --muted: #a1a1aa;
+            --line: #27272a;
+            --surface: #18181b;
+            --shadow: 0 1px 3px rgba(0,0,0,.3);
+        }
+        
+        * { box-sizing: border-box; }
+        
+        html, body {
+            margin: 0;
+            height: 100%;
+            color: var(--ink);
+            font: 16px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,Roboto,Arial;
+            background: var(--bg);
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: var(--muted);
+            text-decoration: none;
+            padding: 8px 0;
+        }
+        
+        .back-link:hover {
+            color: var(--ink);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin: 0 0 20px;
+            line-height: 1.2;
+        }
+        
+        .project-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+        }
+        
+        .project-links {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+        
+        .project-links a {
+            padding: 10px 20px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            text-decoration: none;
+            color: var(--ink);
+            transition: background 0.2s ease;
+        }
+        
+        .project-links a:hover {
+            background: var(--line);
+        }
+        
+        .content {
+            line-height: 1.7;
+        }
+        
+        .content h2 {
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .content h3 {
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        
+        .content p {
+            margin-bottom: 20px;
+            color: var(--muted);
+        }
+        
+        .content ul, .content ol {
+            margin-bottom: 20px;
+            padding-left: 20px;
+        }
+        
+        .content li {
+            margin-bottom: 8px;
+            color: var(--muted);
+        }
+        
+        .content code {
+            background: var(--surface);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--line);
+            font-family: ui-monospace, Menlo, Consolas, monospace;
+            font-size: 0.9em;
+        }
+        
+        .content pre {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: var(--radius);
+            border: 1px solid var(--line);
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        .content pre code {
+            background: none;
+            padding: 0;
+            border: none;
+        }
+        
+        .highlight-box {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: var(--radius);
+            border: 1px solid var(--line);
+            margin: 20px 0;
+        }
+        
+        .highlight-box strong {
+            color: var(--ink);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--line);
+        }
+        
+        th {
+            color: var(--ink);
+        }
+        
+        td {
+            color: var(--muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="portfolio_prom_aaa_restored_new_cards.html" class="back-link">← Back to Portfolio</a>
+        
+        <h1>Ball-Collecting Robots — Mechatronics Project</h1>
+        
+        <div class="project-links">
+            <a href="https://github.com/promaaa/ball-collecting-robots" target="_blank" rel="noopener">View Code</a>
+        </div>
+        
+        <div class="content">
+            <h2>Project Overview</h2>
+            <p>An autonomous robotics system designed to collect and sort colored balls in a competitive field environment. This project demonstrates the integration of mechanical design, embedded programming, and real-time control systems.</p>
+            
+            <div class="highlight-box">
+                <strong>Core Challenge:</strong> Design and build autonomous robots capable of efficiently collecting colored balls while navigating obstacles and competing against other robots in real-time.
+            </div>
+
+            <h2>System Architecture</h2>
+
+            <h3>🤖 Mechanical Design</h3>
+            <ul>
+                <li><strong>Chassis:</strong> Lightweight aluminum frame optimized for speed and maneuverability</li>
+                <li><strong>Drive System:</strong> Differential drive with high-torque DC motors</li>
+                <li><strong>Collection Mechanism:</strong> Custom-designed ball intake with rotating brushes</li>
+                <li><strong>Sorting System:</strong> Color-based sorting mechanism with dedicated storage compartments</li>
+                <li><strong>Sensors Integration:</strong> Ultrasonic sensors for navigation, color sensors for ball detection</li>
+            </ul>
+
+            <h3>🧠 Control Systems</h3>
+            <ul>
+                <li><strong>Microcontroller:</strong> Arduino-based control system with real-time processing</li>
+                <li><strong>PID Controllers:</strong> Multiple PID loops for motor control and trajectory following</li>
+                <li><strong>State Machine:</strong> Robust state management for different operational modes</li>
+                <li><strong>Sensor Fusion:</strong> Integration of multiple sensor inputs for decision making</li>
+            </ul>
+
+            <h2>Technical Implementation</h2>
+
+            <h3>Embedded Control Logic</h3>
+            <pre><code>// Main control loop structure
+void mainControlLoop() {
+    // Sensor readings
+    updateSensorReadings();
+    
+    // State machine execution
+    switch (currentState) {
+        case SEARCHING:
+            searchForBalls();
+            break;
+        case COLLECTING:
+            collectBall();
+            break;
+        case NAVIGATING:
+            navigateToTarget();
+            break;
+        case DEPOSITING:
+            depositBalls();
+            break;
+    }
+    
+    // PID control updates
+    updateMotorPID();
+    
+    // Safety checks
+    performSafetyChecks();
+}</code></pre>
+
+            <h3>PID Control Implementation</h3>
+            <pre><code>class PIDController {
+private:
+    double kp, ki, kd;
+    double integral, previousError;
+    unsigned long lastTime;
+    
+public:
+    double compute(double setpoint, double input) {
+        unsigned long now = millis();
+        double timeChange = (now - lastTime) / 1000.0;
+        
+        double error = setpoint - input;
+        integral += error * timeChange;
+        double derivative = (error - previousError) / timeChange;
+        
+        double output = kp * error + ki * integral + kd * derivative;
+        
+        previousError = error;
+        lastTime = now;
+        
+        return output;
+    }
+};</code></pre>
+
+            <h2>Competition Strategy</h2>
+
+            <h3>Autonomous Behavior</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Phase</th>
+                        <th>Strategy</th>
+                        <th>Duration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Initialization</td>
+                        <td>Sensor calibration and position estimation</td>
+                        <td>2 seconds</td>
+                    </tr>
+                    <tr>
+                        <td>Ball Search</td>
+                        <td>Systematic field scanning with priority zones</td>
+                        <td>Variable</td>
+                    </tr>
+                    <tr>
+                        <td>Collection</td>
+                        <td>Optimized path planning to ball clusters</td>
+                        <td>Variable</td>
+                    </tr>
+                    <tr>
+                        <td>Sorting</td>
+                        <td>Real-time color classification and sorting</td>
+                        <td>1-2 seconds</td>
+                    </tr>
+                    <tr>
+                        <td>Deposit</td>
+                        <td>Efficient delivery to designated zones</td>
+                        <td>3-5 seconds</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Path Planning Algorithm</h3>
+            <pre><code>// Simplified path planning logic
+struct Point {
+    float x, y;
+};
+
+class PathPlanner {
+private:
+    vector<Point> waypoints;
+    Point currentPosition;
+    Point targetPosition;
+    
+public:
+    void planPath(Point start, Point goal) {
+        waypoints.clear();
+        
+        // Simple A* implementation for obstacle avoidance
+        // Priority queue for exploring nodes
+        // Cost function considering distance and obstacles
+        
+        generateWaypoints(start, goal);
+    }
+    
+    Point getNextWaypoint() {
+        if (!waypoints.empty()) {
+            Point next = waypoints.front();
+            waypoints.erase(waypoints.begin());
+            return next;
+        }
+        return currentPosition;
+    }
+};</code></pre>
+
+            <h2>Sensor Integration</h2>
+
+            <h3>Multi-Sensor System</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sensor Type</th>
+                        <th>Model</th>
+                        <th>Purpose</th>
+                        <th>Update Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Ultrasonic</td>
+                        <td>HC-SR04</td>
+                        <td>Obstacle detection and wall following</td>
+                        <td>50 Hz</td>
+                    </tr>
+                    <tr>
+                        <td>Color Sensor</td>
+                        <td>TCS3200</td>
+                        <td>Ball color classification</td>
+                        <td>20 Hz</td>
+                    </tr>
+                    <tr>
+                        <td>Encoders</td>
+                        <td>Optical rotary</td>
+                        <td>Position tracking and odometry</td>
+                        <td>1000 Hz</td>
+                    </tr>
+                    <tr>
+                        <td>IMU</td>
+                        <td>MPU6050</td>
+                        <td>Orientation and acceleration</td>
+                        <td>100 Hz</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Color Detection System</h3>
+            <pre><code>typedef struct {
+    int red, green, blue;
+    String colorName;
+} ColorProfile;
+
+ColorProfile ballColors[] = {
+    {255, 0, 0, "RED"},
+    {0, 255, 0, "GREEN"},
+    {0, 0, 255, "BLUE"},
+    {255, 255, 0, "YELLOW"}
+};
+
+String detectBallColor() {
+    // Read RGB values from color sensor
+    int r = readRed();
+    int g = readGreen();
+    int b = readBlue();
+    
+    // Find closest color match
+    int minDistance = INT_MAX;
+    String detectedColor = "UNKNOWN";
+    
+    for (int i = 0; i < 4; i++) {
+        int distance = sqrt(pow(r - ballColors[i].red, 2) + 
+                          pow(g - ballColors[i].green, 2) + 
+                          pow(b - ballColors[i].blue, 2));
+        
+        if (distance < minDistance) {
+            minDistance = distance;
+            detectedColor = ballColors[i].colorName;
+        }
+    }
+    
+    return detectedColor;
+}</code></pre>
+
+            <h2>Performance Metrics</h2>
+
+            <div class="highlight-box">
+                <strong>Competition Results:</strong>
+                <ul style="margin: 10px 0 0 0;">
+                    <li><strong>Ball Collection Rate:</strong> 85% efficiency in controlled environment</li>
+                    <li><strong>Color Sorting Accuracy:</strong> 95% correct classification</li>
+                    <li><strong>Navigation Precision:</strong> ±2cm positioning accuracy</li>
+                    <li><strong>Response Time:</strong> <100ms sensor-to-actuator latency</li>
+                    <li><strong>Competition Ranking:</strong> Top 3 in regional robotics competition</li>
+                </ul>
+            </div>
+
+            <h2>Challenges Overcome</h2>
+
+            <h3>Technical Challenges</h3>
+            <ul>
+                <li><strong>Real-time Constraints:</strong> Optimized control loops for <10ms cycle times</li>
+                <li><strong>Sensor Noise:</strong> Implemented Kalman filtering for improved accuracy</li>
+                <li><strong>Power Management:</strong> Efficient motor control to maximize battery life</li>
+                <li><strong>Mechanical Reliability:</strong> Robust design for repeated impacts and operations</li>
+            </ul>
+
+            <h3>Competition Environment</h3>
+            <ul>
+                <li><strong>Dynamic Obstacles:</strong> Other robots and moving balls</li>
+                <li><strong>Lighting Variations:</strong> Adaptive color calibration for different venues</li>
+                <li><strong>Time Pressure:</strong> 2-minute rounds requiring optimal strategy execution</li>
+                <li><strong>Mechanical Failures:</strong> Redundant systems and quick-repair design</li>
+            </ul>
+
+            <h2>System Specifications</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Specification</th>
+                        <th>Performance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Microcontroller</td>
+                        <td>Arduino Mega 2560</td>
+                        <td>16 MHz, 256KB Flash</td>
+                    </tr>
+                    <tr>
+                        <td>Motors</td>
+                        <td>DC Gear Motors</td>
+                        <td>12V, 200 RPM, 5 kg·cm torque</td>
+                    </tr>
+                    <tr>
+                        <td>Power System</td>
+                        <td>Li-Po Battery Pack</td>
+                        <td>11.1V, 2200mAh, 25C discharge</td>
+                    </tr>
+                    <tr>
+                        <td>Maximum Speed</td>
+                        <td>Linear velocity</td>
+                        <td>1.2 m/s forward, 0.8 m/s turning</td>
+                    </tr>
+                    <tr>
+                        <td>Operating Time</td>
+                        <td>Continuous operation</td>
+                        <td>45 minutes typical usage</td>
+                    </tr>
+                    <tr>
+                        <td>Collection Capacity</td>
+                        <td>Ball storage</td>
+                        <td>12 balls maximum per trip</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Software Architecture</h2>
+
+            <h3>Modular Design</h3>
+            <pre><code>// Main system modules
+class RobotSystem {
+private:
+    MotorController motors;
+    SensorManager sensors;
+    PathPlanner pathPlanner;
+    StateMachine fsm;
+    ColorDetector colorSystem;
+    SafetyMonitor safety;
+    
+public:
+    void initialize();
+    void update();
+    void executeStrategy();
+};
+
+// State machine implementation
+enum RobotState {
+    IDLE,
+    SEARCHING,
+    APPROACHING,
+    COLLECTING,
+    SORTING,
+    NAVIGATING,
+    DEPOSITING,
+    EMERGENCY_STOP
+};</code></pre>
+
+            <h2>Future Improvements</h2>
+
+            <h3>Hardware Enhancements</h3>
+            <ul>
+                <li><strong>Vision System:</strong> Camera-based object recognition for improved accuracy</li>
+                <li><strong>Advanced Sensors:</strong> LIDAR integration for better environment mapping</li>
+                <li><strong>Upgraded Processing:</strong> Raspberry Pi for more complex algorithms</li>
+                <li><strong>Wireless Communication:</strong> Team coordination for multi-robot strategies</li>
+            </ul>
+
+            <h3>Software Improvements</h3>
+            <ul>
+                <li><strong>Machine Learning:</strong> Adaptive behavior based on competition history</li>
+                <li><strong>Advanced Path Planning:</strong> RRT* algorithms for optimal trajectories</li>
+                <li><strong>Swarm Intelligence:</strong> Coordinated behavior with multiple robots</li>
+                <li><strong>Real-time Analytics:</strong> Performance monitoring and strategy adjustment</li>
+            </ul>
+
+            <h2>Skills Demonstrated</h2>
+
+            <div class="highlight-box">
+                <strong>Interdisciplinary Engineering:</strong>
+                <ul style="margin: 10px 0 0 0;">
+                    <li><strong>Mechanical Engineering:</strong> Design and fabrication of robot chassis and mechanisms</li>
+                    <li><strong>Electrical Engineering:</strong> Circuit design, power systems, and sensor integration</li>
+                    <li><strong>Software Engineering:</strong> Real-time embedded programming and control algorithms</li>
+                    <li><strong>Systems Engineering:</strong> Integration and optimization of complex subsystems</li>
+                    <li><strong>Project Management:</strong> Timeline coordination and team collaboration</li>
+                </ul>
+            </div>
+
+            <p>This project represents a comprehensive application of mechatronics principles, combining mechanical design, embedded systems programming, and intelligent control to create an autonomous robotic system capable of complex tasks in competitive environments.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evento Write-up — Marc Duboc</title>
+    <style>
+        :root {
+            --bg: #fafafa;
+            --ink: #0a0a0a;
+            --muted: #666666;
+            --line: #e4e4e7;
+            --surface: #ffffff;
+            --radius: 8px;
+            --shadow: 0 1px 3px rgba(0,0,0,.1);
+        }
+        
+        [data-theme="dark"] {
+            --bg: #0f0f0f;
+            --ink: #fafafa;
+            --muted: #a1a1aa;
+            --line: #27272a;
+            --surface: #18181b;
+            --shadow: 0 1px 3px rgba(0,0,0,.3);
+        }
+        
+        * { box-sizing: border-box; }
+        
+        html, body {
+            margin: 0;
+            height: 100%;
+            color: var(--ink);
+            font: 16px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,Roboto,Arial;
+            background: var(--bg);
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: var(--muted);
+            text-decoration: none;
+            padding: 8px 0;
+        }
+        
+        .back-link:hover {
+            color: var(--ink);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin: 0 0 20px;
+            line-height: 1.2;
+        }
+        
+        .project-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+        }
+        
+        .project-links {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+        
+        .project-links a {
+            padding: 10px 20px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            text-decoration: none;
+            color: var(--ink);
+            transition: background 0.2s ease;
+        }
+        
+        .project-links a:hover {
+            background: var(--line);
+        }
+        
+        .content {
+            line-height: 1.7;
+        }
+        
+        .content h2 {
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .content h3 {
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        
+        .content p {
+            margin-bottom: 20px;
+            color: var(--muted);
+        }
+        
+        .content ul, .content ol {
+            margin-bottom: 20px;
+            padding-left: 20px;
+        }
+        
+        .content li {
+            margin-bottom: 8px;
+            color: var(--muted);
+        }
+        
+        .content code {
+            background: var(--surface);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--line);
+            font-family: ui-monospace, Menlo, Consolas, monospace;
+            font-size: 0.9em;
+        }
+        
+        .content pre {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: var(--radius);
+            border: 1px solid var(--line);
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        .content pre code {
+            background: none;
+            padding: 0;
+            border: none;
+        }
+        
+        .highlight-box {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: var(--radius);
+            border: 1px solid var(--line);
+            margin: 20px 0;
+        }
+        
+        .highlight-box strong {
+            color: var(--ink);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--line);
+        }
+        
+        th {
+            color: var(--ink);
+        }
+        
+        td {
+            color: var(--muted);
+        }
+        
+        .image-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--radius);
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .feature-card {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: var(--radius);
+            border: 1px solid var(--line);
+        }
+        
+        .feature-card h4 {
+            margin: 0 0 10px;
+            color: var(--ink);
+            font-size: 1.1rem;
+        }
+        
+        .feature-card p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="portfolio_prom_aaa_restored_new_cards.html" class="back-link">← Back to Portfolio</a>
+        
+        <h1>Evento — Event Management Platform</h1>
+        
+        <div class="project-links">
+            <a href="https://github.com/promaaa/evento" target="_blank" rel="noopener">View Code</a>
+        </div>
+        
+        <div class="content">
+            <h2>Project Overview</h2>
+            <p>Evento is a comprehensive event management platform developed as part of the Colosseum Hackathon by Solana. The platform provides a modern, intuitive interface for creating, managing, and participating in events with real-time interaction capabilities.</p>
+            
+            <div class="highlight-box">
+                <strong>Hackathon Context:</strong> Our proposal for Colosseum Hackaton by Solana, focusing on building innovative event management solutions leveraging modern web technologies.
+            </div>
+
+            <h2>Platform Features</h2>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>🎪 Event Creation & Management</h4>
+                    <p>Create and customize events with detailed descriptions, topics, and scheduling capabilities</p>
+                </div>
+                <div class="feature-card">
+                    <h4>👥 User Profiles & Authentication</h4>
+                    <p>Comprehensive user management with profiles, avatars, and personalized event tracking</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🗨️ Real-time Chat System</h4>
+                    <p>Live discussion threads within event rooms with participant interaction</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🔍 Advanced Search & Discovery</h4>
+                    <p>Topic-based categorization and powerful search functionality for event discovery</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📊 Activity Tracking</h4>
+                    <p>Comprehensive activity feeds showing user participation and engagement metrics</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📱 Responsive Design</h4>
+                    <p>Mobile-first design ensuring optimal experience across all device sizes</p>
+                </div>
+            </div>
+
+            <h2>Technical Architecture</h2>
+
+            <h3>🏗️ Backend Framework</h3>
+            <ul>
+                <li><strong>Django:</strong> Robust Python web framework for rapid development</li>
+                <li><strong>Django Templates:</strong> Server-side rendering with template inheritance</li>
+                <li><strong>SQLite/PostgreSQL:</strong> Database management for event and user data</li>
+                <li><strong>Django Authentication:</strong> Built-in user management and security</li>
+                <li><strong>Django Forms:</strong> Form validation and data processing</li>
+            </ul>
+
+            <h3>🎨 Frontend Technologies</h3>
+            <ul>
+                <li><strong>HTML5 & CSS3:</strong> Modern semantic markup and responsive styling</li>
+                <li><strong>JavaScript (Vanilla):</strong> Interactive features and dynamic content</li>
+                <li><strong>SVG Icons:</strong> Scalable vector graphics for clean interface elements</li>
+                <li><strong>Responsive Grid:</strong> Flexible layout system for all screen sizes</li>
+            </ul>
+
+            <h2>Core Functionality</h2>
+
+            <h3>Event Management System</h3>
+            <pre><code># Django Model Structure (Simplified)
+class Room(models.Model):
+    host = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True)
+    name = models.CharField(max_length=200)
+    description = models.TextField(null=True, blank=True)
+    participants = models.ManyToManyField(User, related_name='participants', blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-updated', '-created']
+
+class Message(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    body = models.TextField()
+    updated = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-updated', '-created']</code></pre>
+
+            <h3>User Authentication & Profiles</h3>
+            <pre><code># User Profile Management
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    avatar = models.ImageField(upload_to='avatars/', default='avatar.svg')
+    bio = models.TextField(max_length=500, blank=True)
+    name = models.CharField(max_length=200, null=True)
+    
+    def __str__(self):
+        return self.user.username</code></pre>
+
+            <h2>User Interface Design</h2>
+
+            <h3>Design System</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Purpose</th>
+                        <th>Features</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Header Navigation</td>
+                        <td>Site navigation and search</td>
+                        <td>Logo, search bar, user dropdown menu</td>
+                    </tr>
+                    <tr>
+                        <td>Topic Sidebar</td>
+                        <td>Event categorization</td>
+                        <td>Browse by topics, participant counts</td>
+                    </tr>
+                    <tr>
+                        <td>Event Cards</td>
+                        <td>Event display</td>
+                        <td>Host info, participant count, timestamps</td>
+                    </tr>
+                    <tr>
+                        <td>Chat Interface</td>
+                        <td>Real-time messaging</td>
+                        <td>Message threads, user avatars, timestamps</td>
+                    </tr>
+                    <tr>
+                        <td>User Profiles</td>
+                        <td>User information display</td>
+                        <td>Avatar, bio, hosted events, activities</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Responsive Layout System</h3>
+            <pre><code>/* Mobile-First CSS Framework */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media screen and (min-width: 768px) {
+  .layout--3 {
+    grid-template-columns: 1fr 3fr 1fr;
+  }
+}
+
+.container {
+  max-width: 120rem;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.roomList {
+  background: var(--color-dark);
+  max-height: 90vh;
+  overflow-y: scroll;
+}</code></pre>
+
+            <h2>JavaScript Interactivity</h2>
+
+            <h3>Dynamic UI Features</h3>
+            <pre><code>// Dropdown Menu Toggle
+const dropdownMenu = document.querySelector(".dropdown-menu");
+const dropdownButton = document.querySelector(".dropdown-button");
+
+if (dropdownButton) {
+  dropdownButton.addEventListener("click", () => {
+    dropdownMenu.classList.toggle("show");
+  });
+}
+
+// Image Upload Preview
+const photoInput = document.querySelector("#avatar");
+const photoPreview = document.querySelector("#preview-avatar");
+
+if (photoInput) {
+  photoInput.onchange = () => {
+    const [file] = photoInput.files;
+    if (file) {
+      photoPreview.src = URL.createObjectURL(file);
+    }
+  };
+}
+
+// Auto-scroll Chat
+const conversationThread = document.querySelector(".room__box");
+if (conversationThread) {
+  conversationThread.scrollTop = conversationThread.scrollHeight;
+}</code></pre>
+
+            <h2>Page Structure & Navigation</h2>
+
+            <h3>Core Pages</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Page</th>
+                        <th>Functionality</th>
+                        <th>Key Features</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>index.html</td>
+                        <td>Homepage & Event Listing</td>
+                        <td>Browse events, topics, recent activities</td>
+                    </tr>
+                    <tr>
+                        <td>room.html</td>
+                        <td>Individual Event View</td>
+                        <td>Event details, chat, participant list</td>
+                    </tr>
+                    <tr>
+                        <td>profile.html</td>
+                        <td>User Profile Display</td>
+                        <td>User info, hosted events, activities</td>
+                    </tr>
+                    <tr>
+                        <td>create-room.html</td>
+                        <td>Event Creation Form</td>
+                        <td>Event details input, topic selection</td>
+                    </tr>
+                    <tr>
+                        <td>login.html / signup.html</td>
+                        <td>Authentication Forms</td>
+                        <td>User registration and login</td>
+                    </tr>
+                    <tr>
+                        <td>settings.html</td>
+                        <td>User Settings</td>
+                        <td>Profile editing, avatar upload</td>
+                    </tr>
+                    <tr>
+                        <td>activity.html</td>
+                        <td>Activity Feed</td>
+                        <td>Recent user activities and interactions</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Template Inheritance</h3>
+            <pre><code># Django Template Structure
+<!-- main.html (Base Template) -->
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Powering Events, Together !</title>
+    <link rel="stylesheet" href="{% static 'styles/style.css' %}" />
+</head>
+<body>
+    {% include 'navbar.html' %}
+    
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    
+    {% block content %}
+    {% endblock %}
+    
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html></code></pre>
+
+            <h2>Event Room Features</h2>
+
+            <h3>Real-time Communication</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>💬 Message Threads</h4>
+                    <p>Hierarchical conversation structure with reply capabilities and user attribution</p>
+                </div>
+                <div class="feature-card">
+                    <h4>👥 Participant Management</h4>
+                    <p>Live participant lists with join/leave functionality and user profiles</p>
+                </div>
+                <div class="feature-card">
+                    <h4>⏰ Timestamps</h4>
+                    <p>Relative time display for messages and activities using Django's timesince filter</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📍 Room Persistence</h4>
+                    <p>Message history and room state maintained across sessions</p>
+                </div>
+            </div>
+
+            <h3>Room Management Interface</h3>
+            <pre><code># Room View Template Logic
+{% extends 'main.html' %}
+
+{% block content %}
+<main class="profile-page layout layout--3">
+  <div class="container">
+    <div class="room__top">
+      <div class="room__topLeft">
+        <a href="{% url 'home' %}">
+          <svg><!-- Back arrow icon --></svg>
+        </a>
+        <h3>{{room.name}}</h3>
+      </div>
+      {% if request.user == room.host %}
+      <div class="room__topRight">
+        <a href="{% url 'update-room' room.id %}">
+          <svg><!-- Settings icon --></svg>
+        </a>
+      </div>
+      {% endif %}
+    </div>
+    
+    <div class="room__conversation">
+      <div class="threads scroll">
+        {% for message in room_messages %}
+        <div class="thread">
+          <div class="thread__top">
+            <div class="thread__author">
+              <a href="{% url 'user-profile' message.user.id %}">
+                <div class="avatar avatar--small">
+                  <img src="{{message.user.avatar.url}}" />
+                </div>
+                <span>@{{message.user.username}}</span>
+              </a>
+              <span>{{message.created|timesince}} ago</span>
+            </div>
+          </div>
+          <div class="thread__details">
+            {{message.body}}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}</code></pre>
+
+            <h2>Search & Discovery System</h2>
+
+            <h3>Topic-Based Organization</h3>
+            <pre><code>// Topic Model & View Logic
+class Topic(models.Model):
+    name = models.CharField(max_length=200)
+    
+    def __str__(self):
+        return self.name
+
+# View with search functionality
+def home(request):
+    q = request.GET.get('q', '')
+    
+    rooms = Room.objects.filter(
+        Q(topic__name__icontains=q) |
+        Q(name__icontains=q) |
+        Q(description__icontains=q)
+    )
+    
+    topics = Topic.objects.all()[:5]
+    room_count = rooms.count()
+    
+    context = {
+        'rooms': rooms,
+        'topics': topics,
+        'room_count': room_count,
+    }
+    return render(request, 'base/home.html', context)</code></pre>
+
+            <h2>User Experience Features</h2>
+
+            <h3>Profile Customization</h3>
+            <ul>
+                <li><strong>Avatar Upload:</strong> Custom profile pictures with preview functionality</li>
+                <li><strong>Bio Management:</strong> Personalized user descriptions and information</li>
+                <li><strong>Activity Tracking:</strong> Comprehensive history of user interactions</li>
+                <li><strong>Event Hosting:</strong> Track and manage created events</li>
+                <li><strong>Participation History:</strong> Record of joined events and conversations</li>
+            </ul>
+
+            <h3>Interactive Elements</h3>
+            <pre><code>/* CSS Animations & Transitions */
+.btn {
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-menu {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease-in-out;
+}
+
+.dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}</code></pre>
+
+            <h2>Security & Data Management</h2>
+
+            <h3>Django Security Features</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Security Layer</th>
+                        <th>Implementation</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>CSRF Protection</td>
+                        <td>Django middleware & tokens</td>
+                        <td>Prevent cross-site request forgery</td>
+                    </tr>
+                    <tr>
+                        <td>User Authentication</td>
+                        <td>Django.contrib.auth</td>
+                        <td>Secure login/logout functionality</td>
+                    </tr>
+                    <tr>
+                        <td>Permission System</td>
+                        <td>Decorator-based access control</td>
+                        <td>Restrict edit/delete to room hosts</td>
+                    </tr>
+                    <tr>
+                        <td>Input Validation</td>
+                        <td>Django Forms & Models</td>
+                        <td>Sanitize and validate user input</td>
+                    </tr>
+                    <tr>
+                        <td>File Upload Security</td>
+                        <td>Restricted file types & sizes</td>
+                        <td>Safe avatar image uploads</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Development Highlights</h2>
+
+            <div class="highlight-box">
+                <strong>Hackathon Achievement:</strong>
+                <ul style="margin: 10px 0 0 0;">
+                    <li><strong>Rapid Development:</strong> Built complete platform within hackathon timeframe</li>
+                    <li><strong>Modern Design:</strong> Implemented contemporary UI/UX principles</li>
+                    <li><strong>Full-Stack Implementation:</strong> End-to-end Django application development</li>
+                    <li><strong>Real-time Features:</strong> Interactive messaging and activity systems</li>
+                    <li><strong>Responsive Design:</strong> Mobile-first approach with cross-device compatibility</li>
+                </ul>
+            </div>
+
+            <h2>Deployment & Configuration</h2>
+
+            <h3>Django Project Structure</h3>
+            <pre><code>evento/
+├── base/                 # Main Django app
+│   ├── models.py        # Data models (Room, Message, User)
+│   ├── views.py         # View controllers
+│   ├── urls.py          # URL routing
+│   ├── forms.py         # Django forms
+│   └── templates/       # HTML templates
+├── static/              # Static assets
+│   ├── styles/          # CSS stylesheets
+│   ├── js/              # JavaScript files
+│   └── images/          # Static images
+├── theme/               # Template prototypes
+├── templates/           # Global templates
+│   ├── main.html        # Base template
+│   └── navbar.html      # Navigation component
+└── manage.py            # Django management script</code></pre>
+
+            <h2>Future Enhancements</h2>
+
+            <h3>Planned Features</h3>
+            <ul>
+                <li><strong>Real-time Notifications:</strong> WebSocket integration for live updates</li>
+                <li><strong>Video Conferencing:</strong> Integrated video calls within event rooms</li>
+                <li><strong>Calendar Integration:</strong> Sync events with external calendar apps</li>
+                <li><strong>Analytics Dashboard:</strong> Event metrics and participation insights</li>
+                <li><strong>Mobile App:</strong> Native iOS and Android applications</li>
+                <li><strong>API Development:</strong> RESTful API for third-party integrations</li>
+                <li><strong>Advanced Permissions:</strong> Role-based access control for events</li>
+                <li><strong>Monetization Features:</strong> Paid events and premium features</li>
+            </ul>
+
+            <h2>Skills Demonstrated</h2>
+
+            <div class="highlight-box">
+                <strong>Technical Competencies:</strong>
+                <ul style="margin: 10px 0 0 0;">
+                    <li><strong>Full-Stack Development:</strong> Complete Django web application with frontend and backend</li>
+                    <li><strong>Database Design:</strong> Relational data modeling and ORM implementation</li>
+                    <li><strong>User Interface Design:</strong> Modern, responsive web interface development</li>
+                    <li><strong>JavaScript Programming:</strong> Interactive features and dynamic content management</li>
+                    <li><strong>Security Implementation:</strong> Web application security best practices</li>
+                    <li><strong>Rapid Prototyping:</strong> Quick development cycle suitable for hackathon environment</li>
+                    <li><strong>Version Control:</strong> Git workflow and collaborative development practices</li>
+                </ul>
+            </div>
+
+            <p>Evento represents a comprehensive event management solution built with modern web technologies, demonstrating proficiency in full-stack development, user experience design, and rapid application development within the constraints of a competitive hackathon environment.</p>
+        </div>
+    </div>
+</body>
+</html>

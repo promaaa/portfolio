@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenzies Write-up — Marc Duboc</title>
+    <style>
+        :root {
+            --bg: #fafafa;
+            --ink: #0a0a0a;
+            --muted: #666666;
+            --line: #e4e4e7;
+            --surface: #ffffff;
+            --radius: 8px;
+            --shadow: 0 1px 3px rgba(0,0,0,.1);
+        }
+        
+        [data-theme="dark"] {
+            --bg: #0f0f0f;
+            --ink: #fafafa;
+            --muted: #a1a1aa;
+            --line: #27272a;
+            --surface: #18181b;
+            --shadow: 0 1px 3px rgba(0,0,0,.3);
+        }
+        
+        * { box-sizing: border-box; }
+        
+        html, body {
+            margin: 0;
+            height: 100%;
+            color: var(--ink);
+            font: 16px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,Roboto,Arial;
+            background: var(--bg);
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: var(--muted);
+            text-decoration: none;
+            padding: 8px 0;
+        }
+        
+        .back-link:hover {
+            color: var(--ink);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin: 0 0 20px;
+            line-height: 1.2;
+        }
+        
+        .project-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+        }
+        
+        .project-links {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+        
+        .project-links a {
+            padding: 10px 20px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            text-decoration: none;
+            color: var(--ink);
+            transition: background 0.2s ease;
+        }
+        
+        .project-links a:hover {
+            background: var(--line);
+        }
+        
+        .content {
+            line-height: 1.7;
+        }
+        
+        .content h2 {
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .content h3 {
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        
+        .content p {
+            margin-bottom: 20px;
+            color: var(--muted);
+        }
+        
+        .content ul, .content ol {
+            margin-bottom: 20px;
+            padding-left: 20px;
+        }
+        
+        .content li {
+            margin-bottom: 8px;
+            color: var(--muted);
+        }
+        
+        .content code {
+            background: var(--surface);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--line);
+            font-family: ui-monospace, Menlo, Consolas, monospace;
+            font-size: 0.9em;
+        }
+        
+        .content pre {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: var(--radius);
+            border: 1px solid var(--line);
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        .content pre code {
+            background: none;
+            padding: 0;
+            border: none;
+        }
+        
+        .highlight-box {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: var(--radius);
+            border: 1px solid var(--line);
+            margin: 20px 0;
+        }
+        
+        .highlight-box strong {
+            color: var(--ink);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--line);
+        }
+        
+        th {
+            color: var(--ink);
+        }
+        
+        td {
+            color: var(--muted);
+        }
+        
+        .game-demo {
+            background: #0B2434;
+            padding: 20px;
+            border-radius: var(--radius);
+            margin: 30px 0;
+            color: white;
+            text-align: center;
+        }
+        
+        .dice-grid {
+            display: grid;
+            grid-template: auto auto / repeat(5, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+            justify-items: center;
+        }
+        
+        .dice-demo {
+            width: 40px;
+            height: 40px;
+            background: #F5F5F5;
+            color: #0B2434;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .dice-demo.held {
+            background: #59E391;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .feature-card {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: var(--radius);
+            border: 1px solid var(--line);
+        }
+        
+        .feature-card h4 {
+            margin: 0 0 10px;
+            color: var(--ink);
+            font-size: 1.1rem;
+        }
+        
+        .feature-card p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="portfolio_prom_aaa_restored_new_cards.html" class="back-link">← Back to Portfolio</a>
+        
+        <h1>Tenzies — React Dice Game</h1>
+        
+        <div class="project-links">
+            <a href="https://github.com/promaaa/tenzies" target="_blank" rel="noopener">View Code</a>
+        </div>
+        
+        <div class="content">
+            <h2>Game Overview</h2>
+            <p>Tenzies is a modern implementation of the classic dice game built with React. The objective is simple yet engaging: roll until all 10 dice show the same number. Players can hold dice between rolls to strategically achieve the winning condition.</p>
+            
+            <div class="game-demo">
+                <h3 style="color: white; margin-top: 0;">Game Interface</h3>
+                <p style="color: #ccc; font-size: 0.9rem;">Roll until all dice are the same. Click each die to freeze it at its current value between rolls.</p>
+                <div class="dice-grid">
+                    <div class="dice-demo held">3</div>
+                    <div class="dice-demo held">3</div>
+                    <div class="dice-demo held">3</div>
+                    <div class="dice-demo held">3</div>
+                    <div class="dice-demo">2</div>
+                    <div class="dice-demo held">3</div>
+                    <div class="dice-demo">4</div>
+                    <div class="dice-demo held">3</div>
+                    <div class="dice-demo held">3</div>
+                    <div class="dice-demo">1</div>
+                </div>
+                <p style="color: #59E391; font-size: 0.9rem;">Green dice are held • Click unheld dice to hold them</p>
+            </div>
+
+            <h2>Technical Implementation</h2>
+
+            <h3>⚛️ React Architecture</h3>
+            <ul>
+                <li><strong>Function Components:</strong> Modern React with hooks for state management</li>
+                <li><strong>useState Hook:</strong> Game state management for dice configuration</li>
+                <li><strong>useEffect Hook:</strong> Side effects for game completion and accessibility</li>
+                <li><strong>useRef Hook:</strong> DOM manipulation for focus management</li>
+                <li><strong>Component Composition:</strong> Modular design with reusable Die component</li>
+            </ul>
+
+            <h3>🛠️ Development Stack</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Technology</th>
+                        <th>Purpose</th>
+                        <th>Version/Features</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>React</td>
+                        <td>UI Framework</td>
+                        <td>Function components with hooks</td>
+                    </tr>
+                    <tr>
+                        <td>Vite</td>
+                        <td>Build Tool</td>
+                        <td>Fast development server and bundling</td>
+                    </tr>
+                    <tr>
+                        <td>Nanoid</td>
+                        <td>ID Generation</td>
+                        <td>Unique identifiers for dice objects</td>
+                    </tr>
+                    <tr>
+                        <td>React Confetti</td>
+                        <td>Visual Effects</td>
+                        <td>Celebration animation on win</td>
+                    </tr>
+                    <tr>
+                        <td>CSS Grid</td>
+                        <td>Layout System</td>
+                        <td>Responsive dice arrangement</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Core Game Logic</h2>
+
+            <h3>State Management</h3>
+            <pre><code>// Main game state with dice array
+const [dice, setDice] = useState(() => generateAllNewDice())
+
+// Game win condition logic
+const gameWon = dice.every(die => die.isHeld) &&
+    dice.every(die => die.value === dice[0].value)
+
+// Dice object structure
+function generateAllNewDice() {
+    return new Array(10)
+        .fill(0)
+        .map(() => ({
+            value: Math.ceil(Math.random() * 6),
+            isHeld: false,
+            id: nanoid()
+        }))
+}</code></pre>
+
+            <h3>Interactive Functions</h3>
+            <pre><code>// Dice rolling mechanism
+function rollDice() {
+    if (!gameWon) {
+        setDice(oldDice => oldDice.map(die =>
+            die.isHeld ?
+                die :
+                { ...die, value: Math.ceil(Math.random() * 6) }
+        ))
+    } else {
+        // Reset game for new round
+        setDice(generateAllNewDice())
+    }
+}
+
+// Hold/unhold dice toggle
+function hold(id) {
+    setDice(oldDice => oldDice.map(die =>
+        die.id === id ?
+            { ...die, isHeld: !die.isHeld } :
+            die
+    ))
+}</code></pre>
+
+            <h2>Component Architecture</h2>
+
+            <h3>Die Component</h3>
+            <pre><code>// Reusable Die component with accessibility
+export default function Die(props) {
+    const styles = {
+        backgroundColor: props.isHeld ? "#59E391" : "white"
+    }
+    
+    return (
+        &lt;button 
+            style={styles}
+            onClick={props.hold}
+            aria-pressed={props.isHeld}
+            aria-label={`Die with value ${props.value}, 
+            ${props.isHeld ? "held" : "not held"}`}
+        &gt;{props.value}&lt;/button&gt;
+    )
+}</code></pre>
+
+            <h3>Main App Component</h3>
+            <pre><code>// Dynamic dice rendering with React keys
+const diceElements = dice.map(dieObj => (
+    &lt;Die
+        key={dieObj.id}
+        value={dieObj.value}
+        isHeld={dieObj.isHeld}
+        hold={() => hold(dieObj.id)}
+    /&gt;
+))
+
+// Conditional rendering based on game state
+return (
+    &lt;main&gt;
+        {gameWon && &lt;Confetti /&gt;}
+        &lt;h1 className="title"&gt;Tenzies&lt;/h1&gt;
+        &lt;p className="instructions"&gt;
+            Roll until all dice are the same. 
+            Click each die to freeze it at its current value between rolls.
+        &lt;/p&gt;
+        &lt;div className="dice-container"&gt;
+            {diceElements}
+        &lt;/div&gt;
+        &lt;button ref={buttonRef} className="roll-dice" onClick={rollDice}&gt;
+            {gameWon ? "New Game" : "Roll"}
+        &lt;/button&gt;
+    &lt;/main&gt;
+)</code></pre>
+
+            <h2>User Experience Features</h2>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>🎯 Visual Feedback</h4>
+                    <p>Held dice turn green with smooth color transitions providing clear game state indication</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🎊 Win Celebration</h4>
+                    <p>Confetti animation using react-confetti library creates satisfying victory experience</p>
+                </div>
+                <div class="feature-card">
+                    <h4>♿ Accessibility</h4>
+                    <p>Screen reader support with aria-labels and live regions for inclusive gameplay</p>
+                </div>
+                <div class="feature-card">
+                    <h4>⌨️ Keyboard Navigation</h4>
+                    <p>Focus management ensures keyboard users can navigate and play effectively</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📱 Responsive Design</h4>
+                    <p>Mobile-friendly layout adapts to different screen sizes with CSS Grid</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🔄 State Persistence</h4>
+                    <p>Game state maintained during play with instant visual updates</p>
+                </div>
+            </div>
+
+            <h2>Styling & Design</h2>
+
+            <h3>Modern CSS Implementation</h3>
+            <pre><code>/* CSS Grid for dice layout */
+.dice-container {
+    display: grid;
+    grid-template: auto auto / repeat(5, 1fr);
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+/* Interactive button styling */
+.dice-container button {
+    height: 50px;
+    width: 50px;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    border: none;
+    background-color: white;
+    font-size: 1.75rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Main game button */
+button.roll-dice {
+    height: 50px;
+    padding: 6px 21px;
+    border: none;
+    border-radius: 6px;
+    background-color: #5035FF;
+    color: white;
+    font-size: 1.2rem;
+}</code></pre>
+
+            <h3>Color Scheme & Typography</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Element</th>
+                        <th>Color</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Background</td>
+                        <td>#0B2434 (Dark Blue)</td>
+                        <td>Creates focused gaming environment</td>
+                    </tr>
+                    <tr>
+                        <td>Game Board</td>
+                        <td>#F5F5F5 (Light Gray)</td>
+                        <td>Clean, neutral playing surface</td>
+                    </tr>
+                    <tr>
+                        <td>Dice (Default)</td>
+                        <td>White</td>
+                        <td>Clear, readable dice faces</td>
+                    </tr>
+                    <tr>
+                        <td>Dice (Held)</td>
+                        <td>#59E391 (Green)</td>
+                        <td>Visual indication of held state</td>
+                    </tr>
+                    <tr>
+                        <td>Roll Button</td>
+                        <td>#5035FF (Purple)</td>
+                        <td>Primary action emphasis</td>
+                    </tr>
+                    <tr>
+                        <td>Typography</td>
+                        <td>Karla Font Family</td>
+                        <td>Modern, readable sans-serif</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Accessibility Implementation</h2>
+
+            <h3>Screen Reader Support</h3>
+            <pre><code>// Comprehensive aria-label for each die
+aria-label={`Die with value ${props.value}, 
+${props.isHeld ? "held" : "not held"}`}
+
+// Button state indication
+aria-pressed={props.isHeld}
+
+// Live region for game state announcements
+&lt;div aria-live="polite" className="sr-only"&gt;
+    {gameWon && &lt;p&gt;Congratulations! You won! Press "New Game" to start again.&lt;/p&gt;}
+&lt;/div&gt;
+
+// Screen reader only text
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}</code></pre>
+
+            <h3>Focus Management</h3>
+            <pre><code>// Automatic focus on win for immediate feedback
+const buttonRef = useRef(null)
+
+useEffect(() => {
+    if (gameWon) {
+        buttonRef.current.focus()
+    }
+}, [gameWon])</code></pre>
+
+            <h2>Build Configuration</h2>
+
+            <h3>Vite Setup</h3>
+            <pre><code>// vite.config.js - Modern build tool configuration
+import {defineConfig} from "vite"
+import react from "@vitejs/plugin-react"
+
+export default defineConfig({
+    plugins: [
+        react()
+    ]
+})
+
+// index.jsx - React 18 rendering
+import ReactDOM from "react-dom/client"
+import App from "./App"
+
+ReactDOM
+    .createRoot(document.getElementById("root"))
+    .render(&lt;App /&gt;)</code></pre>
+
+            <h3>Project Structure</h3>
+            <pre><code>tenzies/
+├── index.html           # Entry HTML file
+├── index.jsx            # React root rendering
+├── App.jsx              # Main game component
+├── Die.jsx              # Individual die component
+├── index.css            # Global styles
+├── vite.config.js       # Build configuration
+└── package.json         # Dependencies and scripts</code></pre>
+
+            <h2>Game Mechanics</h2>
+
+            <h3>Rules Implementation</h3>
+            <div class="highlight-box">
+                <strong>Game Flow:</strong>
+                <ol style="margin: 10px 0 0 0; color: var(--muted);">
+                    <li>Start with 10 random dice showing values 1-6</li>
+                    <li>Click any die to "hold" it (turns green)</li>
+                    <li>Click "Roll" to reroll all unheld dice</li>
+                    <li>Continue holding dice and rolling until all 10 dice show the same number</li>
+                    <li>Win celebration triggers with confetti animation</li>
+                    <li>Click "New Game" to reset and play again</li>
+                </ol>
+            </div>
+
+            <h3>Win Condition Logic</h3>
+            <pre><code>// Two-part win condition check
+const gameWon = dice.every(die => die.isHeld) &&
+    dice.every(die => die.value === dice[0].value)
+
+// Part 1: All dice must be held (player's intentional choice)
+dice.every(die => die.isHeld)
+
+// Part 2: All dice must show the same value
+dice.every(die => die.value === dice[0].value)</code></pre>
+
+            <h2>Performance Optimizations</h2>
+
+            <h3>React Best Practices</h3>
+            <ul>
+                <li><strong>Key Props:</strong> Unique IDs using nanoid prevent unnecessary re-renders</li>
+                <li><strong>Functional Updates:</strong> State updates use functional form for consistency</li>
+                <li><strong>Component Memoization:</strong> Die components only re-render when props change</li>
+                <li><strong>Lazy Initial State:</strong> useState with function to avoid repeated calculations</li>
+                <li><strong>Event Handler Optimization:</strong> Inline functions passed efficiently to children</li>
+            </ul>
+
+            <h3>Bundle Optimization</h3>
+            <pre><code>// Vite provides automatic optimizations:
+// - Fast HMR (Hot Module Replacement)
+// - Tree shaking for smaller bundles
+// - Modern ES modules support
+// - Automatic CSS preprocessing
+// - Development server with instant updates</code></pre>
+
+            <h2>Development Features</h2>
+
+            <div class="highlight-box">
+                <strong>Developer Experience:</strong>
+                <ul style="margin: 10px 0 0 0;">
+                    <li><strong>Fast Refresh:</strong> Vite's HMR for instant development feedback</li>
+                    <li><strong>TypeScript Ready:</strong> Project structure supports easy TS migration</li>
+                    <li><strong>Modern JavaScript:</strong> ES6+ features with automatic transpilation</li>
+                    <li><strong>Development Tools:</strong> React DevTools compatibility for state inspection</li>
+                    <li><strong>CSS Hot Reload:</strong> Instant style updates without page refresh</li>
+                </ul>
+            </div>
+
+            <h2>Potential Enhancements</h2>
+
+            <h3>Feature Expansion Ideas</h3>
+            <ul>
+                <li><strong>Score Tracking:</strong> Count rolls to completion and high score storage</li>
+                <li><strong>Timer Mode:</strong> Speed challenges with countdown timers</li>
+                <li><strong>Difficulty Levels:</strong> Variable dice count (6, 8, 10, 12 dice options)</li>
+                <li><strong>Animations:</strong> Dice rolling animations with CSS or Framer Motion</li>
+                <li><strong>Sound Effects:</strong> Audio feedback for rolls, holds, and wins</li>
+                <li><strong>Multiplayer:</strong> Real-time multiplayer with WebSockets</li>
+                <li><strong>Statistics:</strong> Game analytics and progress tracking</li>
+                <li><strong>Themes:</strong> Customizable color schemes and visual styles</li>
+            </ul>
+
+            <h3>Technical Improvements</h3>
+            <ul>
+                <li><strong>TypeScript Migration:</strong> Type safety for better development experience</li>
+                <li><strong>State Management:</strong> Redux or Zustand for complex state scenarios</li>
+                <li><strong>Testing Suite:</strong> Unit tests with Jest and React Testing Library</li>
+                <li><strong>Performance Monitoring:</strong> Web Vitals tracking and optimization</li>
+                <li><strong>PWA Features:</strong> Service worker and offline capability</li>
+                <li><strong>Internationalization:</strong> Multi-language support with react-i18next</li>
+            </ul>
+
+            <h2>Skills Demonstrated</h2>
+
+            <div class="highlight-box">
+                <strong>Technical Competencies:</strong>
+                <ul style="margin: 10px 0 0 0;">
+                    <li><strong>React Development:</strong> Modern hooks-based component architecture</li>
+                    <li><strong>State Management:</strong> Complex state updates with immutable patterns</li>
+                    <li><strong>JavaScript Proficiency:</strong> ES6+ features, array methods, and functional programming</li>
+                    <li><strong>CSS Grid & Flexbox:</strong> Modern layout techniques for responsive design</li>
+                    <li><strong>Accessibility:</strong> WCAG compliance with screen reader support</li>
+                    <li><strong>Build Tools:</strong> Modern development workflow with Vite</li>
+                    <li><strong>User Experience:</strong> Intuitive interface design and interaction patterns</li>
+                    <li><strong>Performance:</strong> Optimized rendering and efficient state updates</li>
+                </ul>
+            </div>
+
+            <p>Tenzies showcases modern React development practices, combining engaging gameplay with technical excellence. The project demonstrates proficiency in component-based architecture, state management, accessibility implementation, and modern JavaScript development workflows.</p>
+        </div>
+    </div>
+</body>
+</html>

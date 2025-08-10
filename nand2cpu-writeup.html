@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>nand2cpu Project Write-up — Marc Duboc</title>
+    <style>
+        :root {
+            --bg: #fafafa;
+            --ink: #0a0a0a;
+            --muted: #666666;
+            --line: #e4e4e7;
+            --surface: #ffffff;
+            --radius: 8px;
+            --shadow: 0 1px 3px rgba(0,0,0,.1);
+        }
+        
+        [data-theme="dark"] {
+            --bg: #0f0f0f;
+            --ink: #fafafa;
+            --muted: #a1a1aa;
+            --line: #27272a;
+            --surface: #18181b;
+            --shadow: 0 1px 3px rgba(0,0,0,.3);
+        }
+        
+        * { box-sizing: border-box; }
+        
+        html, body {
+            margin: 0;
+            height: 100%;
+            color: var(--ink);
+            font: 16px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,Roboto,Arial;
+            background: var(--bg);
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: var(--muted);
+            text-decoration: none;
+            padding: 8px 0;
+        }
+        
+        .back-link:hover {
+            color: var(--ink);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin: 0 0 20px;
+            line-height: 1.2;
+        }
+        
+        .project-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+        }
+        
+        .project-links {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+        
+        .project-links a {
+            padding: 10px 20px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            text-decoration: none;
+            color: var(--ink);
+            transition: background 0.2s ease;
+        }
+        
+        .project-links a:hover {
+            background: var(--line);
+        }
+        
+        .content {
+            line-height: 1.7;
+        }
+        
+        .content h2 {
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .content h3 {
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        
+        .content p {
+            margin-bottom: 20px;
+            color: var(--muted);
+        }
+        
+        .content ul, .content ol {
+            margin-bottom: 20px;
+            padding-left: 20px;
+        }
+        
+        .content li {
+            margin-bottom: 8px;
+            color: var(--muted);
+        }
+        
+        .content code {
+            background: var(--surface);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--line);
+            font-family: ui-monospace, Menlo, Consolas, monospace;
+            font-size: 0.9em;
+        }
+        
+        .content pre {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: var(--radius);
+            border: 1px solid var(--line);
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        .content pre code {
+            background: none;
+            padding: 0;
+            border: none;
+        }
+        
+        .highlight-box {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: var(--radius);
+            border: 1px solid var(--line);
+            margin: 20px 0;
+        }
+        
+        .highlight-box strong {
+            color: var(--ink);
+        }
+        
+        .video-embed {
+            margin: 30px 0;
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+        }
+        
+        .video-embed iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: var(--radius);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="portfolio_prom_aaa_restored_new_cards.html" class="back-link">← Back to Portfolio</a>
+        
+        <h1>nand2cpu — Building a CPU from NAND Gates</h1>
+        
+        <div class="project-links">
+            <a href="https://www.youtube.com/watch?v=wIBkvQ6MfKQ" target="_blank" rel="noopener">Watch Demo</a>
+            <a href="https://github.com/promaaa/nand2cpu" target="_blank" rel="noopener">View Code</a>
+        </div>
+        
+        <div class="video-embed">
+            <iframe src="https://www.youtube.com/embed/wIBkvQ6MfKQ" 
+                    title="nand2cpu — Building a CPU from NAND Gates" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen></iframe>
+        </div>
+        
+        <div class="content">
+            <h2>Overview</h2>
+            <p>This repository contains the complete source code for <strong>Part 1</strong> of the "From Bits to Chip" series. This first episode demonstrates how to build your first CPU starting from a single NAND gate.</p>
+            
+            <div class="highlight-box">
+                <strong>Episode Goal:</strong> Understand how a single logic gate (NAND) can eventually calculate 7 + 8 = 15 through progressive building blocks.
+            </div>
+
+            <h2>Key Features</h2>
+            <ul>
+                <li><strong>NAND-only Implementation:</strong> Every component built from single NAND gate primitive</li>
+                <li><strong>Progressive Building:</strong> From logic gates → half adder → full adder → 8-bit ALU → 16-bit ALU</li>
+                <li><strong>Complete Toolchain:</strong> Verilog RTL, testbenches, Python assembler, and build automation</li>
+                <li><strong>Educational Focus:</strong> Clear progression following the video episode structure</li>
+                <li><strong>Hands-on Validation:</strong> Live testing with calculator verification (7 + 8 = 15)</li>
+                <li><strong>Open Source:</strong> All code and documentation freely available on GitHub</li>
+            </ul>
+
+            <h2>Building Blocks</h2>
+            <p>The project demonstrates how complex digital systems emerge from simple components:</p>
+
+            <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--line);">
+                        <th style="text-align: left; padding: 10px; color: var(--ink);">Component</th>
+                        <th style="text-align: left; padding: 10px; color: var(--ink);">Description</th>
+                        <th style="text-align: left; padding: 10px; color: var(--ink);">NAND Gates</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid var(--line);">
+                        <td style="padding: 10px; color: var(--muted);"><code>nand_gate.v</code></td>
+                        <td style="padding: 10px; color: var(--muted);">Universal primitive</td>
+                        <td style="padding: 10px; color: var(--muted);">1</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--line);">
+                        <td style="padding: 10px; color: var(--muted);"><code>and_gate.v</code></td>
+                        <td style="padding: 10px; color: var(--muted);">4-bit AND gate</td>
+                        <td style="padding: 10px; color: var(--muted);">2</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--line);">
+                        <td style="padding: 10px; color: var(--muted);"><code>or_gate.v</code></td>
+                        <td style="padding: 10px; color: var(--muted);">OR gate</td>
+                        <td style="padding: 10px; color: var(--muted);">3</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--line);">
+                        <td style="padding: 10px; color: var(--muted);"><code>alu8.v</code></td>
+                        <td style="padding: 10px; color: var(--muted);">8-bit ALU</td>
+                        <td style="padding: 10px; color: var(--muted);">~200</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; color: var(--muted);"><code>alu16.v</code></td>
+                        <td style="padding: 10px; color: var(--muted);">16-bit ALU</td>
+                        <td style="padding: 10px; color: var(--muted);">~400</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>The 7 + 8 = 15 Demonstration</h2>
+            <p>This repository implements the exact demonstration from the video:</p>
+
+            <pre><code>// From add7_plus_8.v testbench
+initial begin
+    A = 8'b00000111;  // 7 in binary
+    B = 8'b00001000;  // 8 in binary
+    op = 3'b000;      // ADD operation
+    
+    #10;
+    
+    // Expected: Result = 15 (0b00001111)
+    $display("7 + 8 = %d", Result);
+end</code></pre>
+
+            <div class="highlight-box">
+                <strong>Visual confirmation:</strong> The simulator shows the exact same result as a calculator!
+            </div>
+
+            <h2>ALU Architecture</h2>
+            
+            <h3>8-bit ALU (Core of the episode)</h3>
+            <ul>
+                <li><strong>Operations:</strong> ADD, SUB, AND, OR, XOR, SHL, SHR, NOT</li>
+                <li><strong>Construction:</strong> Half-adder → Full-adder → 8-bit chain</li>
+                <li><strong>Flags:</strong> Zero, Carry, Overflow detection</li>
+                <li><strong>Latency:</strong> 0.8ns (as shown in video benchmarks)</li>
+            </ul>
+
+            <h3>16-bit ALU (Scaling demonstration)</h3>
+            <ul>
+                <li><strong>Architecture:</strong> Two chained 8-bit ALUs</li>
+                <li><strong>Carry propagation:</strong> Between upper and lower bytes</li>
+                <li><strong>Latency:</strong> 1.6ns (2× scaling challenge discussed)</li>
+                <li><strong>Pipelining:</strong> Concepts introduced for performance optimization</li>
+            </ul>
+
+            <h2>Python Assembler Tool</h2>
+            <p>The Python assembler demonstrated in the episode converts assembly instructions into 16-bit machine code:</p>
+
+            <pre><code># Featured in video: 3-operand instructions
+ADD R0, R1, R2  ; R0 = R1 + R2
+SUB R3, R4, R5  ; R3 = R4 - R5  
+AND R6, R7, R0  ; R6 = R7 & R0
+
+# 2-operand instructions
+SHL R1, R2      ; R1 = R2 << 1
+NOT R3, R4      ; R3 = ~R4</pre></code>
+
+            <h3>16-bit Instruction Format</h3>
+            <pre><code>[15:13] [12:10] [9:7] [6:4] [3:0]
+Opcode    Rd    Rs1   Rs2  Unused</code></pre>
+
+            <p><strong>Parser:</strong> Tokenizes mnemonics and operands, validates syntax<br>
+            <strong>Encoder:</strong> Maps to 4-bit opcodes, packs into 16-bit words</p>
+
+            <h2>Getting Started</h2>
+            
+            <h3>Prerequisites</h3>
+            <pre><code># Ubuntu/Debian
+sudo apt update
+sudo apt install iverilog python3 make
+
+# macOS
+brew install icarus-verilog python3</code></pre>
+
+            <h3>Basic Usage</h3>
+            <pre><code># Clone repository
+git clone https://github.com/promaaa/nand2cpu.git
+cd nand2cpu
+
+# Reproduce the video demonstration: 7 + 8 = 15
+make sim-add7_plus_8
+
+# Test the complete 16-bit ALU
+make sim-tb_alu16
+
+# Test individual components
+make sim-tb_nand_gate      # Test NAND gate primitive
+
+# Test the Python assembler (featured in episode)
+make assembler
+hexdump -C tools/assembler/test.bin</code></pre>
+
+            <h2>Testing & Validation</h2>
+            
+            <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--line);">
+                        <th style="text-align: left; padding: 10px; color: var(--ink);">Test</th>
+                        <th style="text-align: left; padding: 10px; color: var(--ink);">Episode Focus</th>
+                        <th style="text-align: left; padding: 10px; color: var(--ink);">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid var(--line);">
+                        <td style="padding: 10px; color: var(--muted);"><code>add7_plus_8.v</code></td>
+                        <td style="padding: 10px; color: var(--muted);">Main demonstration</td>
+                        <td style="padding: 10px; color: green;">✅</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--line);">
+                        <td style="padding: 10px; color: var(--muted);"><code>tb_nand_gate.v</code></td>
+                        <td style="padding: 10px; color: var(--muted);">Foundation primitive</td>
+                        <td style="padding: 10px; color: green;">✅</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--line);">
+                        <td style="padding: 10px; color: var(--muted);"><code>tb_alu16.v</code></td>
+                        <td style="padding: 10px; color: var(--muted);">16-bit scaling</td>
+                        <td style="padding: 10px; color: green;">✅</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; color: var(--muted);">Python Assembler</td>
+                        <td style="padding: 10px; color: var(--muted);">Tool demonstration</td>
+                        <td style="padding: 10px; color: green;">✅</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box">
+                <strong>Educational Impact:</strong> This project follows the methodology of the renowned Nand2Tetris course, building complex systems from first principles. It bridges the gap between theoretical computer architecture and practical hardware implementation.
+            </div>
+        </div>
+    </div>
+</body>
+</html>
