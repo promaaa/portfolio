@@ -166,7 +166,7 @@
     </div>
   <!-- KPI grid removed per request -->
     <figure>
-  <img src="pictures_autonomous/robot_overview.png" alt="Robot overview" loading="lazy" decoding="async" class="img-zoomable" />
+  <img src="pictures/robot_overview.png" alt="Robot overview" loading="lazy" decoding="async" class="img-zoomable" />
       <figcaption>Figure 1 — Autonomous robot prototype overview.</figcaption>
     </figure>
     
@@ -185,11 +185,11 @@
 
   <h2 id="architecture-overview">3. Architecture Overview</h2>
     <figure>
-  <img src="pictures_autonomous/prototype1_architecture.png" alt="Prototype 1 architecture" loading="lazy" decoding="async" class="img-zoomable" />
+  <img src="pictures/prototype1_architecture.png" alt="Prototype 1 architecture" loading="lazy" decoding="async" class="img-zoomable" />
       <figcaption>Figure 2 — Prototype 1 architecture (servos, open loop speed).</figcaption>
     </figure>
     <figure>
-  <img src="pictures_autonomous/prototype2_architecture.png" alt="Prototype 2 architecture" loading="lazy" decoding="async" class="img-zoomable" />
+  <img src="pictures/prototype2_architecture.png" alt="Prototype 2 architecture" loading="lazy" decoding="async" class="img-zoomable" />
       <figcaption>Figure 3 — Prototype 2 architecture (DC motors + encoders + cascaded PI).</figcaption>
     </figure>
   <p class="fig-note"><strong>Figure insight (Fig.2–3)</strong> Prototype&nbsp;1 applies the guidance law directly to servos with no wheel‑speed feedback → high sensitivity to servo asymmetry and battery voltage. Prototype&nbsp;2 adds an inner PI speed loop (encoders) that linearises actuation so the guidance layer manipulates predictable differential speeds, reducing surface‑dependent response variance.</p>
@@ -203,7 +203,7 @@
       <li>Motion capture (ground truth mm‑level)</li>
     </ul>
     <figure>
-  <img src="pictures_autonomous/prototype1_hardware.png" alt="Prototype 1 hardware" loading="lazy" decoding="async" class="img-zoomable" />
+  <img src="pictures/prototype1_hardware.png" alt="Prototype 1 hardware" loading="lazy" decoding="async" class="img-zoomable" />
       <figcaption>Figure 4 — Prototype 1 hardware.</figcaption>
     </figure>
     
@@ -212,11 +212,11 @@
   <p>Processing chain: acquisition → HSV color mask → largest blob → centroid. Horizontal pixel offset becomes bearing error <code>ε</code>. Small‑angle approximation:</p>
   <div class="eq">$$ \varepsilon \approx \frac{x_{px}-c_x}{f_x} $$<span class="label">Eq. 1 — Bearing error approximation</span></div>
     <figure>
-  <img src="pictures_autonomous/optical_guidance_diagram.png" alt="Optical guidance diagram" loading="lazy" decoding="async" class="img-zoomable" />
+  <img src="pictures/optical_guidance_diagram.png" alt="Optical guidance diagram" loading="lazy" decoding="async" class="img-zoomable" />
       <figcaption>Figure 5 — Optical guidance flow.</figcaption>
     </figure>
     <figure>
-  <img src="pictures_autonomous/camera_principle.png" alt="Camera principle" loading="lazy" decoding="async" class="img-zoomable" />
+  <img src="pictures/camera_principle.png" alt="Camera principle" loading="lazy" decoding="async" class="img-zoomable" />
       <figcaption>Figure 6 — Camera geometry.</figcaption>
     </figure>
   <p class="fig-note"><strong>Figure insight (Fig.5–6)</strong> The vision pipeline keeps only one blob centroid (robust vs clutter). The small‑angle approximation (Eq.1) maps horizontal pixel offset to a near‑linear bearing error—adequate bandwidth without heavy intrinsic calibration at this stage.</p>
@@ -227,7 +227,7 @@
   <div class="eq">$$ \Omega = \frac{R}{L}(\Omega_d - \Omega_g) $$<span class="label">Eq. 2 — Differential drive relation</span></div>
   <p>Used for preliminary gain sweeps (trajectory envelopes & steady‑state error sensitivity).</p>
     <figure>
-  <img src="pictures_autonomous/kinematic_simulation.png" alt="Kinematic simulation" loading="lazy" decoding="async" class="img-zoomable" />
+  <img src="pictures/kinematic_simulation.png" alt="Kinematic simulation" loading="lazy" decoding="async" class="img-zoomable" />
       <figcaption>Figure 7 — Simulated trajectory under P guidance.</figcaption>
     </figure>
     
@@ -237,11 +237,11 @@
   <div class="eq">$$ \Omega_{\text{cmd D}} = \Omega_0 + K_p\,\varepsilon \qquad \Omega_{\text{cmd G}} = \Omega_0 - K_p\,\varepsilon $$<span class="label">Eq. 3 — Proportional guidance</span></div>
   <p>Simulation looked stable → direct deployment.</p>
     <figure>
-  <img src="pictures_autonomous/p_controller_theory.png" alt="P controller theory" loading="lazy" decoding="async" class="img-zoomable" />
+  <img src="pictures/p_controller_theory.png" alt="P controller theory" loading="lazy" decoding="async" class="img-zoomable" />
       <figcaption>Figure 8 — P controller (theory).</figcaption>
     </figure>
     <figure>
-  <img src="pictures_autonomous/p_controller_experiment.png" alt="P controller experiment" loading="lazy" decoding="async" class="img-zoomable" />
+  <img src="pictures/p_controller_experiment.png" alt="P controller experiment" loading="lazy" decoding="async" class="img-zoomable" />
       <figcaption>Figure 9 — P controller (experiment) — oscillations from servo asymmetry.</figcaption>
     </figure>
   <p class="fig-note"><strong>Figure insight (Fig.8–9)</strong> Sustained oscillation stems from left/right speed imbalance: the proportional correction repeatedly overshoots because the effective wheel gains differ, injecting a persistent bias. Remedy: add integral action (slow compensation) or redesign actuation.</p>
@@ -249,16 +249,16 @@
     <h3>Limitations</h3>
     <div class="two-up">
       <figure>
-  <img src="pictures_autonomous/servo_asymmetry_left.png" alt="Servo asymmetry left" loading="lazy" decoding="async" class="img-zoomable" />
+  <img src="pictures/servo_asymmetry_left.png" alt="Servo asymmetry left" loading="lazy" decoding="async" class="img-zoomable" />
     <figcaption>Figure 10a — Raw PWM step responses: left vs right servo actual speed (asymmetry visible).</figcaption>
       </figure>
       <figure>
-  <img src="pictures_autonomous/servo_asymmetry_right.png" alt="Servo asymmetry right" loading="lazy" decoding="async" class="img-zoomable" />
+  <img src="pictures/servo_asymmetry_right.png" alt="Servo asymmetry right" loading="lazy" decoding="async" class="img-zoomable" />
     <figcaption>Figure 10b — Linearised (piecewise) speed model used inside simulation.</figcaption>
       </figure>
     </div>
     <figure>
-  <img src="pictures_autonomous/experimental_setup.png" alt="Experimental setup" loading="lazy" decoding="async" class="img-zoomable" />
+  <img src="pictures/experimental_setup.png" alt="Experimental setup" loading="lazy" decoding="async" class="img-zoomable" />
       <figcaption>Figure 11 — Instrumented test setup.</figcaption>
     </figure>
   <p class="fig-note"><strong>Figure insight (Fig.10–11)</strong> (10a) Empirical PWM→speed step responses show right servo higher effective gain (+12–15%) and a wider dead zone on the left. (10b) A simplified piecewise‑linear mapping substitutes the raw non‑linear curves inside simulation to preserve bias magnitude while enabling faster analytical gain sweeps. (11) Instrumented rig ensured repeatable capture of the asymmetric dynamics. This structural mismatch drives steady‑state offset under pure P; integral cancels it but increases time in saturation.</p>
@@ -269,20 +269,20 @@
   <div class="eq">$$ C(p)=K_p + \frac{K_i}{p} $$<span class="label">Eq. 4 — PI controller form</span></div>
   <p>Integral removed residual error at cost of hitting servo speed ceiling.</p>
     <figure>
-  <img src="pictures_autonomous/pi_theory.png" alt="PI theory" loading="lazy" decoding="async" class="img-zoomable" />
+  <img src="pictures/pi_theory.png" alt="PI theory" loading="lazy" decoding="async" class="img-zoomable" />
       <figcaption>Figure 12 — PI theoretical trajectory.</figcaption>
     </figure>
     <figure>
-  <img src="pictures_autonomous/p_vs_pi_experiment.png" alt="P vs PI experiment" loading="lazy" decoding="async" class="img-zoomable" />
+  <img src="pictures/p_vs_pi_experiment.png" alt="P vs PI experiment" loading="lazy" decoding="async" class="img-zoomable" />
       <figcaption>Figure 13 — P vs PI experimental comparison.</figcaption>
     </figure>
     <div class="two-up">
       <figure>
-  <img src="pictures_autonomous/static_ball_comparison.png" alt="Static ball comparison" loading="lazy" decoding="async" class="img-zoomable" />
+  <img src="pictures/static_ball_comparison.png" alt="Static ball comparison" loading="lazy" decoding="async" class="img-zoomable" />
         <figcaption>Figure 14 — Static ball: P vs PI vs theory.</figcaption>
       </figure>
       <figure>
-  <img src="pictures_autonomous/moving_ball_comparison.png" alt="Moving ball comparison" loading="lazy" decoding="async" class="img-zoomable" />
+  <img src="pictures/moving_ball_comparison.png" alt="Moving ball comparison" loading="lazy" decoding="async" class="img-zoomable" />
         <figcaption>Figure 15 — Moving ball comparison.</figcaption>
       </figure>
     </div>
@@ -299,10 +299,10 @@
       <li>H‑bridge (PWM current delivery)</li>
     </ul>
     <div class="two-up">
-  <figure><img src="pictures_autonomous/dc_motor_gearbox.png" alt="DC motor" loading="lazy" decoding="async" class="img-zoomable" /><figcaption>Figure 16 — DC motor + gearbox.</figcaption></figure>
-  <figure><img src="pictures_autonomous/incremental_encoders.png" alt="Encoders" loading="lazy" decoding="async" class="img-zoomable" /><figcaption>Figure 17 — Incremental encoders.</figcaption></figure>
+  <figure><img src="pictures/dc_motor_gearbox.png" alt="DC motor" loading="lazy" decoding="async" class="img-zoomable" /><figcaption>Figure 16 — DC motor + gearbox.</figcaption></figure>
+  <figure><img src="pictures/incremental_encoders.png" alt="Encoders" loading="lazy" decoding="async" class="img-zoomable" /><figcaption>Figure 17 — Incremental encoders.</figcaption></figure>
     </div>
-  <figure><img src="pictures_autonomous/h_bridge_driver.png" alt="H-bridge driver" loading="lazy" decoding="async" class="img-zoomable" /><figcaption>Figure 18 — H‑bridge driver.</figcaption></figure>
+  <figure><img src="pictures/h_bridge_driver.png" alt="H-bridge driver" loading="lazy" decoding="async" class="img-zoomable" /><figcaption>Figure 18 — H‑bridge driver.</figcaption></figure>
     
     <p>Result: guidance loop outputs target differential speeds instead of raw PWM → portability to battery & surface variation.</p>
 
@@ -310,23 +310,23 @@
   <p>Step response identification → first order model:</p>
   <div class="eq">$$ G(p)=\frac{K_m}{1+T_0 p}, \quad K_m=4,\;T_0=35\,\text{ms} $$<span class="label">Eq. 5 — Identified motor model</span></div>
   <p>Parameters via least squares fit.</p>
-  <figure><img src="pictures_autonomous/measured_vs_model_speed.png" alt="Measured vs model speed" loading="lazy" decoding="async" class="img-zoomable" /><figcaption>Figure 19 — Model fit vs measured.</figcaption></figure>
+  <figure><img src="pictures/measured_vs_model_speed.png" alt="Measured vs model speed" loading="lazy" decoding="async" class="img-zoomable" /><figcaption>Figure 19 — Model fit vs measured.</figcaption></figure>
   <p class="fig-note"><strong>Figure insight (Fig.19)</strong> Residual error max &lt; 5% over the operating band → first‑order model sufficient for the speed loop whose goal is mainly slow disturbance rejection (voltage, friction). No immediate derivative term needed.</p>
 
   <h3>5.4 Speed Loop PI</h3>
   <p>Speed loop tuning in PySyLic:</p>
   <div class="eq">$$ K_p=44, \qquad T_i=0.17\,\text{s} $$<span class="label">Eq. 6 — Speed PI parameters</span></div>
   <p>Target margins (30&nbsp;dB / 45°) surpassed by measured (∞ / 66°) → strong robustness.</p>
-  <figure><img src="pictures_autonomous/pi_tuning_pysylic.png" alt="PI tuning" loading="lazy" decoding="async" class="img-zoomable" /><figcaption>Figure 20 — PI tuning workspace.</figcaption></figure>
+  <figure><img src="pictures/pi_tuning_pysylic.png" alt="PI tuning" loading="lazy" decoding="async" class="img-zoomable" /><figcaption>Figure 20 — PI tuning workspace.</figcaption></figure>
   <p class="fig-note"><strong>Figure insight (Fig.20)</strong> Design tool reports 66° phase margin (> target 45°) giving robustness to friction variability + vision latency (tens of ms). Infinite gain margin (no crossover) signals low risk of destabilising noise amplification.</p>
     <p>Inner loop shields outer guidance from motor & voltage variation.</p>
 
   <h3>5.5 Comparative Results</h3>
     <div class="two-up">
-  <figure><img src="pictures_autonomous/p1_vs_p2_trajectories.png" alt="P1 vs P2 trajectories" loading="lazy" decoding="async" class="img-zoomable" /><figcaption>Figure 21 — P1 vs P2 trajectories.</figcaption></figure>
-  <figure><img src="pictures_autonomous/static_ball_nonlinear.png" alt="Static ball nonlinear" loading="lazy" decoding="async" class="img-zoomable" /><figcaption>Figure 22 — Static ball: nonlinear theory vs experiment.</figcaption></figure>
+  <figure><img src="pictures/p1_vs_p2_trajectories.png" alt="P1 vs P2 trajectories" loading="lazy" decoding="async" class="img-zoomable" /><figcaption>Figure 21 — P1 vs P2 trajectories.</figcaption></figure>
+  <figure><img src="pictures/static_ball_nonlinear.png" alt="Static ball nonlinear" loading="lazy" decoding="async" class="img-zoomable" /><figcaption>Figure 22 — Static ball: nonlinear theory vs experiment.</figcaption></figure>
     </div>
-  <figure><img src="pictures_autonomous/moving_ball_nonlinear.png" alt="Moving ball nonlinear" loading="lazy" decoding="async" class="img-zoomable" /><figcaption>Figure 23 — Moving ball: nonlinear theory vs experiment.</figcaption></figure>
+  <figure><img src="pictures/moving_ball_nonlinear.png" alt="Moving ball nonlinear" loading="lazy" decoding="async" class="img-zoomable" /><figcaption>Figure 23 — Moving ball: nonlinear theory vs experiment.</figcaption></figure>
   <p class="fig-note"><strong>Figure insight (Fig.21–23)</strong> Prototype&nbsp;2 both shortens capture time and eliminates terminal oscillation. Remaining model vs experiment gaps come mainly from perception latency + speed discretisation; qualitative dynamics (damping, low overshoot) match, validating the model → controller → hardware pipeline.</p>
     <p>Bottleneck migrated: now vision frame rate & lighting noise, not actuation. Classic maturation signal.</p>
 
