@@ -180,12 +180,12 @@
       <h2>Best Projects</h2>
       <div class="grid">
         <!-- Ball-Collecting Robots -->
-        <article class="card col-12 col-6" id="ball-collecting-robots">
+  <article class="card col-12 col-6" id="ball-collecting-robots" role="link" aria-label="Open ball-collecting robots write-up" tabindex="0" data-href="ball-collecting-writeup.html">
           <div class="thumb">
             <img src="pictures/ball-collecting.jpg" alt="Ball-Collecting Robots" onerror="this.parentNode.textContent='(poster missing)';this.remove();">
           </div>
-          <h3>ball-collecting robots — Hardware + Software + Mechatronics</h3>
-          <p class="blurb">Embedded control + mechanics + on-device logic. Short field demo that stands out.</p>
+          <h3>ball-collecting robots — autonomous guidance & PI control</h3>
+          <p class="blurb">Optical bearing guidance + first‑order motor ID + cascaded PI speed & heading loop across two hardware iterations.</p>
           <div class="tags"><span class="tag">Mechatronics</span><span class="tag">Embedded</span><span class="tag">PID</span><span class="tag">C/C++</span></div>
           <div class="actions"><a href="ball-collecting-writeup.html">Write‑up ↗</a><a href="https://github.com/promaaa/ball-collecting-robots" target="_blank" rel="noopener">Code ↗</a></div>
         </article>
@@ -449,6 +449,18 @@
       toggle.innerHTML = theme === 'dark' ? sunSvg : moonSvg;
       toggle.title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
     }
+  })();
+  // Make ball-collecting robots card clickable (excluding inner action links)
+  (function(){
+    const card = document.getElementById('ball-collecting-robots');
+    if(!card) return;
+    // Style tweak
+    const style = document.createElement('style');
+    style.textContent = `#ball-collecting-robots{cursor:pointer}#ball-collecting-robots .actions{cursor:auto}`;
+    document.head.appendChild(style);
+    function go(){ window.location = card.getAttribute('data-href'); }
+    card.addEventListener('click', (e)=>{ if(e.target.closest('.actions')) return; go(); });
+    card.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { if(e.target.closest('.actions')) return; e.preventDefault(); go(); }});
   })();
   </script>
 </body>
