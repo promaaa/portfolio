@@ -190,8 +190,8 @@
           <div class="actions"><a href="ball-collecting-writeup.html">Write‑up ↗</a><a href="https://github.com/promaaa/ball-collecting-robots" target="_blank" rel="noopener">Code ↗</a></div>
         </article>
 
-        <!-- nand2cpu ALU -->
-        <article class="card col-12 col-6" id="nand2cpu-alu-verilog">
+  <!-- nand2cpu ALU -->
+  <article class="card col-12 col-6" id="nand2cpu-alu-verilog" role="link" tabindex="0" aria-label="Open nand2cpu ALU write-up" data-href="nand2cpu-writeup.html">
           <div class="thumb"><img src="pictures/nand2cpu.jpg" alt="nand2cpu — ALU" onerror="this.parentNode.textContent='(poster missing)';this.remove();"></div>
           <h3>nand2cpu — 8/16‑bit alu in verilog</h3>
           <p class="blurb">Arithmetic/logic ops, flags, testbenches, timing. Real computer architecture chops.</p>
@@ -199,8 +199,8 @@
           <div class="actions"><a href="https://www.youtube.com/watch?v=wIBkvQ6MfKQ" target="_blank" rel="noopener">Demo ↗</a><a href="nand2cpu-writeup.html">Write‑up ↗</a><a href="https://github.com/promaaa/nand2cpu" target="_blank" rel="noopener">Code ↗</a></div>
         </article>
 
-        <!-- Smart Grid realtime -->
-        <article class="card col-12 col-6" id="smart-grid-realtime">
+  <!-- Smart Grid realtime -->
+  <article class="card col-12 col-6" id="smart-grid-realtime" role="link" tabindex="0" aria-label="Open smart grid write-up" data-href="smart-grid-writeup.html">
           <div class="thumb"><img src="pictures/smart_grid.png" alt="Smart Grid — realtime" onerror="this.parentNode.textContent='(poster missing)';this.remove();"></div>
           <h3>smart grid — real‑time data ingestion & apis</h3>
           <p class="blurb">UDP ingestion, stream processing, metrics & REST APIs. Enterprise/IoT credibility.</p>
@@ -208,8 +208,8 @@
           <div class="actions"><a href="smart-grid-writeup.html">Write‑up ↗</a><a href="https://github.com/promaaa/smart_grid_JPA" target="_blank" rel="noopener">Code ↗</a></div>
         </article>
 
-        <!-- Chef‑Claude -->
-        <article class="card col-12 col-6" id="chef-claude">
+  <!-- Chef‑Claude -->
+  <article class="card col-12 col-6" id="chef-claude" role="link" tabindex="0" aria-label="Open chef claude write-up" data-href="chef-claude-writeup.html">
           <div class="thumb"><img src="pictures/chef-claude.png" alt="Chef‑Claude" onerror="this.parentNode.textContent='(poster missing)';this.remove();"></div>
           <h3>chef‑claude — ai recipe generator</h3>
           <p class="blurb">LLM prompts + API orchestration + clean UX. Trendy, useful, marketable.</p>
@@ -217,8 +217,8 @@
           <div class="actions"><a href="chef-claude-writeup.html">Write‑up ↗</a><a href="https://github.com/promaaa/chef-claude" target="_blank" rel="noopener">Code ↗</a></div>
         </article>
 
-        <!-- Evento -->
-        <article class="card col-12 col-6" id="evento-solana">
+  <!-- Evento -->
+  <article class="card col-12 col-6" id="evento-solana" role="link" tabindex="0" aria-label="Open evento write-up" data-href="evento-writeup.html">
           <div class="thumb"><img src="pictures/evento.jpeg" alt="Evento — Solana" onerror="this.parentNode.textContent='(poster missing)';this.remove();"></div>
           <h3>evento — solana hackathon project</h3>
           <p class="blurb">Teamwork + blockchain. Payments, tickets, simple on‑chain flows under pressure.</p>
@@ -226,8 +226,8 @@
           <div class="actions"><a href="evento-writeup.html">Write‑up ↗</a><a href="https://github.com/promaaa/evento" target="_blank" rel="noopener">Code ↗</a></div>
         </article>
 
-        <!-- Tenzies -->
-        <article class="card col-12 col-6" id="tenzies-mini-game">
+  <!-- Tenzies -->
+  <article class="card col-12 col-6" id="tenzies-mini-game" role="link" tabindex="0" aria-label="Open tenzies write-up" data-href="tenzies-writeup.html">
           <div class="thumb"><img src="pictures/tenzies.png" alt="Tenzies" onerror="this.parentNode.textContent='(poster missing)';this.remove();"></div>
           <h3>tenzies — mini game</h3>
           <p class="blurb">Small, polished, fun. Highlights UX/UI details, animations, and state management.</p>
@@ -450,17 +450,18 @@
       toggle.title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
     }
   })();
-  // Make ball-collecting robots card clickable (excluding inner action links)
+  // Make all project cards with data-href clickable (excluding inner action links)
   (function(){
-    const card = document.getElementById('ball-collecting-robots');
-    if(!card) return;
-    // Style tweak
+    const cards = document.querySelectorAll('#projects .card[data-href]');
+    if(!cards.length) return;
     const style = document.createElement('style');
-    style.textContent = `#ball-collecting-robots{cursor:pointer}#ball-collecting-robots .actions{cursor:auto}`;
+    style.textContent = `#projects .card[data-href]{cursor:pointer}#projects .card[data-href] .actions{cursor:auto}`;
     document.head.appendChild(style);
-    function go(){ window.location = card.getAttribute('data-href'); }
-    card.addEventListener('click', (e)=>{ if(e.target.closest('.actions')) return; go(); });
-    card.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { if(e.target.closest('.actions')) return; e.preventDefault(); go(); }});
+    cards.forEach(card=>{
+      function go(){ const href = card.getAttribute('data-href'); if(href) window.location = href; }
+      card.addEventListener('click', (e)=>{ if(e.target.closest('.actions')) return; go(); });
+      card.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { if(e.target.closest('.actions')) return; e.preventDefault(); go(); }});
+    });
   })();
   </script>
 </body>
