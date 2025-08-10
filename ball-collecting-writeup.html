@@ -1,574 +1,485 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ball-Collecting Robots Write-up — Marc Duboc</title>
-    <style>
-        :root {
-            --bg: #fafafa;
-            --ink: #0a0a0a;
-            --muted: #666666;
-            --line: #e4e4e7;
-            --surface: #ffffff;
-            --radius: 8px;
-            --shadow: 0 1px 3px rgba(0,0,0,.1);
-        }
-        
-        [data-theme="dark"] {
-            --bg: #0f0f0f;
-            --ink: #fafafa;
-            --muted: #a1a1aa;
-            --line: #27272a;
-            --surface: #18181b;
-            --shadow: 0 1px 3px rgba(0,0,0,.3);
-        }
-        
-        * { box-sizing: border-box; }
-        
-        html, body {
-            margin: 0;
-            height: 100%;
-            color: var(--ink);
-            font: 16px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,Roboto,Arial;
-            background: var(--bg);
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-        
-        .back-link {
-            display: inline-block;
-            margin-bottom: 30px;
-            color: var(--muted);
-            text-decoration: none;
-            padding: 8px 0;
-        }
-        
-        .back-link:hover {
-            color: var(--ink);
-        }
-        
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 600;
-            margin: 0 0 20px;
-            line-height: 1.2;
-        }
-        
-        .project-meta {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-        
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 12px;
-            background: var(--surface);
-            border: 1px solid var(--line);
-            border-radius: var(--radius);
-            font-size: 0.9rem;
-        }
-        
-        .project-links {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 40px;
-        }
-        
-        .project-links a {
-            padding: 10px 20px;
-            background: var(--surface);
-            border: 1px solid var(--line);
-            border-radius: var(--radius);
-            text-decoration: none;
-            color: var(--ink);
-            transition: background 0.2s ease;
-        }
-        
-        .project-links a:hover {
-            background: var(--line);
-        }
-        
-        .content {
-            line-height: 1.7;
-        }
-        
-        .content h2 {
-            margin-top: 40px;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-            font-weight: 500;
-        }
-        
-        .content h3 {
-            margin-top: 30px;
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-            font-weight: 500;
-        }
-        
-        .content p {
-            margin-bottom: 20px;
-            color: var(--muted);
-        }
-        
-        .content ul, .content ol {
-            margin-bottom: 20px;
-            padding-left: 20px;
-        }
-        
-        .content li {
-            margin-bottom: 8px;
-            color: var(--muted);
-        }
-        
-        .content code {
-            background: var(--surface);
-            padding: 2px 6px;
-            border-radius: 4px;
-            border: 1px solid var(--line);
-            font-family: ui-monospace, Menlo, Consolas, monospace;
-            font-size: 0.9em;
-        }
-        
-        .content pre {
-            background: var(--surface);
-            padding: 20px;
-            border-radius: var(--radius);
-            border: 1px solid var(--line);
-            overflow-x: auto;
-            margin: 20px 0;
-        }
-        
-        .content pre code {
-            background: none;
-            padding: 0;
-            border: none;
-        }
-        
-        .highlight-box {
-            background: var(--surface);
-            padding: 20px;
-            border-radius: var(--radius);
-            border: 1px solid var(--line);
-            margin: 20px 0;
-        }
-        
-        .highlight-box strong {
-            color: var(--ink);
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid var(--line);
-        }
-        
-        th {
-            color: var(--ink);
-        }
-        
-        td {
-            color: var(--muted);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Autonomous Ball-Collecting Robot — Marc Duboc</title>
+  <meta name="description" content="End-to-end modeling, control, and validation of an autonomous table tennis ball collecting ground robot (two prototypes, P→PI cascaded control)." />
+  <style>
+    :root { --bg:#fafafa; --ink:#0a0a0a; --muted:#666; --line:#e4e4e7; --surface:#ffffff; --radius:8px; --shadow:0 1px 3px rgba(0,0,0,.08);} 
+    [data-theme="dark"] { --bg:#0f0f0f; --ink:#fafafa; --muted:#a1a1aa; --line:#27272a; --surface:#18181b; --shadow:0 1px 3px rgba(0,0,0,.4);} 
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%;font:16px/1.6 ui-sans-serif,system-ui,-apple-system,Inter,Roboto,Segoe UI,Arial;color:var(--ink);background:var(--bg)}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:920px;margin:0 auto;padding:48px 24px}
+    .back-link{display:inline-block;margin-bottom:32px;font-size:.9rem;color:var(--muted);padding:6px 0}
+    .back-link:hover{color:var(--ink)}
+    h1{margin:0 0 16px;font-size:clamp(2rem,5vw,2.8rem);line-height:1.15;font-weight:600}
+    h2{margin:48px 0 16px;font-size:1.9rem;font-weight:560;line-height:1.25}
+    h3{margin:36px 0 12px;font-size:1.25rem;font-weight:550}
+    p{margin:0 0 20px;color:var(--muted)}
+    ul,ol{margin:0 0 24px 0;padding-left:22px}
+    li{margin:0 0 8px;color:var(--muted)}
+    code{background:var(--surface);border:1px solid var(--line);padding:2px 6px;border-radius:4px;font-size:.85em;font-family:ui-monospace,Menlo,Consolas,monospace}
+    pre{background:var(--surface);border:1px solid var(--line);padding:20px;overflow:auto;border-radius:var(--radius);margin:24px 0}
+    pre code{background:none;padding:0;border:none;font-size:.9em}
+    table{border-collapse:collapse;width:100%;margin:32px 0;font-size:.9rem}
+    th,td{border-bottom:1px solid var(--line);padding:10px 8px;text-align:left;vertical-align:top}
+    th{color:var(--ink);font-weight:600}
+    td{color:var(--muted)}
+    /* Code block enhancement */
+    .code-wrap{position:relative;margin:32px 0;background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.8rem;line-height:1.5}
+    .code-header{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,var(--surface),var(--surface-alt, var(--surface)))}
+    .code-header .title{font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+    .code-body{margin:0;display:grid;grid-template-columns:auto 1fr}
+    .code-lines{padding:12px 0 12px 0;margin:0;list-style:none;background:var(--surface-alt,var(--bg));border-right:1px solid var(--line);counter-reset:ln}
+    .code-lines li{counter-increment:ln;padding:0 12px 0 16px;text-align:right;font-variant-numeric:tabular-nums;color:var(--muted);user-select:none}
+    .code-content{padding:12px 16px;overflow:auto}
+    .code-content pre{margin:0;padding:0;background:none;border:none;font-size:inherit;line-height:inherit}
+    .tok-kw{color:#2563eb;font-weight:500}
+    .tok-fn{color:#7c3aed}
+    .tok-num{color:#db2777}
+    .tok-com{color:#6b7280;font-style:italic}
+    .tok-lit{color:#047857}
+    [data-theme="dark"] .tok-kw{color:#60a5fa}
+    [data-theme="dark"] .tok-fn{color:#c4b5fd}
+    [data-theme="dark"] .tok-num{color:#f472b6}
+    [data-theme="dark"] .tok-lit{color:#6ee7b7}
+    [data-theme="dark"] .tok-com{color:#9ca3af}
+  .meta-badges{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 28px}
+    .badge{background:var(--surface);border:1px solid var(--line);padding:6px 12px;border-radius:var(--radius);font-size:.75rem;letter-spacing:.5px;color:var(--muted);text-transform:uppercase;font-weight:500}
+    .links{display:flex;gap:12px;margin:0 0 40px}
+    .links a{border:1px solid var(--line);background:var(--surface);padding:10px 18px;border-radius:var(--radius);font-size:.85rem;font-weight:500}
+    .links a:hover{background:var(--line)}
+  .highlight{background:var(--surface);border:1px solid var(--line);padding:20px 24px;border-radius:var(--radius);margin:28px 0;position:relative}
+  .highlight strong{color:var(--ink)}
+  .abstract-box{background:var(--surface);border:1px solid var(--line);padding:24px 28px;border-radius:var(--radius);margin:32px 0 40px;}
+  .abstract-box h2{margin:0 0 12px;font-size:1rem;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--muted)}
+  .abstract-box p{margin:0 0 14px;font-size:.95rem;color:var(--muted)}
+  .abstract-box ul{margin:8px 0 0 18px}
+  .abstract-box li{font-size:.9rem}
+  .toc{background:var(--surface);border:1px solid var(--line);padding:20px 24px;border-radius:var(--radius);margin:0 0 48px}
+  .toc h2{margin:0 0 12px;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--muted)}
+  .toc ol{margin:0;padding-left:20px;font-size:.9rem}
+  .toc li{margin:4px 0}
+  .callout{background:var(--surface);border:1px solid var(--line);padding:18px 22px;border-radius:var(--radius);margin:36px 0}
+  .callout h3{margin:0 0 12px;font-size:1rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+  .eq{margin:28px auto 32px;padding:12px 0;text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:6px;font-size:1rem}
+  .eq .label{display:block;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+  /* KPI grid removed */
+  /* Image enhancements */
+  figure{margin:40px auto 34px;padding:0;max-width:860px;display:block;text-align:center}
+  figure img{width:100%;max-width:100%;height:auto;display:block;margin:0 auto;border:1px solid var(--line);border-radius:6px;background:var(--surface);image-rendering:auto;transition:box-shadow .25s ease,transform .25s ease}
+  figure img.pixel-perfect{margin-left:auto;margin-right:auto;}
+  figcaption{margin:8px auto 0;font-size:.70rem;letter-spacing:.08em;line-height:1.4;text-transform:uppercase;color:var(--muted);max-width:100%;text-align:center}
+  .two-up figure{margin:24px 0 18px;text-align:left}
+  .two-up figure figcaption{text-align:left;margin-top:8px}
+  .img-zoomable{cursor:zoom-in}
+  .img-zoomed{position:relative;z-index:20;box-shadow:0 8px 32px rgba(0,0,0,.35);transform:scale(1.4);cursor:zoom-out}
+  .theme-toggle{position:fixed;top:12px;right:12px;border:1px solid var(--line);background:var(--surface);color:var(--muted);padding:6px;font-size:12px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s ease}
+  .theme-toggle:hover{background:var(--surface-alt);color:var(--ink)}
+  .theme-toggle svg{width:16px;height:16px;fill:currentColor;display:block}
+    figure{margin:32px 0 28px;padding:0}
+    figure img{max-width:100%;display:block;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+    figcaption{margin-top:8px;font-size:.75rem;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
+    .two-up{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    @media(max-width:720px){.two-up{grid-template-columns:1fr}}
+    blockquote{margin:28px 0;padding:16px 20px;border-left:4px solid var(--line);background:var(--surface);border-radius:4px;color:var(--muted);font-style:italic}
+    .section-lead{font-size:1.05rem;color:var(--ink);font-weight:500;margin-top:-4px}
+    .future-list li strong{color:var(--ink)}
+    .footer-note{margin-top:80px;font-size:.75rem;text-align:center;color:var(--muted);opacity:.8}
+    .math{font-size:.95em;font-family:Georgia,serif;background:none;border:none;padding:0}
+  .fig-note{margin:-4px auto 32px;max-width:780px;font-size:.85rem;line-height:1.5;color:var(--muted);background:linear-gradient(90deg,rgba(59,130,246,.12),rgba(59,130,246,.04));border:1px solid var(--line);border-left:4px solid #3b82f6;padding:14px 18px;border-radius:6px}
+  [data-theme="dark"] .fig-note{background:linear-gradient(90deg,rgba(96,165,250,.20),rgba(96,165,250,.06));border-left-color:#60a5fa}
+  .fig-note strong{color:var(--ink);font-weight:600;letter-spacing:.5px;text-transform:uppercase;font-size:.72rem;display:block;margin-bottom:4px}
+  /* Lessons matrix & FAQ styling */
+  .lessons-table{width:100%;border-collapse:collapse;margin:32px 0;font-size:.82rem}
+  .lessons-table th,.lessons-table td{border-bottom:1px solid var(--line);padding:10px 10px;vertical-align:top;text-align:left}
+  .lessons-table th{font-weight:600;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .lessons-table td strong{color:var(--ink)}
+  .faq{margin:28px 0 12px;display:flex;flex-direction:column;gap:18px}
+  .faq-item{background:var(--surface);border:1px solid var(--line);padding:16px 18px;border-radius:6px}
+  .faq-item h4{margin:0 0 6px;font-size:.9rem;font-weight:600;color:var(--ink);line-height:1.3}
+  .faq-item p{margin:0;font-size:.8rem;line-height:1.45}
+  .faq-item .hook{display:block;margin-top:6px;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  @media(max-width:720px){.faq-item{padding:14px 14px}}
+  .lessons-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;margin:28px 0 12px}
+  .lesson{background:var(--surface);border:1px solid var(--line);padding:16px 18px;border-radius:6px;display:flex;flex-direction:column;gap:8px;position:relative}
+  .lesson:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#3b82f6,#2563eb)}
+  .lesson h4{margin:0;font-size:.9rem;font-weight:600;color:var(--ink);line-height:1.25}
+  .lesson p{margin:0;font-size:.75rem;line-height:1.4;color:var(--muted)}
+  .lesson .impact{margin-top:4px;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  @media(max-width:680px){.lessons-cards{grid-template-columns:1fr}}
+  </style>
+  <script>
+    window.MathJax = {tex:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"]]},svg:{fontCache:'global'}};
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
-    <div class="container">
-        <a href="portfolio_prom_aaa_restored_new_cards.html" class="back-link">← Back to Portfolio</a>
-        
-        <h1>Ball-Collecting Robots — Mechatronics Project</h1>
-        
-        <div class="project-links">
-            <a href="https://github.com/promaaa/ball-collecting-robots" target="_blank" rel="noopener">View Code</a>
-        </div>
-        
-        <div class="content">
-            <h2>Project Overview</h2>
-            <p>An autonomous robotics system designed to collect and sort colored balls in a competitive field environment. This project demonstrates the integration of mechanical design, embedded programming, and real-time control systems.</p>
-            
-            <div class="highlight-box">
-                <strong>Core Challenge:</strong> Design and build autonomous robots capable of efficiently collecting colored balls while navigating obstacles and competing against other robots in real-time.
-            </div>
-
-            <h2>System Architecture</h2>
-
-            <h3>🤖 Mechanical Design</h3>
-            <ul>
-                <li><strong>Chassis:</strong> Lightweight aluminum frame optimized for speed and maneuverability</li>
-                <li><strong>Drive System:</strong> Differential drive with high-torque DC motors</li>
-                <li><strong>Collection Mechanism:</strong> Custom-designed ball intake with rotating brushes</li>
-                <li><strong>Sorting System:</strong> Color-based sorting mechanism with dedicated storage compartments</li>
-                <li><strong>Sensors Integration:</strong> Ultrasonic sensors for navigation, color sensors for ball detection</li>
-            </ul>
-
-            <h3>🧠 Control Systems</h3>
-            <ul>
-                <li><strong>Microcontroller:</strong> Arduino-based control system with real-time processing</li>
-                <li><strong>PID Controllers:</strong> Multiple PID loops for motor control and trajectory following</li>
-                <li><strong>State Machine:</strong> Robust state management for different operational modes</li>
-                <li><strong>Sensor Fusion:</strong> Integration of multiple sensor inputs for decision making</li>
-            </ul>
-
-            <h2>Technical Implementation</h2>
-
-            <h3>Embedded Control Logic</h3>
-            <pre><code>// Main control loop structure
-void mainControlLoop() {
-    // Sensor readings
-    updateSensorReadings();
-    
-    // State machine execution
-    switch (currentState) {
-        case SEARCHING:
-            searchForBalls();
-            break;
-        case COLLECTING:
-            collectBall();
-            break;
-        case NAVIGATING:
-            navigateToTarget();
-            break;
-        case DEPOSITING:
-            depositBalls();
-            break;
-    }
-    
-    // PID control updates
-    updateMotorPID();
-    
-    // Safety checks
-    performSafetyChecks();
-}</code></pre>
-
-            <h3>PID Control Implementation</h3>
-            <pre><code>class PIDController {
-private:
-    double kp, ki, kd;
-    double integral, previousError;
-    unsigned long lastTime;
-    
-public:
-    double compute(double setpoint, double input) {
-        unsigned long now = millis();
-        double timeChange = (now - lastTime) / 1000.0;
-        
-        double error = setpoint - input;
-        integral += error * timeChange;
-        double derivative = (error - previousError) / timeChange;
-        
-        double output = kp * error + ki * integral + kd * derivative;
-        
-        previousError = error;
-        lastTime = now;
-        
-        return output;
-    }
-};</code></pre>
-
-            <h2>Competition Strategy</h2>
-
-            <h3>Autonomous Behavior</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Phase</th>
-                        <th>Strategy</th>
-                        <th>Duration</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Initialization</td>
-                        <td>Sensor calibration and position estimation</td>
-                        <td>2 seconds</td>
-                    </tr>
-                    <tr>
-                        <td>Ball Search</td>
-                        <td>Systematic field scanning with priority zones</td>
-                        <td>Variable</td>
-                    </tr>
-                    <tr>
-                        <td>Collection</td>
-                        <td>Optimized path planning to ball clusters</td>
-                        <td>Variable</td>
-                    </tr>
-                    <tr>
-                        <td>Sorting</td>
-                        <td>Real-time color classification and sorting</td>
-                        <td>1-2 seconds</td>
-                    </tr>
-                    <tr>
-                        <td>Deposit</td>
-                        <td>Efficient delivery to designated zones</td>
-                        <td>3-5 seconds</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h3>Path Planning Algorithm</h3>
-            <pre><code>// Simplified path planning logic
-struct Point {
-    float x, y;
-};
-
-class PathPlanner {
-private:
-    vector<Point> waypoints;
-    Point currentPosition;
-    Point targetPosition;
-    
-public:
-    void planPath(Point start, Point goal) {
-        waypoints.clear();
-        
-        // Simple A* implementation for obstacle avoidance
-        // Priority queue for exploring nodes
-        // Cost function considering distance and obstacles
-        
-        generateWaypoints(start, goal);
-    }
-    
-    Point getNextWaypoint() {
-        if (!waypoints.empty()) {
-            Point next = waypoints.front();
-            waypoints.erase(waypoints.begin());
-            return next;
-        }
-        return currentPosition;
-    }
-};</code></pre>
-
-            <h2>Sensor Integration</h2>
-
-            <h3>Multi-Sensor System</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Sensor Type</th>
-                        <th>Model</th>
-                        <th>Purpose</th>
-                        <th>Update Rate</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Ultrasonic</td>
-                        <td>HC-SR04</td>
-                        <td>Obstacle detection and wall following</td>
-                        <td>50 Hz</td>
-                    </tr>
-                    <tr>
-                        <td>Color Sensor</td>
-                        <td>TCS3200</td>
-                        <td>Ball color classification</td>
-                        <td>20 Hz</td>
-                    </tr>
-                    <tr>
-                        <td>Encoders</td>
-                        <td>Optical rotary</td>
-                        <td>Position tracking and odometry</td>
-                        <td>1000 Hz</td>
-                    </tr>
-                    <tr>
-                        <td>IMU</td>
-                        <td>MPU6050</td>
-                        <td>Orientation and acceleration</td>
-                        <td>100 Hz</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h3>Color Detection System</h3>
-            <pre><code>typedef struct {
-    int red, green, blue;
-    String colorName;
-} ColorProfile;
-
-ColorProfile ballColors[] = {
-    {255, 0, 0, "RED"},
-    {0, 255, 0, "GREEN"},
-    {0, 0, 255, "BLUE"},
-    {255, 255, 0, "YELLOW"}
-};
-
-String detectBallColor() {
-    // Read RGB values from color sensor
-    int r = readRed();
-    int g = readGreen();
-    int b = readBlue();
-    
-    // Find closest color match
-    int minDistance = INT_MAX;
-    String detectedColor = "UNKNOWN";
-    
-    for (int i = 0; i < 4; i++) {
-        int distance = sqrt(pow(r - ballColors[i].red, 2) + 
-                          pow(g - ballColors[i].green, 2) + 
-                          pow(b - ballColors[i].blue, 2));
-        
-        if (distance < minDistance) {
-            minDistance = distance;
-            detectedColor = ballColors[i].colorName;
-        }
-    }
-    
-    return detectedColor;
-}</code></pre>
-
-            <h2>Performance Metrics</h2>
-
-            <div class="highlight-box">
-                <strong>Competition Results:</strong>
-                <ul style="margin: 10px 0 0 0;">
-                    <li><strong>Ball Collection Rate:</strong> 85% efficiency in controlled environment</li>
-                    <li><strong>Color Sorting Accuracy:</strong> 95% correct classification</li>
-                    <li><strong>Navigation Precision:</strong> ±2cm positioning accuracy</li>
-                    <li><strong>Response Time:</strong> <100ms sensor-to-actuator latency</li>
-                    <li><strong>Competition Ranking:</strong> Top 3 in regional robotics competition</li>
-                </ul>
-            </div>
-
-            <h2>Challenges Overcome</h2>
-
-            <h3>Technical Challenges</h3>
-            <ul>
-                <li><strong>Real-time Constraints:</strong> Optimized control loops for <10ms cycle times</li>
-                <li><strong>Sensor Noise:</strong> Implemented Kalman filtering for improved accuracy</li>
-                <li><strong>Power Management:</strong> Efficient motor control to maximize battery life</li>
-                <li><strong>Mechanical Reliability:</strong> Robust design for repeated impacts and operations</li>
-            </ul>
-
-            <h3>Competition Environment</h3>
-            <ul>
-                <li><strong>Dynamic Obstacles:</strong> Other robots and moving balls</li>
-                <li><strong>Lighting Variations:</strong> Adaptive color calibration for different venues</li>
-                <li><strong>Time Pressure:</strong> 2-minute rounds requiring optimal strategy execution</li>
-                <li><strong>Mechanical Failures:</strong> Redundant systems and quick-repair design</li>
-            </ul>
-
-            <h2>System Specifications</h2>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Component</th>
-                        <th>Specification</th>
-                        <th>Performance</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Microcontroller</td>
-                        <td>Arduino Mega 2560</td>
-                        <td>16 MHz, 256KB Flash</td>
-                    </tr>
-                    <tr>
-                        <td>Motors</td>
-                        <td>DC Gear Motors</td>
-                        <td>12V, 200 RPM, 5 kg·cm torque</td>
-                    </tr>
-                    <tr>
-                        <td>Power System</td>
-                        <td>Li-Po Battery Pack</td>
-                        <td>11.1V, 2200mAh, 25C discharge</td>
-                    </tr>
-                    <tr>
-                        <td>Maximum Speed</td>
-                        <td>Linear velocity</td>
-                        <td>1.2 m/s forward, 0.8 m/s turning</td>
-                    </tr>
-                    <tr>
-                        <td>Operating Time</td>
-                        <td>Continuous operation</td>
-                        <td>45 minutes typical usage</td>
-                    </tr>
-                    <tr>
-                        <td>Collection Capacity</td>
-                        <td>Ball storage</td>
-                        <td>12 balls maximum per trip</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h2>Software Architecture</h2>
-
-            <h3>Modular Design</h3>
-            <pre><code>// Main system modules
-class RobotSystem {
-private:
-    MotorController motors;
-    SensorManager sensors;
-    PathPlanner pathPlanner;
-    StateMachine fsm;
-    ColorDetector colorSystem;
-    SafetyMonitor safety;
-    
-public:
-    void initialize();
-    void update();
-    void executeStrategy();
-};
-
-// State machine implementation
-enum RobotState {
-    IDLE,
-    SEARCHING,
-    APPROACHING,
-    COLLECTING,
-    SORTING,
-    NAVIGATING,
-    DEPOSITING,
-    EMERGENCY_STOP
-};</code></pre>
-
-            <h2>Future Improvements</h2>
-
-            <h3>Hardware Enhancements</h3>
-            <ul>
-                <li><strong>Vision System:</strong> Camera-based object recognition for improved accuracy</li>
-                <li><strong>Advanced Sensors:</strong> LIDAR integration for better environment mapping</li>
-                <li><strong>Upgraded Processing:</strong> Raspberry Pi for more complex algorithms</li>
-                <li><strong>Wireless Communication:</strong> Team coordination for multi-robot strategies</li>
-            </ul>
-
-            <h3>Software Improvements</h3>
-            <ul>
-                <li><strong>Machine Learning:</strong> Adaptive behavior based on competition history</li>
-                <li><strong>Advanced Path Planning:</strong> RRT* algorithms for optimal trajectories</li>
-                <li><strong>Swarm Intelligence:</strong> Coordinated behavior with multiple robots</li>
-                <li><strong>Real-time Analytics:</strong> Performance monitoring and strategy adjustment</li>
-            </ul>
-
-            <h2>Skills Demonstrated</h2>
-
-            <div class="highlight-box">
-                <strong>Interdisciplinary Engineering:</strong>
-                <ul style="margin: 10px 0 0 0;">
-                    <li><strong>Mechanical Engineering:</strong> Design and fabrication of robot chassis and mechanisms</li>
-                    <li><strong>Electrical Engineering:</strong> Circuit design, power systems, and sensor integration</li>
-                    <li><strong>Software Engineering:</strong> Real-time embedded programming and control algorithms</li>
-                    <li><strong>Systems Engineering:</strong> Integration and optimization of complex subsystems</li>
-                    <li><strong>Project Management:</strong> Timeline coordination and team collaboration</li>
-                </ul>
-            </div>
-
-            <p>This project represents a comprehensive application of mechatronics principles, combining mechanical design, embedded systems programming, and intelligent control to create an autonomous robotic system capable of complex tasks in competitive environments.</p>
-        </div>
+  <div class="container" id="top">
+    <a href="main.html" class="back-link">← Back to Portfolio</a>
+    <h1>Autonomous Table Tennis Ball Collecting Robot</h1>
+    <div class="meta-badges">
+      <div class="badge">Mechatronics</div>
+      <div class="badge">Embedded C/C++</div>
+      <div class="badge">Control (P • PI)</div>
+      <div class="badge">Model → Reality</div>
     </div>
+  <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme"></button>
+    <div class="links">
+      <a href="https://github.com/promaaa/ball-collecting-robots" target="_blank" rel="noopener">Code ↗</a>
+  <a href="#conclusions-next">Conclusions ↓</a>
+    </div>
+    <div class="abstract-box" id="abstract">
+      <h2>Abstract</h2>
+      <p>This work details the design, modeling, control synthesis and experimental validation of two generations of an autonomous differential‑drive robot that detects and centers on a standard 40&nbsp;mm table tennis ball. A progression from open‑loop servo actuation with proportional / PI guidance to cascaded PI regulation with DC motors and encoder feedback shifts the dominant performance bottleneck from actuation to perception. Sub‑centimeter steady‑state accuracy (≤0.5–1&nbsp;cm) is achieved on static and slowly rolling targets while maintaining robust stability margins.</p>
+      <ul>
+        <li><strong>Methodology:</strong> Analytical modeling → simulation pre‑tuning → iterative closed‑loop experiments.</li>
+        <li><strong>Control Stack:</strong> Outer optical guidance (P/PI) + inner wheel speed PI (Prototype 2).</li>
+        <li><strong>Measured Margins:</strong> Phase ≥ 66°, gain margin → ∞ (speed loop).</li>
+        <li><strong>Outcome:</strong> Hardware redesign yielded deterministic, bias‑free actuation; perception now rate‑limiting.</li>
+      </ul>
+    </div>
+    <div class="toc" id="toc">
+      <h2>Contents</h2>
+      <ol>
+        <li><a href="#introduction">Introduction</a></li>
+  <li><a href="#core-challenge">Core Challenge</a></li>
+  <li><a href="#architecture-overview">Architecture Overview</a></li>
+  <li><a href="#p1">Prototype 1: Servo Platform</a></li>
+  <li><a href="#p2">Prototype 2: Encoders & Cascaded Control</a></li>
+  <li><a href="#prediction-measurement">Prediction vs Measurement</a></li>
+  <li><a href="#minimal-loop">Minimal Arduino PI Loop</a></li>
+  <li><a href="#conclusions-next">Conclusions & Next Focus</a></li>
+  <li><a href="#faq">Portfolio FAQ</a></li>
+      </ol>
+    </div>
+    <div class="callout">
+      <h3>Key Contributions</h3>
+      <ul>
+        <li>Quantified actuator asymmetry prompting drivetrain redesign.</li>
+        <li>Identification + first‑order motor model enabling analytical PI tuning.</li>
+        <li>Explicit stability margin targets integrated into iteration loop.</li>
+        <li>Demonstrated bottleneck migration (actuation → perception) as maturity indicator.</li>
+      </ul>
+    </div>
+  <!-- KPI grid removed per request -->
+    <figure>
+  <img src="pictures_autonomous/robot_overview.png" alt="Robot overview" loading="lazy" decoding="async" class="img-zoomable" />
+      <figcaption>Figure 1 — Autonomous robot prototype overview.</figcaption>
+    </figure>
+    
+
+    <h2 id="introduction">1. Introduction</h2>
+    <p>Collecting dispersed table tennis balls between multi‑ball drills breaks training flow. Goal: an autonomous ground robot that rapidly detects, approaches, and centers on a (static or slow rolling) ball, emphasizing <strong>accuracy (≤1&nbsp;cm)</strong>, <strong>speed</strong>, and <strong>stability (low oscillation)</strong>.</p>
+    <blockquote>Development loop: Theory ⇄ Simulation ⇄ Experiment ⇄ Gap analysis ⇄ Improvement.</blockquote>
+
+  <h2 id="core-challenge">2. Core Challenge</h2>
+    <p><strong>Core challenge:</strong> Fast, precise, robust interception under variable lighting & friction, with constrained onboard compute.</p>
+    <ul>
+      <li>Reliable ball detection (color, distance ambiguity, lighting)</li>
+      <li>Stable, bias‑free navigation</li>
+      <li>Low‑latency control pipeline</li>
+    </ul>
+
+  <h2 id="architecture-overview">3. Architecture Overview</h2>
+    <figure>
+  <img src="pictures_autonomous/prototype1_architecture.png" alt="Prototype 1 architecture" loading="lazy" decoding="async" class="img-zoomable" />
+      <figcaption>Figure 2 — Prototype 1 architecture (servos, open loop speed).</figcaption>
+    </figure>
+    <figure>
+  <img src="pictures_autonomous/prototype2_architecture.png" alt="Prototype 2 architecture" loading="lazy" decoding="async" class="img-zoomable" />
+      <figcaption>Figure 3 — Prototype 2 architecture (DC motors + encoders + cascaded PI).</figcaption>
+    </figure>
+  <p class="fig-note"><strong>Figure insight (Fig.2–3)</strong> Prototype&nbsp;1 applies the guidance law directly to servos with no wheel‑speed feedback → high sensitivity to servo asymmetry and battery voltage. Prototype&nbsp;2 adds an inner PI speed loop (encoders) that linearises actuation so the guidance layer manipulates predictable differential speeds, reducing surface‑dependent response variance.</p>
+
+  <h2 id="p1">4. Prototype 1: Servo Platform</h2>
+  <h3>4.1 Hardware Stack</h3>
+    <ul>
+      <li>Camera (color segmentation → centroid)</li>
+      <li>Arduino UNO (guidance loop)</li>
+      <li>Servomotors (propulsion, asymmetric response)</li>
+      <li>Motion capture (ground truth mm‑level)</li>
+    </ul>
+    <figure>
+  <img src="pictures_autonomous/prototype1_hardware.png" alt="Prototype 1 hardware" loading="lazy" decoding="async" class="img-zoomable" />
+      <figcaption>Figure 4 — Prototype 1 hardware.</figcaption>
+    </figure>
+    
+
+  <h3>4.2 Vision Bearing Extraction</h3>
+  <p>Processing chain: acquisition → HSV color mask → largest blob → centroid. Horizontal pixel offset becomes bearing error <code>ε</code>. Small‑angle approximation:</p>
+  <div class="eq">$$ \varepsilon \approx \frac{x_{px}-c_x}{f_x} $$<span class="label">Eq. 1 — Bearing error approximation</span></div>
+    <figure>
+  <img src="pictures_autonomous/optical_guidance_diagram.png" alt="Optical guidance diagram" loading="lazy" decoding="async" class="img-zoomable" />
+      <figcaption>Figure 5 — Optical guidance flow.</figcaption>
+    </figure>
+    <figure>
+  <img src="pictures_autonomous/camera_principle.png" alt="Camera principle" loading="lazy" decoding="async" class="img-zoomable" />
+      <figcaption>Figure 6 — Camera geometry.</figcaption>
+    </figure>
+  <p class="fig-note"><strong>Figure insight (Fig.5–6)</strong> The vision pipeline keeps only one blob centroid (robust vs clutter). The small‑angle approximation (Eq.1) maps horizontal pixel offset to a near‑linear bearing error—adequate bandwidth without heavy intrinsic calibration at this stage.</p>
+    <p>Design choice: keep vision minimal (latency & tunability) before richer perception (depth, learning).</p>
+
+  <h3>4.3 Kinematic Approximation</h3>
+  <p>Differential drive (no‑slip, small heading error):</p>
+  <div class="eq">$$ \Omega = \frac{R}{L}(\Omega_d - \Omega_g) $$<span class="label">Eq. 2 — Differential drive relation</span></div>
+  <p>Used for preliminary gain sweeps (trajectory envelopes & steady‑state error sensitivity).</p>
+    <figure>
+  <img src="pictures_autonomous/kinematic_simulation.png" alt="Kinematic simulation" loading="lazy" decoding="async" class="img-zoomable" />
+      <figcaption>Figure 7 — Simulated trajectory under P guidance.</figcaption>
+    </figure>
+    
+
+  <h3>4.4 Baseline P Guidance</h3>
+  <p>Wheel command laws:</p>
+  <div class="eq">$$ \Omega_{\text{cmd D}} = \Omega_0 + K_p\,\varepsilon \qquad \Omega_{\text{cmd G}} = \Omega_0 - K_p\,\varepsilon $$<span class="label">Eq. 3 — Proportional guidance</span></div>
+  <p>Simulation looked stable → direct deployment.</p>
+    <figure>
+  <img src="pictures_autonomous/p_controller_theory.png" alt="P controller theory" loading="lazy" decoding="async" class="img-zoomable" />
+      <figcaption>Figure 8 — P controller (theory).</figcaption>
+    </figure>
+    <figure>
+  <img src="pictures_autonomous/p_controller_experiment.png" alt="P controller experiment" loading="lazy" decoding="async" class="img-zoomable" />
+      <figcaption>Figure 9 — P controller (experiment) — oscillations from servo asymmetry.</figcaption>
+    </figure>
+  <p class="fig-note"><strong>Figure insight (Fig.8–9)</strong> Sustained oscillation stems from left/right speed imbalance: the proportional correction repeatedly overshoots because the effective wheel gains differ, injecting a persistent bias. Remedy: add integral action (slow compensation) or redesign actuation.</p>
+
+    <h3>Limitations</h3>
+    <div class="two-up">
+      <figure>
+  <img src="pictures_autonomous/servo_asymmetry_left.png" alt="Servo asymmetry left" loading="lazy" decoding="async" class="img-zoomable" />
+    <figcaption>Figure 10a — Raw PWM step responses: left vs right servo actual speed (asymmetry visible).</figcaption>
+      </figure>
+      <figure>
+  <img src="pictures_autonomous/servo_asymmetry_right.png" alt="Servo asymmetry right" loading="lazy" decoding="async" class="img-zoomable" />
+    <figcaption>Figure 10b — Linearised (piecewise) speed model used inside simulation.</figcaption>
+      </figure>
+    </div>
+    <figure>
+  <img src="pictures_autonomous/experimental_setup.png" alt="Experimental setup" loading="lazy" decoding="async" class="img-zoomable" />
+      <figcaption>Figure 11 — Instrumented test setup.</figcaption>
+    </figure>
+  <p class="fig-note"><strong>Figure insight (Fig.10–11)</strong> (10a) Empirical PWM→speed step responses show right servo higher effective gain (+12–15%) and a wider dead zone on the left. (10b) A simplified piecewise‑linear mapping substitutes the raw non‑linear curves inside simulation to preserve bias magnitude while enabling faster analytical gain sweeps. (11) Instrumented rig ensured repeatable capture of the asymmetric dynamics. This structural mismatch drives steady‑state offset under pure P; integral cancels it but increases time in saturation.</p>
+    <p>Clear unequal speed curves → biased steering & sustained oscillation. Hardware change justified.</p>
+
+  <h3>4.5 PI Enhancement</h3>
+  <p>PI guidance controller:</p>
+  <div class="eq">$$ C(p)=K_p + \frac{K_i}{p} $$<span class="label">Eq. 4 — PI controller form</span></div>
+  <p>Integral removed residual error at cost of hitting servo speed ceiling.</p>
+    <figure>
+  <img src="pictures_autonomous/pi_theory.png" alt="PI theory" loading="lazy" decoding="async" class="img-zoomable" />
+      <figcaption>Figure 12 — PI theoretical trajectory.</figcaption>
+    </figure>
+    <figure>
+  <img src="pictures_autonomous/p_vs_pi_experiment.png" alt="P vs PI experiment" loading="lazy" decoding="async" class="img-zoomable" />
+      <figcaption>Figure 13 — P vs PI experimental comparison.</figcaption>
+    </figure>
+    <div class="two-up">
+      <figure>
+  <img src="pictures_autonomous/static_ball_comparison.png" alt="Static ball comparison" loading="lazy" decoding="async" class="img-zoomable" />
+        <figcaption>Figure 14 — Static ball: P vs PI vs theory.</figcaption>
+      </figure>
+      <figure>
+  <img src="pictures_autonomous/moving_ball_comparison.png" alt="Moving ball comparison" loading="lazy" decoding="async" class="img-zoomable" />
+        <figcaption>Figure 15 — Moving ball comparison.</figcaption>
+      </figure>
+    </div>
+  <p class="fig-note"><strong>Figure insight (Fig.12–15)</strong> Integral action cancels bias but enlarges the initial saturation interval (command pinned at servo max), slightly extending capture time. The precision vs speed trade now hits the actuator physics ceiling, justifying the hardware redesign.</p>
+    <p><strong>Findings:</strong> error ≤ 0.5&nbsp;cm; performance now limited by servo saturation & mechanical asymmetry → redesign.</p>
+
+  <h2 id="p2">5. Prototype 2: Encoders & Cascaded Control</h2>
+  <h3>5.1 Redesign Rationale</h3>
+    <p>Address saturation, asymmetry, and limited camera performance. Shift to a cascaded architecture decoupling velocity regulation from outer guidance.</p>
+  <h3>5.2 Actuation & Sensing</h3>
+    <ul>
+      <li>DC motors + 1/24 gearbox (torque & finer speed granularity)</li>
+      <li>Incremental encoders (real wheel speed feedback)</li>
+      <li>H‑bridge (PWM current delivery)</li>
+    </ul>
+    <div class="two-up">
+  <figure><img src="pictures_autonomous/dc_motor_gearbox.png" alt="DC motor" loading="lazy" decoding="async" class="img-zoomable" /><figcaption>Figure 16 — DC motor + gearbox.</figcaption></figure>
+  <figure><img src="pictures_autonomous/incremental_encoders.png" alt="Encoders" loading="lazy" decoding="async" class="img-zoomable" /><figcaption>Figure 17 — Incremental encoders.</figcaption></figure>
+    </div>
+  <figure><img src="pictures_autonomous/h_bridge_driver.png" alt="H-bridge driver" loading="lazy" decoding="async" class="img-zoomable" /><figcaption>Figure 18 — H‑bridge driver.</figcaption></figure>
+    
+    <p>Result: guidance loop outputs target differential speeds instead of raw PWM → portability to battery & surface variation.</p>
+
+  <h3>5.3 Motor Model</h3>
+  <p>Step response identification → first order model:</p>
+  <div class="eq">$$ G(p)=\frac{K_m}{1+T_0 p}, \quad K_m=4,\;T_0=35\,\text{ms} $$<span class="label">Eq. 5 — Identified motor model</span></div>
+  <p>Parameters via least squares fit.</p>
+  <figure><img src="pictures_autonomous/measured_vs_model_speed.png" alt="Measured vs model speed" loading="lazy" decoding="async" class="img-zoomable" /><figcaption>Figure 19 — Model fit vs measured.</figcaption></figure>
+  <p class="fig-note"><strong>Figure insight (Fig.19)</strong> Residual error max &lt; 5% over the operating band → first‑order model sufficient for the speed loop whose goal is mainly slow disturbance rejection (voltage, friction). No immediate derivative term needed.</p>
+
+  <h3>5.4 Speed Loop PI</h3>
+  <p>Speed loop tuning in PySyLic:</p>
+  <div class="eq">$$ K_p=44, \qquad T_i=0.17\,\text{s} $$<span class="label">Eq. 6 — Speed PI parameters</span></div>
+  <p>Target margins (30&nbsp;dB / 45°) surpassed by measured (∞ / 66°) → strong robustness.</p>
+  <figure><img src="pictures_autonomous/pi_tuning_pysylic.png" alt="PI tuning" loading="lazy" decoding="async" class="img-zoomable" /><figcaption>Figure 20 — PI tuning workspace.</figcaption></figure>
+  <p class="fig-note"><strong>Figure insight (Fig.20)</strong> Design tool reports 66° phase margin (> target 45°) giving robustness to friction variability + vision latency (tens of ms). Infinite gain margin (no crossover) signals low risk of destabilising noise amplification.</p>
+    <p>Inner loop shields outer guidance from motor & voltage variation.</p>
+
+  <h3>5.5 Comparative Results</h3>
+    <div class="two-up">
+  <figure><img src="pictures_autonomous/p1_vs_p2_trajectories.png" alt="P1 vs P2 trajectories" loading="lazy" decoding="async" class="img-zoomable" /><figcaption>Figure 21 — P1 vs P2 trajectories.</figcaption></figure>
+  <figure><img src="pictures_autonomous/static_ball_nonlinear.png" alt="Static ball nonlinear" loading="lazy" decoding="async" class="img-zoomable" /><figcaption>Figure 22 — Static ball: nonlinear theory vs experiment.</figcaption></figure>
+    </div>
+  <figure><img src="pictures_autonomous/moving_ball_nonlinear.png" alt="Moving ball nonlinear" loading="lazy" decoding="async" class="img-zoomable" /><figcaption>Figure 23 — Moving ball: nonlinear theory vs experiment.</figcaption></figure>
+  <p class="fig-note"><strong>Figure insight (Fig.21–23)</strong> Prototype&nbsp;2 both shortens capture time and eliminates terminal oscillation. Remaining model vs experiment gaps come mainly from perception latency + speed discretisation; qualitative dynamics (damping, low overshoot) match, validating the model → controller → hardware pipeline.</p>
+    <p>Bottleneck migrated: now vision frame rate & lighting noise, not actuation. Classic maturation signal.</p>
+
+  <h2 id="prediction-measurement">6. Prediction vs Measurement</h2>
+    <table>
+      <thead><tr><th>Stage</th><th>Model prediction</th><th>Reality</th><th>Gap</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td>P / servos</td><td>Faster, residual error</td><td>Oscillations ↑</td><td>Servo asymmetry</td><td>Add integral</td></tr>
+        <tr><td>PI / servos</td><td>Error removed</td><td>Speed capped</td><td>Saturation</td><td>DC motors + encoders</td></tr>
+        <tr><td>PI / DC motors</td><td>Stable & faster</td><td>Confirmed</td><td>Vision noise</td><td>Plan perception upgrade</td></tr>
+      </tbody>
+    </table>
+
+  <h2 id="minimal-loop">7. Minimal Arduino PI Loop</h2>
+      <div class="code-wrap" role="region" aria-label="Arduino PI motor control example">
+        <div class="code-header"><span class="title">arduino / motor_pi_control.cpp</span></div>
+        <div class="code-body">
+          <ul class="code-lines">
+            <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+          </ul>
+          <div class="code-content">
+  <pre><code><span class="tok-com">// Encoder reading</span>
+  <span class="tok-kw">int</span> ticksG = <span class="tok-fn">readEncoderG</span>();
+  <span class="tok-kw">int</span> ticksD = <span class="tok-fn">readEncoderD</span>();
+
+  <span class="tok-com">// Speed computation</span>
+  <span class="tok-kw">float</span> omegaG = ticksG / T_sample;
+  <span class="tok-kw">float</span> omegaD = ticksD / T_sample;
+
+  <span class="tok-com">// Error</span>
+  <span class="tok-kw">float</span> eG = omegaG_ref - omegaG;
+  <span class="tok-kw">float</span> eD = omegaD_ref - omegaD;
+
+  <span class="tok-com">// PI control</span>
+  uG += Kp * (eG - eG_prev) + Ki * eG * T_sample;
+  uD += Kp * (eD - eD_prev) + Ki * eD * T_sample;
+
+  <span class="tok-com">// Saturation</span>
+  uG = constrain(uG, 0, 255);
+  uD = constrain(uD, 0, 255);
+
+  <span class="tok-com">// Apply PWM</span>
+  <span class="tok-fn">analogWrite</span>(motorG, uG);
+  <span class="tok-fn">analogWrite</span>(motorD, uD);
+
+  <span class="tok-com">// Save errors</span>
+  eG_prev = eG;
+  eD_prev = eD;</code></pre>
+          </div>
+        </div>
+      </div>
+
+  <h2 id="conclusions-next">8. Conclusions & Next Focus</h2>
+    <h3>Conclusions</h3>
+    <ul>
+      <li>Centimeter‑level convergence across static & rolling targets.</li>
+      <li>Structured controller escalation (P → PI → cascaded PI) with measured stability margins.</li>
+      <li>Hardware pivot (servos → DC + encoders) justified by quantified asymmetry & saturation.</li>
+      <li>Bottleneck intentionally migrated to perception; modeling + tuning pipeline reusable.</li>
+    </ul>
+    <h3>Limitations</h3>
+    <ul>
+      <li>Vision latency & lighting sensitivity dominate residual error.</li>
+      <li>No derivative / predictive term in guidance yet.</li>
+      <li>Energy & thermal envelope not modeled.</li>
+    </ul>
+    <h3>Future Improvements</h3>
+    <ul class="future-list">
+      <li><strong>Perception:</strong> depth/stereo or lightweight CNN for robust detection; glare mitigation.</li>
+      <li><strong>Control:</strong> lead / D action + velocity‑aware gain scheduling.</li>
+      <li><strong>Robustness:</strong> battery voltage feedforward; IMU fusion between frames.</li>
+      <li><strong>Prediction:</strong> bounce & rolling decay model for pre‑emptive intercept.</li>
+    </ul>
+
+  <h2 id="faq">9. Portfolio FAQ</h2>
+    <div class="faq">
+      <div class="faq-item">
+        <h4>Why switch from hobby servos to DC motors + encoders instead of “better servos”?</h4>
+        <p>Instrumentation exposed persistent gain & dead‑zone asymmetry; moving to encoders + DC motors converted hidden bias into measurable states the controller can regulate.</p>
+        <span class="hook">Hook: steady‑state bias ≈ 0 cm; rare retunes.</span>
+      </div>
+      <div class="faq-item">
+        <h4>How was the motor model identified & used?</h4>
+        <p>Recorded step data → least‑squares first‑order fit → analytical PI tuning meeting target margins before hardware deployment, avoiding trial‑and‑error gain hunts.</p>
+        <span class="hook">Hook: first hardware test matched 66° phase margin design.</span>
+      </div>
+      <div class="faq-item">
+        <h4>What is the next performance lever?</h4>
+        <p>Perception latency & noise now dominate; roadmap: faster capture/processing, illumination normalization, optional lightweight depth to anticipate motion.</p>
+        <span class="hook">Hook: capture time reductions now vision‑bound.</span>
+      </div>
+    </div>
+
+    <p class="footer-note">© 2025 Marc Duboc — Plain HTML/CSS. <a href="#top">Back to top ↑</a></p>
+  </div>
+  <script>
+    // Prevent upscaling: adjust each image to natural width if smaller than container
+    function adjustImage(img){
+      try{
+        const cw = img.parentElement.clientWidth;
+        if(img.naturalWidth && img.naturalWidth < cw){
+          img.style.width = img.naturalWidth + 'px';
+          img.classList.add('pixel-perfect');
+        }
+      }catch(e){}
+    }
+    document.querySelectorAll('figure img').forEach(img=>{
+      if(img.complete) adjustImage(img); else img.addEventListener('load',()=>adjustImage(img));
+      img.addEventListener('click',()=>{
+        if(!img.classList.contains('img-zoomable')) return;
+        img.classList.toggle('img-zoomed');
+      });
+    });
+    // Theme Toggle unified with main.html
+    (function(){
+      const toggle = document.getElementById('theme-toggle');
+      if(!toggle) return;
+      const html = document.documentElement;
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      html.setAttribute('data-theme', savedTheme);
+      updateToggleIcon(savedTheme);
+
+      toggle.addEventListener('click', function(){
+        const current = html.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        updateToggleIcon(next);
+      });
+
+      function updateToggleIcon(theme){
+        const sunSvg = `<svg viewBox="0 0 16 16"><rect x="7" y="0" width="2" height="2"/><rect x="13" y="2" width="2" height="2"/><rect x="14" y="7" width="2" height="2"/><rect x="13" y="12" width="2" height="2"/><rect x="7" y="14" width="2" height="2"/><rect x="2" y="12" width="2" height="2"/><rect x="0" y="7" width="2" height="2"/><rect x="2" y="2" width="2" height="2"/><rect x="5" y="5" width="6" height="6"/><rect x="6" y="4" width="4" height="1"/><rect x="4" y="6" width="1" height="4"/><rect x="11" y="6" width="1" height="4"/><rect x="6" y="11" width="4" height="1"/></svg>`;
+        const moonSvg = `<svg viewBox="0 0 16 16"><rect x="5" y="2" width="6" height="1"/><rect x="3" y="3" width="10" height="1"/><rect x="2" y="4" width="12" height="1"/><rect x="2" y="5" width="12" height="6"/><rect x="2" y="11" width="12" height="1"/><rect x="3" y="12" width="10" height="1"/><rect x="5" y="13" width="6" height="1"/><rect x="4" y="6" width="2" height="1"/><rect x="4" y="7" width="2" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="11" y="6" width="1" height="1"/><rect x="6" y="9" width="2" height="1"/><rect x="6" y="10" width="2" height="1"/></svg>`;
+        toggle.innerHTML = theme === 'dark' ? sunSvg : moonSvg;
+        toggle.title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+      }
+    })();
+    // Match figcaption width to natural image width if smaller than container
+    function syncCaptionWidth(fig){
+      const img=fig.querySelector('img');
+      const cap=fig.querySelector('figcaption');
+      if(!img||!cap) return;
+      const natural=img.naturalWidth; if(!natural) return;
+      const displayed=img.getBoundingClientRect().width;
+      // If image is not occupying full figure width because of pixel-perfect adjustment
+      if(img.style.width && natural < fig.clientWidth){
+        cap.style.maxWidth = img.style.width;
+      } else if(displayed < fig.clientWidth - 4){
+        cap.style.maxWidth = displayed + 'px';
+      }
+    }
+    window.addEventListener('load',()=>{document.querySelectorAll('figure').forEach(syncCaptionWidth);});
+    window.addEventListener('resize',()=>{document.querySelectorAll('figure').forEach(syncCaptionWidth);});
+  </script>
 </body>
 </html>
