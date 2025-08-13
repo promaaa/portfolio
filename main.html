@@ -4,59 +4,115 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Marc Duboc — Portfolio (promaa)</title>
-  <meta name="color-scheme" content="dark" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#fafafa; --ink:#0a0a0a; --muted:#666666; --line:#e4e4e7;
-      --accent:#525252; --accent-h:0; /* hue for hsl() */
-      --surface:#ffffff; --surface-alt:#f4f4f5;
-      --radius:8px; --shadow:0 1px 3px rgba(0,0,0,.1);
+      /* defaults: light theme; dark overrides below */
+      --bg:#f7f7fb; --ink:#0a0a0e; --muted:#5e5e69; --line:rgba(0,0,0,.08);
+      --accent:#5b5bd6; --accent-h:250;
+      --surface:rgba(255,255,255,.7); --surface-alt:rgba(255,255,255,.85);
+      --radius:14px; --shadow:0 10px 30px rgba(0,0,0,.12);
+      --glass-bg:rgba(255,255,255,.6); --glass-border:rgba(255,255,255,.9);
+      --blur:12px;
+      --grad1:#f9f9ff; --grad2:#f3f2fb; --grad3:#efeff7;
+      --crystal-a: rgba(120,110,255,.45); --crystal-b: rgba(255,150,190,.35);
     }
-    
+
     [data-theme="dark"]{
-      --bg:#0f0f0f; --ink:#fafafa; --muted:#a1a1aa; --line:#27272a;
-      --accent:#a1a1aa; --accent-h:0;
-      --surface:#18181b; --surface-alt:#1f1f23;
-      --shadow:0 1px 3px rgba(0,0,0,.3);
+      --bg:#0b0e16; --ink:#f7f7fb; --muted:#b5b7c8; --line:rgba(255,255,255,.1);
+      --accent:#8bbcff; --accent-h:215;
+      --surface:rgba(255,255,255,.06); --surface-alt:rgba(255,255,255,.1);
+      --shadow:0 10px 30px rgba(0,0,0,.4);
+      --glass-bg:rgba(255,255,255,.06); --glass-border:rgba(255,255,255,.2);
+      --blur:14px;
+      --grad1:#0b0f1a; --grad2:#0a0d17; --grad3:#070a12;
+      --crystal-a: rgba(160,160,255,.35); --crystal-b: rgba(255,180,210,.28);
+      --orb-a: rgba(120,200,255,.35); --orb-b: rgba(160,130,255,.35);
     }
     *{box-sizing:border-box}
-    html,body{margin:0;height:100%;color:var(--ink);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,Roboto,Arial;background:var(--bg)}
+    html,body{margin:0;height:100%;color:var(--ink);font:16px/1.65 Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;background:var(--bg);overflow-x:hidden}
     a{color:inherit;text-decoration:none}
-    .container{max-width:1200px;margin:0 auto;padding:60px 40px}
+    .container{max-width:1200px;margin:0 auto;padding:60px 40px;position:relative;z-index:1}
     img{max-width:100%;height:auto;display:block}
+
+    /* BACKGROUND: subtle grainy gradients + floating crystals */
+    .bg{position:fixed;inset:0;z-index:0;pointer-events:none;background:
+      radial-gradient(1200px 800px at 110% -10%, color-mix(in oklab, var(--crystal-a) 38%, transparent), transparent 60%),
+      radial-gradient(900px 700px at -10% 110%, color-mix(in oklab, var(--crystal-b) 32%, transparent), transparent 55%),
+      radial-gradient(700px 500px at 50% -20%, rgba(80,200,180,.06), transparent 60%),
+      linear-gradient(180deg, var(--grad1), var(--grad2) 40%, var(--grad3));
+    }
+    .bg::after{content:"";position:absolute;inset:0;background:radial-gradient(100px 100px at 10% 15%, rgba(255,255,255,.06), transparent 60%) repeat;opacity:.06;mix-blend-mode:overlay;}
+    .noise{position:fixed;inset:0;opacity:.06;mix-blend-mode:soft-light}
+    .bg-crystals{position:absolute;inset:0}
+    .crystal{position:absolute;opacity:.6;filter:blur(.1px);-webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 75%);mask-image:linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 75%)}
+    .crystal polygon{stroke:rgba(255,255,255,.35);stroke-width:0.8;mix-blend-mode:screen}
+    .crystal.c1{top:6%;left:6%;width:140px;height:140px;animation:float 11s ease-in-out infinite}
+    .crystal.c2{top:14%;left:16%;width:180px;height:180px;animation:float 14s ease-in-out infinite reverse}
+    .crystal.c3{top:10%;right:10%;width:160px;height:160px;animation:float 13s ease-in-out infinite}
+    .crystal.c4{top:18%;right:22%;width:220px;height:220px;animation:float 17s ease-in-out infinite reverse}
+    @keyframes float{0%{transform:translateY(0) rotate(0)}50%{transform:translateY(-12px) rotate(3deg)}100%{transform:translateY(0) rotate(0)}}
+    /* Dark theme 3D-like gears (top only) */
+    .bg-gears{position:absolute;inset:0;display:none}
+    .gear{position:absolute;opacity:.6;-webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 75%);mask-image:linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 75%);filter:drop-shadow(0 12px 24px rgba(0,0,0,.35))}
+    .gear .ring{fill:url(#gearGrad)}
+    .gear .tooth{fill:rgba(190,210,255,.18);stroke:rgba(190,210,255,.25);stroke-width:1}
+    .gear .hub{fill:rgba(255,255,255,.08);stroke:rgba(190,210,255,.25);stroke-width:1}
+    .gear .shine{fill:url(#gearShine)}
+    .gear.g1{top:6%;left:6%;width:140px;height:140px;animation:float 12s ease-in-out infinite}
+    .gear.g2{top:14%;left:16%;width:180px;height:180px;animation:float 15s ease-in-out infinite reverse}
+    .gear.g3{top:10%;right:10%;width:160px;height:160px;animation:float 14s ease-in-out infinite}
+    .gear.g4{top:18%;right:22%;width:220px;height:220px;animation:float 17s ease-in-out infinite reverse}
+
+    /* Theme-conditional visibility */
+    [data-theme="dark"] .bg-crystals{display:none}
+    [data-theme="dark"] .bg-gears{display:block}
     
     /* NAV */
-    .nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0;border-bottom:1px solid var(--line);margin-bottom:20px}
-    .brand{font-weight:600;font-size:1.1rem}
-    .brand .badge{margin-left:.8rem;font-size:.8rem;font-weight:500;padding:.3rem .8rem;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--muted)}
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border:1px solid var(--glass-border);border-radius:12px;margin-bottom:28px;background:var(--glass-bg);backdrop-filter:saturate(130%) blur(var(--blur));-webkit-backdrop-filter:saturate(130%) blur(var(--blur));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.18), 0 10px 24px rgba(0,0,0,.18)}
+    .brand{font-weight:700;font-size:1.05rem;letter-spacing:.2px}
+    .brand .badge{margin-left:.8rem;font-size:.8rem;font-weight:600;padding:.3rem .7rem;border:1px solid var(--glass-border);border-radius:999px;background:var(--surface-alt);color:var(--muted)}
     .links{display:flex;gap:32px;align-items:center}
     .links a{position:relative;padding:8px 0;font-weight:400;transition:color .2s ease;color:var(--muted)}
     .links a:hover{color:var(--ink)}
     
     /* Theme Toggle */
-    .theme-toggle{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px;font-size:12px;color:var(--muted);cursor:pointer;transition:all .2s ease;margin-left:16px;display:flex;align-items:center;justify-content:center}
-    .theme-toggle:hover{background:var(--surface-alt);color:var(--ink)}
-    .theme-toggle svg{width:16px;height:16px;fill:currentColor}
+    .theme-toggle{background:var(--surface);border:1px solid var(--glass-border);border-radius:10px;padding:8px;font-size:12px;color:var(--muted);cursor:pointer;transition:all .2s ease;margin-left:16px;display:flex;align-items:center;justify-content:center}
+    .theme-toggle:hover{background:var(--surface-alt);color:var(--ink);transform:translateY(-1px)}
+    .theme-toggle svg{width:20px;height:20px;fill:currentColor}
 
     /* HERO */
     .hero{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;margin-top:60px}
-    .hero h1{font-size:clamp(28px,4.5vw,52px);line-height:1.1;margin:0 0 20px;font-weight:600}
-    .spark{color:var(--ink)}
-    .hero p{color:var(--muted);margin:0 0 28px;font-size:1rem;line-height:1.6}
-    .btn{display:inline-block;padding:12px 20px;border-radius:6px;background:var(--surface);border:1px solid var(--line);font-size:14px;font-weight:400;transition:background .2s ease}
-    .btn:hover{background:var(--surface-alt)}
+    .hero h1{font-size:clamp(34px,6vw,72px);line-height:1.05;margin:0 0 20px;font-weight:800;letter-spacing:-.02em}
+    .spark{background:linear-gradient(90deg, rgba(160,160,255,1), rgba(255,180,210,1));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .amp{font-family:Inter, ui-sans-serif, system-ui; font-weight:800; letter-spacing:0}
+    .hero p{color:var(--muted);margin:0 0 18px;font-size:1.05rem;line-height:1.7}
+    .focus{display:flex;align-items:baseline;gap:10px;margin:4px 0 26px}
+    .focus-label{font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);opacity:.9;position:relative;padding-left:12px}
+    .focus-label::before{content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);width:8px;height:8px;border-radius:50%;background:linear-gradient(90deg, rgba(160,160,255,1), rgba(255,180,210,1))}
+    .focus-items{display:flex;align-items:center;gap:8px}
+    .chip{padding:0;border:none;background:none;font-size:1.02rem;font-weight:800;letter-spacing:-.01em;color:var(--ink)}
+    .dot{color:var(--muted);opacity:.65;margin:0 4px;font-weight:700}
+    .btn{display:inline-block;padding:12px 20px;border-radius:10px;background:var(--surface);border:1px solid var(--glass-border);font-size:14px;font-weight:500;transition:all .2s ease}
+    .btn:hover{background:var(--surface-alt);transform:translateY(-1px)}
     .btn + .btn{margin-left:12px}
 
     /* ASCII */
-    .ascii-wrap{position:relative;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);background:var(--surface);min-height:320px}
+    .ascii-wrap{position:relative;border-radius:var(--radius);overflow:hidden;border:1px solid var(--glass-border);background:var(--glass-bg);backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));min-height:320px;box-shadow:var(--shadow);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 18px 40px rgba(0,0,0,.28)}
     #ascii{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:13px;letter-spacing:.5px;margin:0;padding:24px;white-space:pre;user-select:none;color:var(--muted)}
-    .overlay-tip{position:absolute;right:16px;bottom:16px;background:var(--surface-alt);border:1px solid var(--line);padding:6px 12px;border-radius:4px;color:var(--muted);font-size:11px}
+    .overlay-tip{position:absolute;right:16px;bottom:16px;background:var(--surface-alt);border:1px solid var(--glass-border);padding:6px 12px;border-radius:8px;color:var(--muted);font-size:11px}
     .debug{position:absolute;left:16px;bottom:16px;font-size:11px;color:var(--muted);opacity:.6}
 
     section{margin-top:100px}
-    h2{font-size:clamp(20px,3vw,28px);margin:0 0 24px;font-weight:600}
+    h2{font-family:'Sora', 'Space Grotesk', Inter, ui-sans-serif, system-ui; font-size:clamp(26px,3.2vw,38px);margin:0 0 24px;font-weight:700;letter-spacing:-.01em}
+    h1, h3{font-family:'Space Grotesk', Inter, ui-sans-serif, system-ui}
 
-    /* ===== Project cards – per your spec, adapted to palette ===== */
+    /* ===== Project cards ===== */
     .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:20px}
     @media(min-width:880px){.grid>.col-6{grid-column:span 6}} .grid>.col-12{grid-column:span 12}
     /* 3 colonnes pour les projets sur les écrans larges */
@@ -67,30 +123,43 @@
     @media(min-width:880px){.grid>.col-4{grid-column:span 6}}
     .grid>.col-4{grid-column:span 12}
 
-    .card{position:relative;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;gap:16px;transition:border-color .2s ease}
-    .card:hover,.card:focus-within{border-color:var(--muted)}
+    .card{position:relative;display:flex;flex-direction:column;border-radius:16px;padding:20px;gap:16px;transition:transform .25s ease, box-shadow .25s ease, background .25s ease, border-color .25s ease;
+      border:1px solid var(--glass-border);background:var(--glass-bg);backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));
+      box-shadow:0 8px 26px rgba(0,0,0,.12)}
+    [data-theme="dark"] .card{background:linear-gradient(180deg, rgba(20,24,34,.78), rgba(12,16,26,.62));
+      border-color:rgba(160,185,255,.18);box-shadow:0 10px 28px rgba(0,0,0,.38), inset 0 1px 0 rgba(190,210,255,.06);overflow:hidden}
+    .card:hover,.card:focus-within{transform:translateY(-3px) scale(1.01);box-shadow:0 16px 42px rgba(0,0,0,.2)}
+    [data-theme="dark"] .card:hover,[data-theme="dark"] .card:focus-within{box-shadow:0 22px 52px rgba(0,0,0,.45), inset 0 1px 0 rgba(190,210,255,.1);border-color:rgba(170,195,255,.32)}
+    /* Best Projects (dark): translation + éclaircissement au hover */
+    [data-theme="dark"] #projects .card{transition:transform .25s ease, box-shadow .25s ease, background .25s ease, border-color .25s ease}
+    [data-theme="dark"] #projects .card:hover,[data-theme="dark"] #projects .card:focus-within{
+      transform:translateY(-1px) scale(1.005);
+      background:linear-gradient(180deg, rgba(30,36,50,.82), rgba(18,24,36,.7));
+      border-color:rgba(170,195,255,.32);
+      box-shadow:0 22px 52px rgba(0,0,0,.45), inset 0 1px 0 rgba(190,210,255,.12)
+    }
     
     /* Remove animations for Education and Contact sections */
     #education .card, #contact .card, #reading .card{transition:none}
     #education .card:hover, #education .card:focus-within, #contact .card:hover, #contact .card:focus-within, #reading .card:hover, #reading .card:focus-within{border-color:var(--line);background:var(--surface);transform:none}
     
     @media (prefers-reduced-motion: reduce){.card{transition:border-color 160ms ease, background 160ms ease}.card:hover{transform:none}}
-    .card .thumb{aspect-ratio:16/9;width:100%;border-radius:8px;overflow:hidden;background:var(--bg);display:grid;place-items:center;font-size:.85rem;color:var(--muted)}
+    .card .thumb{aspect-ratio:16/9;width:100%;border-radius:12px;overflow:hidden;background:var(--bg);display:grid;place-items:center;font-size:.85rem;color:var(--muted)}
     .card .thumb img{width:100%;height:100%;object-fit:cover;display:block}
     .card h3{font-size:18px;line-height:1.3;font-weight:600;margin:0;color:var(--ink)}
     .card .blurb{font-size:14px;line-height:1.4;color:var(--muted);max-height:4em;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;line-clamp:3;-webkit-box-orient:vertical}
     .card .tags{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:auto}
-    .tag{background:var(--surface-alt);color:var(--muted);padding:.2rem .6rem;border-radius:4px;font-size:.7rem;font-weight:400;border:1px solid var(--line)}
+    .tag{background:var(--surface-alt);color:var(--muted);padding:.2rem .6rem;border-radius:999px;font-size:.7rem;font-weight:500;border:1px solid var(--glass-border)}
     .card .actions{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:12px}
-    .card .actions a{color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:.2rem .5rem;font-size:.75rem;font-weight:400;transition:background .2s ease}
-    .card .actions a:hover{background:var(--surface-alt)}
+    .card .actions a{color:var(--ink);border:1px solid var(--glass-border);border-radius:8px;padding:.3rem .6rem;font-size:.78rem;font-weight:500;transition:all .2s ease}
+    .card .actions a:hover{background:var(--surface-alt);transform:translateY(-1px)}
 
     /* Contact section buttons - different style */
-    #contact .actions a{color:var(--ink);border:1px solid var(--line);background:rgba(248,247,252,.05);border-radius:10px;padding:.4rem .8rem;font-size:.85rem;font-weight:500;transition:all .2s ease}
+    #contact .actions a{color:var(--ink);border:1px solid var(--glass-border);background:rgba(248,247,252,.06);border-radius:10px;padding:.4rem .8rem;font-size:.85rem;font-weight:500;transition:all .2s ease}
     #contact .actions a:hover{background:rgba(248,247,252,.12);transform:translateY(-1px)}
     
     /* Education section buttons - no purple effect */
-    #education .card .actions a{color:var(--ink);border:1px solid var(--line);background:rgba(248,247,252,.05)}
+    #education .card .actions a{color:var(--ink);border:1px solid var(--glass-border);background:rgba(248,247,252,.05)}
     #education .card .actions a:hover{background:rgba(248,247,252,.12);transform:translateY(-1px)}
     
     /* Reading section - special styling for book comments */
@@ -99,7 +168,7 @@
     .background-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
     @media(max-width:768px){.background-grid{grid-template-columns:1fr}}
     
-    .background-item{position:relative;padding:28px;border-radius:var(--radius);border:1px solid var(--line);background:var(--surface)}
+    .background-item{position:relative;padding:28px;border-radius:var(--radius);border:1px solid var(--glass-border);background:var(--glass-bg);backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));box-shadow:var(--shadow)}
     .background-item::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--line)}
     
     .background-icon{font-size:20px;margin-bottom:16px;color:var(--muted)}
@@ -121,27 +190,210 @@
     }
     
     /* Connect Section - Modern design */
-    .connect-wrapper{max-width:600px;margin:0 auto}
-    .connect-intro{text-align:center;margin-bottom:40px}
-    .connect-intro p{margin:0 0 12px;font-size:16px;color:var(--muted);line-height:1.6}
-    .connect-intro p:last-child{margin-bottom:0;color:var(--ink);font-weight:500}
-    
-    .connect-methods{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    @media(max-width:640px){.connect-methods{grid-template-columns:1fr}}
-    
-    .connect-item{display:flex;align-items:center;gap:16px;padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);transition:background .2s ease;text-decoration:none}
-    .connect-item:hover{background:var(--surface-alt)}
-    
-    .connect-icon{font-size:14px;flex-shrink:0;font-weight:500;color:var(--muted);background:var(--surface-alt);width:32px;height:32px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,monospace;border:1px solid var(--line)}
-    .connect-details{flex:1;min-width:0}
-    .connect-label{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
-    .connect-value{display:block;font-size:14px;color:var(--ink);font-weight:500;overflow:hidden;text-overflow:ellipsis}
+    .connect-wrapper{max-width:880px;margin:0 auto}
+    .connect-intro{text-align:center;margin-bottom:8px}
+    .connect-intro p{margin:0 0 6px;font-size:15px;color:var(--muted);line-height:1.6}
+    .connect-inline{display:flex;flex-wrap:nowrap;gap:22px;align-items:center;justify-content:center;padding:10px 0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+    .connect-inline::-webkit-scrollbar{display:none}
+    .contact-link{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);position:relative;white-space:nowrap}
+    .contact-link::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;opacity:.25;transition:transform .25s ease,opacity .25s ease}
+    .contact-link:hover::after{transform:scaleX(1);opacity:.45}
+    .contact-label{font-size:11px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
+    .contact-value{font-size:15px;font-weight:700}
 
     /* Footer */
     .footer{margin:100px 0 40px;color:var(--muted);font-size:14px;opacity:.8;border-top:1px solid var(--line);padding-top:24px;text-align:center}
+
+    /* Reveal on scroll – refined */
+    .reveal-ready [data-reveal]{opacity:0;transition:opacity .7s ease, transform .7s ease;will-change:transform,opacity}
+    .reveal-ready [data-reveal].is-visible{opacity:1;transform:none}
+    .reveal-ready [data-reveal="up"]{transform:translateY(16px)}
+    .reveal-ready [data-reveal="down"]{transform:translateY(-16px)}
+    .reveal-ready [data-reveal="right"]{transform:translateX(18px)}
+    .reveal-ready [data-reveal="left"]{transform:translateX(-18px)}
+    .reveal-ready [data-reveal="zoom"]{transform:scale(.96)}
+    /* Softer reveal variant for Best Projects */
+    .reveal-ready [data-reveal="up-sm"]{transform:translateY(6px);transition-duration:.45s}
+    .reveal-ready [data-reveal="fade"]{transform:none;opacity:.85;transition:opacity .4s ease}
+    .reveal-ready [data-reveal="fade"].is-visible{opacity:1}
+    @media (prefers-reduced-motion: reduce){
+      .crystal,.noise{display:none}
+      .reveal-ready [data-reveal]{opacity:1;transform:none}
+    }
   </style>
 </head>
 <body>
+  <div class="bg" aria-hidden="true">
+    <!-- Light theme: Floating translucent crystals with facets (top only) -->
+    <div class="bg-crystals">
+    <svg class="crystal c1" viewBox="0 0 100 120" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <linearGradient id="crystalGrad1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" style="stop-color:var(--crystal-a); stop-opacity:.95"/>
+          <stop offset="100%" style="stop-color:var(--crystal-b); stop-opacity:.8"/>
+        </linearGradient>
+        <filter id="shine1" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="1.2" result="blur"/>
+          <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+      <g filter="url(#shine1)">
+        <polygon fill="url(#crystalGrad1)" points="50,4 80,34 70,104 30,104 20,34"/>
+        <polygon fill="rgba(255,255,255,.12)" points="50,4 80,34 60,46"/>
+        <polygon fill="rgba(255,255,255,.08)" points="50,4 40,46 20,34"/>
+        <polygon fill="rgba(255,255,255,.06)" points="30,104 40,46 20,34"/>
+        <polygon fill="rgba(255,255,255,.06)" points="70,104 60,46 80,34"/>
+        <polygon fill="rgba(255,255,255,.10)" points="50,4 60,46 40,46"/>
+      </g>
+    </svg>
+    <svg class="crystal c2" viewBox="0 0 120 140" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <linearGradient id="crystalGrad2" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" style="stop-color:var(--crystal-a); stop-opacity:.9"/>
+          <stop offset="100%" style="stop-color:var(--crystal-b); stop-opacity:.75"/>
+        </linearGradient>
+        <filter id="shine2" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="1.4" result="blur"/>
+          <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+      <g filter="url(#shine2)">
+        <polygon fill="url(#crystalGrad2)" points="60,6 102,44 90,128 30,128 18,44"/>
+        <polygon fill="rgba(255,255,255,.1)" points="60,6 78,48 102,44"/>
+        <polygon fill="rgba(255,255,255,.08)" points="60,6 42,48 18,44"/>
+        <polygon fill="rgba(255,255,255,.06)" points="30,128 42,48 18,44"/>
+        <polygon fill="rgba(255,255,255,.06)" points="90,128 78,48 102,44"/>
+        <polygon fill="rgba(255,255,255,.12)" points="60,6 78,48 42,48"/>
+      </g>
+    </svg>
+    <svg class="crystal c3" viewBox="0 0 110 130" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <linearGradient id="crystalGrad3" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" style="stop-color:var(--crystal-a); stop-opacity:.92"/>
+          <stop offset="100%" style="stop-color:var(--crystal-b); stop-opacity:.78"/>
+        </linearGradient>
+        <filter id="shine3" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="1.2" result="blur"/>
+          <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+      <g filter="url(#shine3)">
+        <polygon fill="url(#crystalGrad3)" points="55,5 96,40 82,122 28,122 14,40"/>
+        <polygon fill="rgba(255,255,255,.1)" points="55,5 74,48 96,40"/>
+        <polygon fill="rgba(255,255,255,.08)" points="55,5 36,48 14,40"/>
+        <polygon fill="rgba(255,255,255,.06)" points="28,122 36,48 14,40"/>
+        <polygon fill="rgba(255,255,255,.06)" points="82,122 74,48 96,40"/>
+        <polygon fill="rgba(255,255,255,.12)" points="55,5 74,48 36,48"/>
+      </g>
+    </svg>
+    <svg class="crystal c4" viewBox="0 0 160 180" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <linearGradient id="crystalGrad4" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" style="stop-color:var(--crystal-a); stop-opacity:.9"/>
+          <stop offset="100%" style="stop-color:var(--crystal-b); stop-opacity:.78"/>
+        </linearGradient>
+        <filter id="shine4" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="1.6" result="blur"/>
+          <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+      <g filter="url(#shine4)">
+        <polygon fill="url(#crystalGrad4)" points="80,6 138,58 120,170 40,170 22,58"/>
+        <polygon fill="rgba(255,255,255,.11)" points="80,6 103,54 138,58"/>
+        <polygon fill="rgba(255,255,255,.08)" points="80,6 57,54 22,58"/>
+        <polygon fill="rgba(255,255,255,.06)" points="40,170 57,54 22,58"/>
+        <polygon fill="rgba(255,255,255,.06)" points="120,170 103,54 138,58"/>
+        <polygon fill="rgba(255,255,255,.12)" points="80,6 103,54 57,54"/>
+      </g>
+    </svg>
+    </div>
+    
+    <!-- Dark theme: floating 3D-like gears (replace crystals) -->
+    <div class="bg-gears">
+      <svg class="gear g1" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <radialGradient id="gearGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="rgba(140,170,255,.35)"/>
+            <stop offset="100%" stop-color="rgba(120,140,220,.15)"/>
+          </radialGradient>
+          <radialGradient id="gearShine" cx="35%" cy="30%" r="25%">
+            <stop offset="0%" stop-color="white" stop-opacity=".25"/>
+            <stop offset="100%" stop-color="white" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <g>
+          <circle class="ring" cx="100" cy="100" r="70"/>
+          <circle class="hub" cx="100" cy="100" r="28"/>
+          <g>
+            <rect class="tooth" x="98" y="18" width="4" height="16" rx="1"/>
+            <rect class="tooth" x="98" y="166" width="4" height="16" rx="1"/>
+            <rect class="tooth" x="18" y="98" width="16" height="4" rx="1"/>
+            <rect class="tooth" x="166" y="98" width="16" height="4" rx="1"/>
+            <rect class="tooth" x="40" y="40" width="12" height="4" transform="rotate(-45 46 42)" rx="1"/>
+            <rect class="tooth" x="148" y="156" width="12" height="4" transform="rotate(-45 154 158)" rx="1"/>
+            <rect class="tooth" x="156" y="40" width="12" height="4" transform="rotate(45 162 42)" rx="1"/>
+            <rect class="tooth" x="40" y="156" width="12" height="4" transform="rotate(45 46 158)" rx="1"/>
+          </g>
+          <ellipse class="shine" cx="78" cy="74" rx="32" ry="20"/>
+        </g>
+      </svg>
+      <svg class="gear g2" viewBox="0 0 240 240" preserveAspectRatio="xMidYMid meet">
+        <use href="#"/>
+        <g>
+          <circle class="ring" cx="120" cy="120" r="88"/>
+          <circle class="hub" cx="120" cy="120" r="34"/>
+          <g>
+            <rect class="tooth" x="118" y="18" width="4" height="18" rx="1"/>
+            <rect class="tooth" x="118" y="204" width="4" height="18" rx="1"/>
+            <rect class="tooth" x="18" y="118" width="18" height="4" rx="1"/>
+            <rect class="tooth" x="204" y="118" width="18" height="4" rx="1"/>
+            <rect class="tooth" x="52" y="52" width="14" height="4" transform="rotate(-45 59 54)" rx="1"/>
+            <rect class="tooth" x="174" y="186" width="14" height="4" transform="rotate(-45 181 188)" rx="1"/>
+            <rect class="tooth" x="186" y="52" width="14" height="4" transform="rotate(45 193 54)" rx="1"/>
+            <rect class="tooth" x="52" y="186" width="14" height="4" transform="rotate(45 59 188)" rx="1"/>
+          </g>
+          <ellipse class="shine" cx="96" cy="86" rx="36" ry="22"/>
+        </g>
+      </svg>
+      <svg class="gear g3" viewBox="0 0 180 180" preserveAspectRatio="xMidYMid meet">
+        <g>
+          <circle class="ring" cx="90" cy="90" r="66"/>
+          <circle class="hub" cx="90" cy="90" r="26"/>
+          <g>
+            <rect class="tooth" x="88" y="6" width="4" height="16" rx="1"/>
+            <rect class="tooth" x="88" y="158" width="4" height="16" rx="1"/>
+            <rect class="tooth" x="6" y="88" width="16" height="4" rx="1"/>
+            <rect class="tooth" x="158" y="88" width="16" height="4" rx="1"/>
+            <rect class="tooth" x="34" y="34" width="12" height="4" transform="rotate(-45 40 36)" rx="1"/>
+            <rect class="tooth" x="134" y="146" width="12" height="4" transform="rotate(-45 140 148)" rx="1"/>
+            <rect class="tooth" x="146" y="34" width="12" height="4" transform="rotate(45 152 36)" rx="1"/>
+            <rect class="tooth" x="34" y="146" width="12" height="4" transform="rotate(45 40 148)" rx="1"/>
+          </g>
+          <ellipse class="shine" cx="72" cy="66" rx="28" ry="18"/>
+        </g>
+      </svg>
+    </div>
+    <!-- Procedural grain -->
+    <svg class="noise" xmlns="http://www.w3.org/2000/svg">
+      <filter id="noiseFilter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/>
+        <feColorMatrix type="saturate" values="0"/>
+      </filter>
+      <rect width="100%" height="100%" filter="url(#noiseFilter)" opacity="1"/>
+    </svg>
+  </div>
   <div class="container">
     <nav class="nav">
       <div class="brand">Marc Duboc <span class="badge">promaa</span></div>
@@ -150,21 +402,22 @@
         <a href="#education">Education</a>
         <a href="#reading">Reading</a>
         <a href="#contact">Contact</a>
+        <a href="essays.html">Essays</a>
         <button class="theme-toggle" id="theme-toggle">
-          <svg viewBox="0 0 16 16">
-            <!-- Simple round moon -->
-            <rect x="5" y="2" width="6" height="1" fill="var(--ink)"/>
-            <rect x="3" y="3" width="10" height="1" fill="var(--ink)"/>
-            <rect x="2" y="4" width="12" height="1" fill="var(--ink)"/>
-            <rect x="2" y="5" width="12" height="6" fill="var(--ink)"/>
-            <rect x="2" y="11" width="12" height="1" fill="var(--ink)"/>
-            <rect x="3" y="12" width="10" height="1" fill="var(--ink)"/>
-            <rect x="5" y="13" width="6" height="1" fill="var(--ink)"/>
-            <!-- White spots -->
-            <rect x="5" y="6" width="1" height="1" fill="var(--bg)"/>
-            <rect x="9" y="7" width="1" height="1" fill="var(--bg)"/>
-            <rect x="11" y="9" width="1" height="1" fill="var(--bg)"/>
-            <rect x="7" y="10" width="1" height="1" fill="var(--bg)"/>
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <!-- Pixel moon crescent -->
+            <rect x="6" y="3" width="6" height="1"/>
+            <rect x="5" y="4" width="7" height="1"/>
+            <rect x="5" y="5" width="7" height="1"/>
+            <rect x="5" y="6" width="7" height="1"/>
+            <rect x="5" y="7" width="7" height="1"/>
+            <rect x="6" y="8" width="6" height="1"/>
+            <rect x="7" y="9" width="5" height="1"/>
+            <rect x="8" y="10" width="4" height="1"/>
+            <!-- Cutout for crescent -->
+            <rect x="4" y="5" width="4" height="1" fill="var(--bg)"/>
+            <rect x="4" y="6" width="4" height="1" fill="var(--bg)"/>
+            <rect x="4" y="7" width="4" height="1" fill="var(--bg)"/>
           </svg>
         </button>
       </div>
@@ -172,8 +425,12 @@
 
     <header class="hero">
       <div>
-        <h1><span class="spark">engineer & builder</span>. I ship small, sharp systems.</h1>
+         <h1><span class="spark">engineer <span class="amp">&</span> builder</span>. I ship small, sharp systems.</h1>
         <p>Clarity, freedom, creativity.</p>
+        <div class="focus" aria-label="Focus areas">
+          <span class="focus-label">Focus</span>
+          <div class="focus-items"><span class="chip">Robotics</span><span class="dot">•</span><span class="chip">Web</span><span class="dot">•</span><span class="chip">Web3</span></div>
+        </div>
         <a class="btn" href="#projects">See projects ↓</a>
         <a class="btn" href="https://github.com/promaaa" target="_blank" rel="noopener">GitHub ↗</a>
         <a class="btn" href="https://www.youtube.com/watch?v=wIBkvQ6MfKQ" target="_blank" rel="noopener">YouTube ↗</a>
@@ -334,46 +591,18 @@
       <div class="connect-wrapper">
         <div class="connect-intro">
           <p>Always interested in challenging projects, innovative collaborations, and meaningful conversations about technology.</p>
-          <p>Currently seeking <strong>internship opportunities</strong> for summer 2025.</p>
         </div>
         
-        <div class="connect-methods">
-          <a href="mailto:marc.duboc@pm.me" class="connect-item email">
-            <div class="connect-icon">@</div>
-            <div class="connect-details">
-              <span class="connect-label">Email</span>
-              <span class="connect-value">marc.duboc@pm.me</span>
-            </div>
-          </a>
-          
-          <a href="https://linkedin.com/in/marc-duboc-072932316" target="_blank" rel="noopener" class="connect-item linkedin">
-            <div class="connect-icon">in</div>
-            <div class="connect-details">
-              <span class="connect-label">LinkedIn</span>
-              <span class="connect-value">Professional profile</span>
-            </div>
-          </a>
-          
-          <a href="https://x.com/proma__" target="_blank" rel="noopener" class="connect-item twitter">
-            <div class="connect-icon">x</div>
-            <div class="connect-details">
-              <span class="connect-label">X (Twitter)</span>
-              <span class="connect-value">Tech thoughts & updates</span>
-            </div>
-          </a>
-          
-          <a href="https://github.com/promaaa" target="_blank" rel="noopener" class="connect-item github">
-            <div class="connect-icon">gh</div>
-            <div class="connect-details">
-              <span class="connect-label">GitHub</span>
-              <span class="connect-value">Code & projects</span>
-            </div>
-          </a>
+        <div class="connect-inline">
+          <a href="mailto:marc.duboc.pro@proton.me" class="contact-link"><span class="contact-label">Email</span><span class="contact-value">marc.duboc.pro@proton.me</span></a>
+          <a href="https://linkedin.com/in/marc-duboc-072932316" target="_blank" rel="noopener" class="contact-link"><span class="contact-label">LinkedIn</span><span class="contact-value">Professional profile</span></a>
+          <a href="https://x.com/proma__" target="_blank" rel="noopener" class="contact-link"><span class="contact-label">X</span><span class="contact-value">Tech thoughts & updates</span></a>
+          <a href="https://github.com/promaaa" target="_blank" rel="noopener" class="contact-link"><span class="contact-label">GitHub</span><span class="contact-value">Code & projects</span></a>
         </div>
       </div>
     </section>
 
-    <footer class="footer">Built with plain HTML/CSS/JS. ASCII reveals “promaa”. © 2025 Marc Duboc.</footer>
+    <footer class="footer">© 2025 — built by promaa (Marc Duboc)</footer>
   </div>
 
   <script>
@@ -386,7 +615,7 @@
       'p':["######.","#.....#","#.....#","######.","#......","#......","#......"],
       'r':["######.","#.....#","#.....#","######.","#.#....","#..#...","#...#.."],
       'o':[".#####.","#.....#","#.....#","#.....#","#.....#","#.....#",".#####."],
-      'm':["#..#..#","##.##.#","#.#.#.#","#.#.#.#","#.#.#.#","#.....#","#.....#"],
+      'm':["#.....#","##...##","#.#.#.#","#.#.#.#","#..#..#","#.....#","#.....#"],
       'a':[".#####.","#.....#","#.....#","#######","#.....#","#.....#","#.....#"]
     };
     var WORD='promaa'; var glyphW=7, glyphH=7, space=1; var wordPixW=WORD.length*glyphW+(WORD.length-1)*space;
@@ -405,10 +634,13 @@
     const toggle = document.getElementById('theme-toggle');
     const html = document.documentElement;
     
-    // Check for saved theme or default to light
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    html.setAttribute('data-theme', savedTheme);
-    updateToggleIcon(savedTheme);
+    // Respect system preference on first load, then saved choice
+    const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const saved = localStorage.getItem('theme');
+    // Default explicit: light
+    const initialTheme = saved ? saved : 'light';
+    html.setAttribute('data-theme', initialTheme);
+    updateToggleIcon(initialTheme);
     
     toggle.addEventListener('click', function(){
       const currentTheme = html.getAttribute('data-theme');
@@ -420,7 +652,7 @@
     });
     
     function updateToggleIcon(theme){
-      const sunSvg = `<svg viewBox="0 0 16 16">
+      const sunSvg = `<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
         <!-- Pixelated sun -->
         <rect x="7" y="0" width="2" height="2"/>
         <rect x="13" y="2" width="2" height="2"/>
@@ -437,26 +669,66 @@
         <rect x="6" y="11" width="4" height="1"/>
       </svg>`;
       
-      const moonSvg = `<svg viewBox="0 0 16 16">
-        <!-- Moon with craters -->
-        <rect x="5" y="2" width="6" height="1"/>
-        <rect x="3" y="3" width="10" height="1"/>
-        <rect x="2" y="4" width="12" height="1"/>
-        <rect x="2" y="5" width="12" height="6"/>
-        <rect x="2" y="11" width="12" height="1"/>
-        <rect x="3" y="12" width="10" height="1"/>
-        <rect x="5" y="13" width="6" height="1"/>
-        <!-- Craters -->
-        <rect x="4" y="6" width="2" height="1"/>
-        <rect x="4" y="7" width="2" height="1"/>
-        <rect x="9" y="8" width="1" height="1"/>
-        <rect x="11" y="6" width="1" height="1"/>
-        <rect x="6" y="9" width="2" height="1"/>
-        <rect x="6" y="10" width="2" height="1"/>
+      const moonSvg = `<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+        <!-- Pixel moon: clear crescent -->
+        <!-- Body -->
+        <rect x="8" y="2" width="8" height="2"/>
+        <rect x="7" y="4" width="10" height="2"/>
+        <rect x="6" y="6" width="11" height="2"/>
+        <rect x="6" y="8" width="11" height="2"/>
+        <rect x="6" y="10" width="11" height="2"/>
+        <rect x="7" y="12" width="10" height="2"/>
+        <rect x="8" y="14" width="8" height="2"/>
+        <!-- Cutout to form crescent -->
+        <rect x="12" y="4" width="7" height="2" fill="var(--bg)"/>
+        <rect x="13" y="6" width="7" height="2" fill="var(--bg)"/>
+        <rect x="13" y="8" width="7" height="2" fill="var(--bg)"/>
+        <rect x="13" y="10" width="7" height="2" fill="var(--bg)"/>
+        <rect x="12" y="12" width="7" height="2" fill="var(--bg)"/>
       </svg>`;
       
       toggle.innerHTML = theme === 'dark' ? sunSvg : moonSvg;
       toggle.title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+      toggle.setAttribute('aria-label', toggle.title);
+    }
+    // Sync with system preference changes if user hasn't chosen explicitly
+    try{
+      const mql = window.matchMedia('(prefers-color-scheme: dark)');
+      mql.addEventListener('change', (e)=>{
+        const userSet = localStorage.getItem('theme');
+        if(userSet) return; // respect explicit choice
+        const newTheme = e.matches ? 'dark' : 'light';
+        html.setAttribute('data-theme', newTheme);
+        updateToggleIcon(newTheme);
+      });
+    }catch(_){/* older browsers */}
+  })();
+  
+  // Reveal on scroll (fade/slide)
+  (function(){
+    const root = document.documentElement;
+    root.classList.add('reveal-ready');
+    const targets = document.querySelectorAll('.hero > div, .hero .ascii-wrap, section h2, #projects .card, #education .background-item, #reading .card, #contact .connect-item');
+    const observer = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){ entry.target.classList.add('is-visible'); observer.unobserve(entry.target); }
+      });
+    },{rootMargin:'-5% 0px -5% 0px', threshold:0.1});
+    targets.forEach((el, idx)=>{ 
+      const attr = el.matches('section h2') ? 'up' : (el.matches('#projects .card') ? 'up-sm' : (el.matches('#contact .connect-item') ? 'fade' : (el.matches('.hero .ascii-wrap') ? 'zoom' : 'up')));
+      el.setAttribute('data-reveal', attr);
+      observer.observe(el);
+    });
+    // keep background objects only near the top of the page
+    const bg = document.querySelector('.bg');
+    if(bg){
+      const cleanup = ()=>{
+        const y = window.scrollY || document.documentElement.scrollTop;
+        const opacity = Math.max(0, 1 - (y/500));
+        bg.style.opacity = 0.85*opacity + 0.15;
+      };
+      window.addEventListener('scroll', cleanup, {passive:true});
+      cleanup();
     }
   })();
   // Make all project cards with data-href clickable (excluding inner action links)
