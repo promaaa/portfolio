@@ -40,6 +40,12 @@
             padding: 40px 20px;
         }
 
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
         img {
             max-width: 100%;
             height: auto;
@@ -56,6 +62,29 @@
         
         .back-link:hover {
             color: var(--ink);
+        }
+
+        .theme-toggle {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 6px;
+            cursor: pointer;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--line);
+        }
+
+        .theme-toggle svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
         }
         
         h1 {
@@ -233,8 +262,11 @@
 </head>
 <body>
     <div class="container">
-    <a href="main.html" class="back-link">← Back to Portfolio</a>
-        
+    <div class="top-bar">
+        <a href="main.html" class="back-link">← Back to Portfolio</a>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Switch to dark mode" title="Switch to dark mode"></button>
+    </div>
+
         <h1>Evento — Event Management Platform</h1>
         
         <div class="project-links">
@@ -753,5 +785,56 @@ def home(request):
             <p>Evento represents a comprehensive event management solution built with modern web technologies, demonstrating proficiency in full-stack development, user experience design, and rapid application development within the constraints of a competitive hackathon environment.</p>
         </div>
     </div>
+    <script>
+    (function(){
+      const toggle = document.getElementById('theme-toggle');
+      const html = document.documentElement;
+      const saved = localStorage.getItem('theme');
+      const initial = saved ? saved : 'light';
+      html.setAttribute('data-theme', initial);
+      updateToggleIcon(initial);
+      toggle.addEventListener('click', function(){
+        const current = html.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        updateToggleIcon(next);
+      });
+      function updateToggleIcon(theme){
+        const sunSvg = `<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <rect x="7" y="0" width="2" height="2"/>
+        <rect x="13" y="2" width="2" height="2"/>
+        <rect x="14" y="7" width="2" height="2"/>
+        <rect x="13" y="12" width="2" height="2"/>
+        <rect x="7" y="14" width="2" height="2"/>
+        <rect x="2" y="12" width="2" height="2"/>
+        <rect x="0" y="7" width="2" height="2"/>
+        <rect x="2" y="2" width="2" height="2"/>
+        <rect x="5" y="5" width="6" height="6"/>
+        <rect x="6" y="4" width="4" height="1"/>
+        <rect x="4" y="6" width="1" height="4"/>
+        <rect x="11" y="6" width="1" height="4"/>
+        <rect x="6" y="11" width="4" height="1"/>
+      </svg>`;
+        const moonSvg = `<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+        <rect x="8" y="2" width="8" height="2"/>
+        <rect x="7" y="4" width="10" height="2"/>
+        <rect x="6" y="6" width="11" height="2"/>
+        <rect x="6" y="8" width="11" height="2"/>
+        <rect x="6" y="10" width="11" height="2"/>
+        <rect x="7" y="12" width="10" height="2"/>
+        <rect x="8" y="14" width="8" height="2"/>
+        <rect x="12" y="4" width="7" height="2" fill=\"var(--bg)\"/>
+        <rect x="13" y="6" width="7" height="2" fill=\"var(--bg)\"/>
+        <rect x="13" y="8" width="7" height="2" fill=\"var(--bg)\"/>
+        <rect x="13" y="10" width="7" height="2" fill=\"var(--bg)\"/>
+        <rect x="12" y="12" width="7" height="2" fill=\"var(--bg)\"/>
+      </svg>`;
+        toggle.innerHTML = theme === 'dark' ? sunSvg : moonSvg;
+        toggle.title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+        toggle.setAttribute('aria-label', toggle.title);
+      }
+    })();
+    </script>
 </body>
 </html>
