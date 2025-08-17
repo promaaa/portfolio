@@ -27,12 +27,8 @@
                 * { box-sizing: border-box; }
                 html,body { margin:0; font:16px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,Roboto,Arial; background:var(--bg); color:var(--ink); }
                 .container { max-width: 880px; margin:0 auto; padding:42px 22px 80px; }
-                .top-bar { display:flex;justify-content:space-between;align-items:center; }
                 .back-link { display:inline-block; margin-bottom:28px; text-decoration:none; color:var(--muted); }
                 .back-link:hover { color:var(--ink); }
-                .theme-toggle{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:6px;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:center;transition:background .2s ease;}
-                .theme-toggle:hover{background:var(--line);}
-                .theme-toggle svg{width:18px;height:18px;fill:currentColor;}
                 h1 { margin:0 0 14px; font-size:2.4rem; font-weight:600; line-height:1.15; }
                 h2 { margin:54px 0 18px; font-size:1.55rem; font-weight:560; line-height:1.3; }
                 h3 { margin:34px 0 14px; font-size:1.18rem; font-weight:550; }
@@ -103,33 +99,45 @@
                 .toc a:hover { color:var(--ink); }
                 .sep { height:1px; background:linear-gradient(90deg,var(--line),transparent); margin:50px 0 40px; }
                 .footer-note { margin-top:70px; font-size:.75rem; text-align:center; color:var(--muted); }
+
                 @media (max-width:680px){ h1{font-size:2rem;} .toc{columns:1;} }
+
+                /* --- Theme toggle button (identique au design Evento) --- */
+                .theme-toggle{
+                  position:fixed; top:12px; right:12px;
+                  border:1px solid var(--line);
+                  background:var(--surface);
+                  color:var(--muted);
+                  padding:6px; font-size:12px; border-radius:6px;
+                  cursor:pointer; display:flex; align-items:center; justify-content:center;
+                  transition:background .2s ease;
+                }
+                .theme-toggle:hover{ background:var(--line); color:var(--ink); }
+                .theme-toggle svg{ width:16px; height:16px; fill:currentColor; display:block; }
         </style>
 </head>
 <body>
 <div class="container">
-    <div class="top-bar">
-        <a href="main.html" class="back-link">← Back to Portfolio</a>
-        <button id="theme-toggle" class="theme-toggle" aria-label="Switch to dark mode" title="Switch to dark mode"></button>
-    </div>
-    <h1>nand2cpu — From a Single NAND Gate to a 16‑bit ALU</h1>
+    <a href="main.html" class="back-link">← Back to Portfolio</a>
+    <h1>nand2cpu — From a Single NAND Gate to a 16-bit ALU</h1>
     <div class="badge-row">
-        <div class="badge">Digital Logic</div>
         <div class="badge">Verilog</div>
         <div class="badge">Assembler</div>
-        <div class="badge">Education</div>
         <div class="badge">Open Source</div>
     </div>
+
+    <!-- ✅ Bouton dark/light ici (après badges, avant links) -->
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme"></button>
+
     <div class="project-links">
-        <a href="https://github.com/promaaa/nand2cpu" target="_blank" rel="noopener">Source Code</a>
-        <a href="https://www.youtube.com/watch?v=wIBkvQ6MfKQ" target="_blank" rel="noopener">Episode Video</a>
-        <a href="https://github.com/promaaa/nand2cpu/tree/main/tools/assembler" target="_blank" rel="noopener">Assembler</a>
+        <a href="https://github.com/promaaa/nand2cpu" target="_blank" rel="noopener">Code ↗</a>
+        <a href="https://www.youtube.com/watch?v=wIBkvQ6MfKQ" target="_blank" rel="noopener">Episode Video↗</a>
     </div>
     <figure>
         <img src="pictures/nand2cpu.jpg" alt="Conceptual illustration of the nand2cpu project" loading="lazy" />
         <figcaption>Figure 1 — Visual identity of the nand2cpu educational project (Part 1).</figcaption>
     </figure>
-    <div class="highlight-box"><strong>TL;DR:</strong> Educational, reproducible journey turning one universal logic primitive (NAND) into a parameterized gate library, an 8‑bit ALU, then a 16‑bit ALU plus a minimal Python assembler and Verilog testbenches (canonical demo: 7 + 8 = 15). First episode of the “From Bits to Chip” series.</div>
+    <div class="highlight-box"><strong>TL;DR:</strong> Educational, reproducible journey turning one universal logic primitive (NAND) into a parameterized gate library, an 8-bit ALU, then a 16-bit ALU plus a minimal Python assembler and Verilog testbenches (canonical demo: 7 + 8 = 15). First episode of the “From Bits to Chip” series.</div>
     <div class="toc">
         <strong style="color:var(--ink);">Contents</strong>
         <a href="#sec1">1. Context & Goal</a>
@@ -152,22 +160,22 @@
     </div>
     <div class="sep" id="sec1"></div>
     <h2>1. Context & Objective</h2>
-    <p>People often hear “any digital system can be built from NAND”. This project makes that statement concrete: a reproducible path from a single universal gate to a working 16‑bit Arithmetic Logic Unit with minimal tooling (Verilog + Python) and systematic verification.</p>
-    <h2 id="sec2">2. Pedagogical Architecture (Bottom‑Up)</h2>
+    <p>People often hear “any digital system can be built from NAND”. This project makes that statement concrete: a reproducible path from a single universal gate to a working 16-bit Arithmetic Logic Unit with minimal tooling (Verilog + Python) and systematic verification.</p>
+    <h2 id="sec2">2. Pedagogical Architecture (Bottom-Up)</h2>
     <ol>
         <li>Parametric universal primitive (<code>nand_gate.v</code>)</li>
         <li>Derived gates by structural composition (AND, OR, etc.)</li>
-        <li>Bit to word level generalization (8‑bit operands)</li>
-        <li>Introduce arithmetic & logical ops (8‑bit ALU)</li>
+        <li>Bit to word level generalization (8-bit operands)</li>
+        <li>Introduce arithmetic & logical ops (8-bit ALU)</li>
         <li>Scale to 16 bits (carry chaining)</li>
-        <li>Add a textual assembler → 16‑bit machine code</li>
+        <li>Add a textual assembler → 16-bit machine code</li>
         <li>Automated testbenches (Icarus Verilog)</li>
     </ol>
     <h2 id="sec3">3. Repository Structure (Snapshot)</h2>
     <ul>
         <li><code>src/rtl/</code> — Verilog modules (gates + ALUs)</li>
         <li><code>src/testbenches/</code> — Focused testbenches</li>
-        <li><code>src/fpga/</code> — Future top‑level for FPGA mapping</li>
+        <li><code>src/fpga/</code> — Future top-level for FPGA mapping</li>
         <li><code>tools/assembler/</code> — Parser & encoder (Python)</li>
         <li><code>tools/scripts/</code> — Build / simulation helpers</li>
         <li><code>examples/</code> — Assembly examples</li>
@@ -175,17 +183,17 @@
     </ul>
     <h2 id="sec4">4. Core Logic Modules</h2>
     <h3>4.1 Universality of NAND</h3>
-        <p>NAND is functionally complete: by combining inversion and conjunction you recover all other boolean operators. The educational value lies in <em>explicit reconstruction</em> rather than hand‑waving: every subsequent gate in the library is expressed structurally in terms of <code>nand_gate</code>, keeping the dependency graph transparent and auditable.</p>
+        <p>NAND is functionally complete: by combining inversion and conjunction you recover all other boolean operators. The educational value lies in <em>explicit reconstruction</em> rather than hand-waving: every subsequent gate in the library is expressed structurally in terms of <code>nand_gate</code>, keeping the dependency graph transparent and auditable.</p>
     <ul>
         <li><code>NOT A = NAND(A, A)</code></li>
         <li><code>AND(A,B) = NOT(NAND(A,B))</code></li>
         <li><code>OR(A,B) = NAND(NOT A, NOT B)</code></li>
     </ul>
-        <p>Each primitive is parameterized via <code>WIDTH</code>, enabling reuse from 1 bit to N bits without duplicating logic. Parameterization keeps the pedagogical jump (bit → bus) incremental: learners reuse mental models instead of confronting an all‑new abstraction.</p>
+        <p>Each primitive is parameterized via <code>WIDTH</code>, enabling reuse from 1 bit to N bits without duplicating logic. Parameterization keeps the pedagogical jump (bit → bus) incremental: learners reuse mental models instead of confronting an all-new abstraction.</p>
             <figure>
                 <svg viewBox="0 0 880 300" width="100%" role="img" aria-label="Derivation of basic logic gates from NAND" style="max-width:880px">
                     <title>Deriving Logic from NAND</title>
-                    <style>
+                    <style id="svg2-style">
                         .box{fill:#fff;stroke:#111;stroke-width:1.2;rx:10;}
                         .title{font:14px system-ui,sans-serif;font-weight:600;fill:#111;}
                         .expr{font:11px ui-monospace;fill:#111;}
@@ -194,7 +202,7 @@
                     </style>
                     <defs>
                         <marker id="arrowHead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-                            <path d="M0,0 L10,3 L0,6 Z" fill="#111" />
+                            <path id="svg2-arrow" d="M0,0 L10,3 L0,6 Z" fill="#111" />
                         </marker>
                     </defs>
                     <!-- Column labels -->
@@ -202,7 +210,6 @@
                     <text x="330" y="32" text-anchor="middle" class="group-label">Unary / Basic</text>
                     <text x="580" y="32" text-anchor="middle" class="group-label">Derived</text>
                     <text x="780" y="32" text-anchor="middle" class="group-label">Composite</text>
-                    <!-- (Column guide lines removed to avoid beige bars) -->
                     <!-- NAND primitive -->
                     <g transform="translate(50,60)">
                         <rect width="120" height="70" class="box"/>
@@ -227,7 +234,7 @@
                         <text x="60" y="30" text-anchor="middle" class="title">OR</text>
                         <text x="60" y="50" text-anchor="middle" class="expr">NAND(¬a,¬b)</text>
                     </g>
-                    <!-- NAND reuse for inversion of inputs shown via small NOT nodes -->
+                    <!-- XOR -->
                     <g transform="translate(520,170)">
                         <rect width="120" height="78" class="box"/>
                         <text x="60" y="30" text-anchor="middle" class="title">XOR</text>
@@ -252,8 +259,8 @@
                 </svg>
                 <figcaption>Figure 2 — Derivation path: each gate is expressed structurally from the single NAND primitive (no hidden abstractions).</figcaption>
             </figure>
-    <h3>4.2 8‑bit ALU</h3>
-        <p>Supported operations (3‑bit opcode): <code>000 ADD</code>, <code>001 SUB</code>, <code>010 AND</code>, <code>011 OR</code>, <code>100 XOR</code>, <code>101 SHL</code>, <code>110 SHR</code>, <code>111 NOT</code>. Internally the ALU partitions functionality into three parallel functional units whose results enter a final result multiplexer selected by the opcode. This separation clarifies where to extend (e.g., future rotate or arithmetic shift).</p>
+    <h3>4.2 8-bit ALU</h3>
+        <p>Supported operations (3-bit opcode): <code>000 ADD</code>, <code>001 SUB</code>, <code>010 AND</code>, <code>011 OR</code>, <code>100 XOR</code>, <code>101 SHL</code>, <code>110 SHR</code>, <code>111 NOT</code>. Internally the ALU partitions functionality into three parallel functional units whose results enter a final result multiplexer selected by the opcode. This separation clarifies where to extend (e.g., future rotate or arithmetic shift).</p>
     <ul>
         <li>Extended internal register (9 bits) captures carry.</li>
         <li>Semantic decoupling between output value and carry flag.</li>
@@ -262,7 +269,7 @@
         <figure>
             <svg viewBox="0 0 900 340" width="100%" role="img" aria-label="8-bit ALU high-level structure" style="max-width:900px">
                 <title>8-bit ALU Diagram</title>
-                <style>
+                <style id="svg3-style">
                 .blk{fill:#fff;stroke:#111;stroke-width:1.2;} .cap{font:14px system-ui,sans-serif;fill:#111;font-weight:600;} .small{font:12px system-ui,sans-serif;fill:#444;} .wire{stroke:#111;stroke-width:1;} .op{fill:#111;font:13px system-ui,sans-serif;font-weight:600;}
                 </style>
                 <rect x="40" y="40" width="120" height="60" rx="8" class="blk"/>
@@ -300,14 +307,14 @@
                 <text x="550" y="61" text-anchor="middle" class="op">Opcode[2:0]</text>
                 <line x1="550" y1="76" x2="550" y2="90" class="wire"/>
             </svg>
-            <figcaption>Figure 3 — 8‑bit ALU organization: parallel functional units feeding a single opcode‑controlled multiplexer.</figcaption>
+            <figcaption>Figure 3 — 8-bit ALU organization: parallel functional units feeding a single opcode-controlled multiplexer.</figcaption>
         </figure>
-    <h3>4.3 16‑bit Extension</h3>
-        <p>Strategy: chain two 8‑bit ALUs with explicit carry propagation. A deliberate choice was <strong>not</strong> to prematurely optimize with a carry‑lookahead so the latency penalty of ripple chaining remains visible and measurable—an on‑ramp to performance discussions.</p>
+    <h3>4.3 16-bit Extension</h3>
+        <p>Strategy: chain two 8-bit ALUs with explicit carry propagation. A deliberate choice was <strong>not</strong> to prematurely optimize with a carry-lookahead so the latency penalty of ripple chaining remains visible and measurable—an on-ramp to performance discussions.</p>
         <figure>
             <svg viewBox="0 0 880 240" width="100%" role="img" aria-label="16-bit ALU chaining two 8-bit blocks" style="max-width:880px">
                 <title>16-bit ALU Chaining</title>
-                <style>
+                <style id="svg4-style">
                 .b{fill:#fff;stroke:#111;stroke-width:1.2;} .t{font:14px system-ui,sans-serif;fill:#111;font-weight:600;} .s{font:12px system-ui,sans-serif;fill:#444;} .w{stroke:#111;stroke-width:1;} .c{stroke:#111;stroke-width:2;}
                 </style>
                 <rect x="60" y="60" width="200" height="120" rx="14" class="b"/>
@@ -332,11 +339,11 @@
                 <line x1="330" y1="60" x2="160" y2="60" class="w"/>
                 <line x1="330" y1="60" x2="460" y2="60" class="w"/>
             </svg>
-            <figcaption>Figure 4 — 16‑bit ALU: low byte produces carry forwarded into the high byte for arithmetic ops.</figcaption>
+            <figcaption>Figure 4 — 16-bit ALU: low byte produces carry forwarded into the high byte for arithmetic ops.</figcaption>
         </figure>
     <h2 id="sec5">5. Mini Python Assembler</h2>
     <h3>5.1 Purpose</h3>
-    <p>Bridge a readable symbolic format (mnemonics + registers) to a compact 16‑bit encoding aligned with the ALU design.</p>
+    <p>Bridge a readable symbolic format (mnemonics + registers) to a compact 16-bit encoding aligned with the ALU design.</p>
     <h3>5.2 Instruction Format (Current)</h3>
     <pre><code>[15:13] Opcode (3 bits)
 [12:10] Rd
@@ -346,7 +353,7 @@
         <figure>
                 <svg viewBox="0 0 760 90" width="100%" role="img" aria-label="16-bit instruction layout" style="max-width:760px">
                 <title>Instruction Bitfield Layout</title>
-                    <style>.f{fill:#fff;stroke:#111;stroke-width:1.1;} .l{font:14px system-ui,sans-serif;fill:#111;font-weight:600;} .s{font:12px system-ui,sans-serif;fill:#444;}</style>
+                    <style id="svg5-style">.f{fill:#fff;stroke:#111;stroke-width:1.1;} .l{font:14px system-ui,sans-serif;fill:#111;font-weight:600;} .s{font:12px system-ui,sans-serif;fill:#444;}</style>
                 <rect x="20" y="20" width="100" height="40" class="f"/>
                 <rect x="120" y="20" width="120" height="40" class="f"/>
                 <rect x="240" y="20" width="120" height="40" class="f"/>
@@ -363,18 +370,18 @@
                 <text x="580" y="42" text-anchor="middle" class="l">Reserved</text>
                 <text x="580" y="58" text-anchor="middle" class="s">[3:0]</text>
             </svg>
-            <figcaption>Figure 5 — Fixed 16‑bit instruction format with 4 LSBs reserved to avoid future encoding breakage.</figcaption>
+            <figcaption>Figure 5 — Fixed 16-bit instruction format with 4 LSBs reserved to avoid future encoding breakage.</figcaption>
         </figure>
     <h3>5.3 Software Pipeline</h3>
     <ol>
         <li><code>parser.py</code>: line cleanup, mnemonic & operand extraction</li>
         <li><code>encoder.py</code>: mnemonic → opcode mapping, bitfield packing</li>
-        <li><code>main.py</code>: orchestration, emits <code>.bin</code> + human‑readable <code>.hex</code></li>
+        <li><code>main.py</code>: orchestration, emits <code>.bin</code> + human-readable <code>.hex</code></li>
     </ol>
         <figure>
                     <svg viewBox="0 0 880 140" width="100%" role="img" aria-label="Assembler pipeline" style="max-width:880px">
                 <title>Assembler Pipeline</title>
-                        <style>.n{fill:#fff;stroke:#111;stroke-width:1.15;} .t{font:14px system-ui,sans-serif;fill:#111;font-weight:600;} .s{font:12px system-ui,sans-serif;fill:#444;} .a{stroke:#111;stroke-width:1.2;marker-end:url(#ar);} </style>
+                        <style id="svg6-style">.n{fill:#fff;stroke:#111;stroke-width:1.15;} .t{font:14px system-ui,sans-serif;fill:#111;font-weight:600;} .s{font:12px system-ui,sans-serif;fill:#444;} .a{stroke:#111;stroke-width:1.2;marker-end:url(#ar);} </style>
                 <defs><marker id="ar" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L10,3 L0,6 Z" fill="#2563eb"/></marker></defs>
                         <defs><marker id="ar" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L10,3 L0,6 Z" fill="#111"/></marker></defs>
                 <rect x="30" y="40" width="120" height="60" rx="10" class="n"/><text x="90" y="70" text-anchor="middle" class="t">Source .asm</text><text x="90" y="88" text-anchor="middle" class="s">(mnemonics)</text>
@@ -395,7 +402,7 @@
     <ul>
         <li>No label resolution for branching (labels collected but unused)</li>
         <li>No immediates or memory operations</li>
-        <li>No pseudo‑instructions</li>
+        <li>No pseudo-instructions</li>
         <li>Minimal error reporting (range / register validation basic)</li>
     </ul>
     <h2 id="sec6">6. Tests & Validation</h2>
@@ -412,7 +419,7 @@ assert(Y == 15);
     <h3>6.3 Test Categories</h3>
     <ul>
         <li>Primitive logic validation (NAND)</li>
-        <li>16‑bit ALU functional validation (chaining integrity)</li>
+        <li>16-bit ALU functional validation (chaining integrity)</li>
         <li>Pedagogical scenario (7 + 8)</li>
         <li>Assembler binary generation + hex inspection</li>
     </ul>
@@ -420,12 +427,12 @@ assert(Y == 15);
     <ul>
         <li>Randomized (fuzz) ALU test vectors</li>
         <li>Coverage metrics (Verilator + gcov)</li>
-        <li>CI non‑regression (GitHub Actions)</li>
+        <li>CI non-regression (GitHub Actions)</li>
     </ul>
         <figure>
                     <svg viewBox="0 0 920 210" width="100%" role="img" aria-label="Test & validation flow" style="max-width:920px">
                 <title>Validation Flow</title>
-                        <style>.n{fill:#fff;stroke:#111;stroke-width:1.1;} .t{font:14px system-ui,sans-serif;fill:#111;font-weight:600;} .s{font:12px system-ui,sans-serif;fill:#444;} .a{stroke:#111;stroke-width:1.1;marker-end:url(#arr);} .lane{font:13px system-ui,sans-serif;fill:#111;font-weight:600;}</style>
+                        <style id="svg7-style">.n{fill:#fff;stroke:#111;stroke-width:1.1;} .t{font:14px system-ui,sans-serif;fill:#111;font-weight:600;} .s{font:12px system-ui,sans-serif;fill:#444;} .a{stroke:#111;stroke-width:1.1;marker-end:url(#arr);} .lane{font:13px system-ui,sans-serif;fill:#111;font-weight:600;}</style>
                         <defs><marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L10,3 L0,6 Z" fill="#111"/></marker></defs>
                 <text x="40" y="24" class="lane">Logic Layer</text>
                 <rect x="20" y="30" width="140" height="60" rx="10" class="n"/><text x="90" y="60" text-anchor="middle" class="t">Gate TBs</text><text x="90" y="78" text-anchor="middle" class="s">(NAND)</text>
@@ -458,7 +465,7 @@ assert(Y == 15);
     <ul>
         <li>No pipeline (clarity first)</li>
         <li>No exposed status flags (episode scope)</li>
-        <li>Minimal cross‑lane shift sophistication</li>
+        <li>Minimal cross-lane shift sophistication</li>
         <li>Assembler intentionally minimal (no macros)</li>
     </ul>
     <h2 id="sec9">9. Technical Roadmap</h2>
@@ -473,11 +480,11 @@ assert(Y == 15);
                                 <div class="t-item" role="listitem"><div class="t-node" data-step="1" data-label="Flags">1</div><div class="t-content"><h4>Flags</h4><p>Add Zero / Negative / Overflow signals.</p></div></div>
                                 <div class="t-item" role="listitem"><div class="t-node" data-step="2" data-label="Immediates">2</div><div class="t-content"><h4>Immediates</h4><p>Literal fields (sign/zero extend) in ISA.</p></div></div>
                                 <div class="t-item" role="listitem"><div class="t-node" data-step="3" data-label="Memory & Branch">3</div><div class="t-content"><h4>Memory & Branch</h4><p>LOAD / STORE + conditional branches.</p></div></div>
-                                <div class="t-item" role="listitem"><div class="t-node" data-step="4" data-label="Register File">4</div><div class="t-content"><h4>Register File</h4><p>Multi‑port module decoupling ALU.</p></div></div>
+                                <div class="t-item" role="listitem"><div class="t-node" data-step="4" data-label="Register File">4</div><div class="t-content"><h4>Register File</h4><p>Multi-port module decoupling ALU.</p></div></div>
                                 <div class="t-item" role="listitem"><div class="t-node" data-step="5" data-label="Pipeline">5</div><div class="t-content"><h4>Pipeline</h4><p>2–3 stage throughput increase.</p></div></div>
                                 <div class="t-item" role="listitem"><div class="t-node" data-step="6" data-label="CI & Coverage">6</div><div class="t-content"><h4>CI & Coverage</h4><p>Verilator + gcov + Actions.</p></div></div>
                                 <div class="t-item" role="listitem"><div class="t-node" data-step="7" data-label="Fast Adder">7</div><div class="t-content"><h4>Fast Adder</h4><p>CLA / prefix structure swap.</p></div></div>
-                                <div class="t-item" role="listitem"><div class="t-node" data-step="8" data-label="Assembler UX">8</div><div class="t-content"><h4>Assembler UX</h4><p>Diagnostics + pseudo‑ops.</p></div></div>
+                                <div class="t-item" role="listitem"><div class="t-node" data-step="8" data-label="Assembler UX">8</div><div class="t-content"><h4>Assembler UX</h4><p>Diagnostics + pseudo-ops.</p></div></div>
                         </div>
                         <div class="timeline-fade-left" aria-hidden="true"></div>
                         <div class="timeline-fade-right" aria-hidden="true"></div>
@@ -506,14 +513,14 @@ assign y = ~(a & b);
     <ul>
         <li>Early convention formalization removes ambiguity.</li>
         <li>A minimal assembler forces ISA stabilization.</li>
-        <li>Fine‑grained testbenches shorten diagnosis cycles.</li>
+        <li>Fine-grained testbenches shorten diagnosis cycles.</li>
         <li>Reserved bits prevent format rewrites later.</li>
     </ul>
     <h2 id="sec13">13. Current Limitations</h2>
     <ul>
         <li>No scripted timing measurements</li>
-        <li>No large‑scale fuzzing</li>
-        <li>No multi‑file assembly linking</li>
+        <li>No large-scale fuzzing</li>
+        <li>No multi-file assembly linking</li>
         <li>No memory / PC / branching yet</li>
     </ul>
     <h2 id="sec14">14. Quick Reproduction</h2>
@@ -538,7 +545,7 @@ hexdump -C tools/assembler/test.bin
         <li>Fuzz script (random A,B,Op + Python oracle)</li>
     </ul>
     <h2 id="sec16">16. Conclusion</h2>
-        <p>A clear foundation: minimal logical core elevated to a working 16‑bit ALU with light tooling, paving the way for memory, pipelining, register file, control path, and execution of multi‑instruction programs. The explicit layering (primitive → composition → word ops → ALU → assembler → tests) makes future architectural steps (control unit, instruction fetch, branch handling) feel evolutionary rather than abrupt. In short: a transparent, inspectable learning artifact that turns a textbook aphorism into verifiable silicon logic.</p>
+        <p>A clear foundation: minimal logical core elevated to a working 16-bit ALU with light tooling, paving the way for memory, pipelining, register file, control path, and execution of multi-instruction programs. The explicit layering (primitive → composition → word ops → ALU → assembler → tests) makes future architectural steps (control unit, instruction fetch, branch handling) feel evolutionary rather than abrupt. In short: a transparent, inspectable learning artifact that turns a textbook aphorism into verifiable silicon logic.</p>
                 <h2 id="sec17">17. Resources <span class="resources-title-note">(curated references & assets)</span></h2>
                 <ul class="resources">
                     <li>
@@ -569,7 +576,7 @@ hexdump -C tools/assembler/test.bin
                         <span class="res-tag">REF</span>
                         <div class="res-body">
                             <h3>Inspirations</h3>
-                            <p>Nand2Tetris & MIT 6.004 shaped the bottom‑up sequencing philosophy.</p>
+                            <p>Nand2Tetris & MIT 6.004 shaped the bottom-up sequencing philosophy.</p>
                             <a href="https://www.nand2tetris.org" target="_blank" rel="noopener">Nand2Tetris site</a>
                         </div>
                     </li>
@@ -584,61 +591,114 @@ hexdump -C tools/assembler/test.bin
                 </ul>
         <div class="footer-note">End of Part 1 — next: memory, control path, and execution model. (MIT License)</div>
 </div>
+
+<!-- Theme toggle + SVG theme adaptation -->
 <script>
-(function(){
-  const toggle = document.getElementById('theme-toggle');
-  const html = document.documentElement;
-  const saved = localStorage.getItem('theme');
-  const initial = saved ? saved : 'light';
-  html.setAttribute('data-theme', initial);
-  updateToggleIcon(initial);
-  toggle.addEventListener('click', function(){
-    const current = html.getAttribute('data-theme');
-    const next = current === 'dark' ? 'light' : 'dark';
-    html.setAttribute('data-theme', next);
-    localStorage.setItem('theme', next);
-    updateToggleIcon(next);
-  });
-  function updateToggleIcon(theme){
-    const sunSvg = `<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-    <rect x="7" y="0" width="2" height="2"/>
-    <rect x="13" y="2" width="2" height="2"/>
-    <rect x="14" y="7" width="2" height="2"/>
-    <rect x="13" y="12" width="2" height="2"/>
-    <rect x="7" y="14" width="2" height="2"/>
-    <rect x="2" y="12" width="2" height="2"/>
-    <rect x="0" y="7" width="2" height="2"/>
-    <rect x="2" y="2" width="2" height="2"/>
-    <rect x="5" y="5" width="6" height="6"/>
-    <rect x="6" y="4" width="4" height="1"/>
-    <rect x="4" y="6" width="1" height="4"/>
-    <rect x="11" y="6" width="1" height="4"/>
-    <rect x="6" y="11" width="4" height="1"/>
-  </svg>`;
-    const moonSvg = `<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-    <rect x="8" y="2" width="8" height="2"/>
-    <rect x="7" y="4" width="10" height="2"/>
-    <rect x="6" y="6" width="11" height="2"/>
-    <rect x="6" y="8" width="11" height="2"/>
-    <rect x="6" y="10" width="11" height="2"/>
-    <rect x="7" y="12" width="10" height="2"/>
-    <rect x="8" y="14" width="8" height="2"/>
-    <rect x="12" y="4" width="7" height="2" fill=\"var(--bg)\"/>
-    <rect x="13" y="6" width="7" height="2" fill=\"var(--bg)\"/>
-    <rect x="13" y="8" width="7" height="2" fill=\"var(--bg)\"/>
-    <rect x="13" y="10" width="7" height="2" fill=\"var(--bg)\"/>
-    <rect x="12" y="12" width="7" height="2" fill=\"var(--bg)\"/>
-  </svg>`;
-    toggle.innerHTML = theme === 'dark' ? sunSvg : moonSvg;
-    toggle.title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
-    toggle.setAttribute('aria-label', toggle.title);
-  }
-})();
+  (function(){
+    const toggle = document.getElementById('theme-toggle');
+    const html = document.documentElement;
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    html.setAttribute('data-theme', savedTheme);
+    setToggleIcon(savedTheme);
+    adaptAllSvgs(savedTheme);
+
+    if(toggle){
+      toggle.addEventListener('click', ()=>{
+        const next = (html.getAttribute('data-theme') === 'dark') ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        setToggleIcon(next);
+        adaptAllSvgs(next);
+      });
+    }
+
+    function setToggleIcon(theme){
+      const sunSvg = `<svg viewBox="0 0 16 16"><rect x="7" y="0" width="2" height="2"/><rect x="13" y="2" width="2" height="2"/><rect x="14" y="7" width="2" height="2"/><rect x="13" y="12" width="2" height="2"/><rect x="7" y="14" width="2" height="2"/><rect x="2" y="12" width="2" height="2"/><rect x="0" y="7" width="2" height="2"/><rect x="2" y="2" width="2" height="2"/><rect x="5" y="5" width="6" height="6"/><rect x="6" y="4" width="4" height="1"/><rect x="4" y="6" width="1" height="4"/><rect x="11" y="6" width="1" height="4"/><rect x="6" y="11" width="4" height="1"/></svg>`;
+      const moonSvg = `<svg viewBox="0 0 16 16"><rect x="5" y="2" width="6" height="1"/><rect x="3" y="3" width="10" height="1"/><rect x="2" y="4" width="12" height="1"/><rect x="2" y="5" width="12" height="6"/><rect x="2" y="11" width="12" height="1"/><rect x="3" y="12" width="10" height="1"/><rect x="5" y="13" width="6" height="1"/><rect x="4" y="6" width="2" height="1"/><rect x="4" y="7" width="2" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="11" y="6" width="1" height="1"/><rect x="6" y="9" width="2" height="1"/><rect x="6" y="10" width="2" height="1"/></svg>`;
+      if(!toggle) return;
+      toggle.innerHTML = (theme === 'dark') ? sunSvg : moonSvg;
+      toggle.title = (theme === 'dark') ? 'Switch to light mode' : 'Switch to dark mode';
+    }
+
+    // Update inlined SVG styles for light/dark
+    function adaptAllSvgs(theme){
+      const light = {
+        text:'#111', muted:'#444', stroke:'#111', surface:'#fff', surfaceStroke:'#111', arrow:'#111', accent:'#2563eb'
+      };
+      const dark = {
+        text:'#fafafa', muted:'#a1a1aa', stroke:'#fafafa', surface:'#18181b', surfaceStroke:'#27272a', arrow:'#fafafa', accent:'#60a5fa'
+      };
+      const p = (theme === 'dark') ? dark : light;
+
+      const s2 = document.getElementById('svg2-style');
+      if(s2){
+        s2.textContent =
+          `.box{fill:${p.surface};stroke:${p.surfaceStroke};stroke-width:1.2;rx:10;}
+           .title{font:14px system-ui,sans-serif;font-weight:600;fill:${p.text};}
+           .expr{font:11px ui-monospace;fill:${p.text};}
+           .group-label{font:12px system-ui,sans-serif;fill:${p.muted};font-weight:600;letter-spacing:.5px;}
+           .arrow{stroke:${p.arrow};stroke-width:1.4;marker-end:url(#arrowHead);}`;
+        const arrow = document.getElementById('svg2-arrow');
+        if(arrow) arrow.setAttribute('fill', p.arrow);
+      }
+
+      const s3 = document.getElementById('svg3-style');
+      if(s3){
+        s3.textContent =
+          `.blk{fill:${p.surface};stroke:${p.surfaceStroke};stroke-width:1.2;}
+           .cap{font:14px system-ui,sans-serif;fill:${p.text};font-weight:600;}
+           .small{font:12px system-ui,sans-serif;fill:${p.muted};}
+           .wire{stroke:${p.stroke};stroke-width:1;}
+           .op{fill:${p.text};font:13px system-ui,sans-serif;font-weight:600;}`;
+      }
+
+      const s4 = document.getElementById('svg4-style');
+      if(s4){
+        s4.textContent =
+          `.b{fill:${p.surface};stroke:${p.surfaceStroke};stroke-width:1.2;}
+           .t{font:14px system-ui,sans-serif;fill:${p.text};font-weight:600;}
+           .s{font:12px system-ui,sans-serif;fill:${p.muted};}
+           .w{stroke:${p.stroke};stroke-width:1;}
+           .c{stroke:${p.stroke};stroke-width:2;}`;
+      }
+
+      const s5 = document.getElementById('svg5-style');
+      if(s5){
+        s5.textContent =
+          `.f{fill:${p.surface};stroke:${p.surfaceStroke};stroke-width:1.1;}
+           .l{font:14px system-ui,sans-serif;fill:${p.text};font-weight:600;}
+           .s{font:12px system-ui,sans-serif;fill:${p.muted};}`;
+      }
+
+      const s6 = document.getElementById('svg6-style');
+      if(s6){
+        s6.textContent =
+          `.n{fill:${p.surface};stroke:${p.surfaceStroke};stroke-width:1.15;}
+           .t{font:14px system-ui,sans-serif;fill:${p.text};font-weight:600;}
+           .s{font:12px system-ui,sans-serif;fill:${p.muted};}
+           .a{stroke:${p.stroke};stroke-width:1.2;marker-end:url(#ar);}`;
+      }
+
+      const s7 = document.getElementById('svg7-style');
+      if(s7){
+        s7.textContent =
+          `.n{fill:${p.surface};stroke:${p.surfaceStroke};stroke-width:1.1;}
+           .t{font:14px system-ui,sans-serif;fill:${p.text};font-weight:600;}
+           .s{font:12px system-ui,sans-serif;fill:${p.muted};}
+           .a{stroke:${p.stroke};stroke-width:1.1;marker-end:url(#arr);}
+           .lane{font:13px system-ui,sans-serif;fill:${p.text};font-weight:600;}`;
+      }
+    }
+
+    // Also react to changes from elsewhere if needed
+    const obs = new MutationObserver(()=>adaptAllSvgs(document.documentElement.getAttribute('data-theme')||'light'));
+    obs.observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] });
+  })();
 </script>
-</body>
-</html>
+
+<!-- Scrollytelling horizontal timeline driven by vertical scroll -->
 <script>
-// Scrollytelling horizontal timeline driven by vertical scroll
+// unchanged logic, moved inside <body> to be valid HTML
 (function(){
     const scroller = document.getElementById('roadmap-timeline');
     if(!scroller) return;
@@ -647,22 +707,19 @@ hexdump -C tools/assembler/test.bin
     const timeline = scroller.querySelector('.timeline');
     const progressBar = scroller.querySelector('.timeline-progress');
     const nodes = [...timeline.querySelectorAll('.t-node')];
-        const items = nodes.map(n=>n.closest('.t-item'));
-        const pill = document.getElementById('roadmap-progress-pill');
+    const items = nodes.map(n=>n.closest('.t-item'));
+    const pill = document.getElementById('roadmap-progress-pill');
 
-    // Set scroller height proportional to required horizontal travel
-        // Configuration
-        const SLACK_END = 0.25; // fraction of vertical scroll kept after horizontal motion completes
-        const HORIZ_FACTOR = 0.48; // base multiplier for converting horizontal overflow to vertical height
-        const EASE = t => 1 - Math.pow(1 - t, 1.9); // ease-out
+    const SLACK_END = 0.25;
+    const HORIZ_FACTOR = 0.48;
+    const EASE = t => 1 - Math.pow(1 - t, 1.9);
 
-        const computeHeights = () => {
-            const vw = viewport.clientWidth;
-            const scrollW = timeline.scrollWidth;
-            const extra = Math.max(0, scrollW - vw);
-            // Vertical height = viewport + scaled horizontal overflow (reduced factor) ensuring earlier completion
-            scroller.style.minHeight = (window.innerHeight + extra * HORIZ_FACTOR) + 'px';
-        };
+    const computeHeights = () => {
+        const vw = viewport.clientWidth;
+        const scrollW = timeline.scrollWidth;
+        const extra = Math.max(0, scrollW - vw);
+        scroller.style.minHeight = (window.innerHeight + extra * HORIZ_FACTOR) + 'px';
+    };
 
     const update = () => {
         const top = scroller.getBoundingClientRect().top;
@@ -670,7 +727,6 @@ hexdump -C tools/assembler/test.bin
         const y = Math.min(Math.max(0, -top), h);
         let raw = h > 0 ? (y / h) : 0;
         raw = Math.min(1, Math.max(0, raw));
-        // Compute motion ratio that reaches 1 before end: map raw in [0, 1-SLACK_END] to [0,1]
         const motionSpan = 1 - SLACK_END;
         const motionRatio = raw < motionSpan ? (raw / motionSpan) : 1;
         const eased = EASE(motionRatio);
@@ -679,18 +735,18 @@ hexdump -C tools/assembler/test.bin
         const maxShift = scrollW - vw;
         timeline.style.transform = `translateX(${-eased * maxShift}px)`;
         progressBar.style.width = (eased * 100) + '%';
-        // Activate nodes based on translation progress
-            let activeIndex = 0;
-            nodes.forEach((n,i) => {
-                const rect = n.getBoundingClientRect();
-                const vRect = viewport.getBoundingClientRect();
-                const center = (rect.left + rect.right)/2;
-                const active = center < vRect.left + vRect.width * 0.55;
-                if(active){ activeIndex = i; }
-                n.classList.toggle('active', active);
-                items[i].classList.toggle('active', active);
-            });
-            if(pill){ pill.textContent = (activeIndex+1) + ' / ' + nodes.length; }
+
+        let activeIndex = 0;
+        nodes.forEach((n,i) => {
+            const rect = n.getBoundingClientRect();
+            const vRect = viewport.getBoundingClientRect();
+            const center = (rect.left + rect.right)/2;
+            const active = center < vRect.left + vRect.width * 0.55;
+            if(active){ activeIndex = i; }
+            n.classList.toggle('active', active);
+            items[i].classList.toggle('active', active);
+        });
+        if(pill){ pill.textContent = (activeIndex+1) + ' / ' + nodes.length; }
     };
 
     const onScroll = () => { requestAnimationFrame(update); };
@@ -700,3 +756,5 @@ hexdump -C tools/assembler/test.bin
     update();
 })();
 </script>
+</body>
+</html>

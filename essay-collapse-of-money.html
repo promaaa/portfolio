@@ -6,12 +6,37 @@
   <title>The Collapse of Money — Marc Duboc</title>
   <meta name="color-scheme" content="light dark" />
   <style>
-    :root{--bg:#f7f7fb;--ink:#0a0a0e;--muted:#5e5e69;--line:rgba(0,0,0,.08);--surface:rgba(255,255,255,.7);--glass-border:rgba(0,0,0,.08)}
-    [data-theme="dark"]{--bg:#0b0e16;--ink:#f7f7fb;--muted:#b5b7c8;--line:rgba(255,255,255,.12);--surface:rgba(255,255,255,.06);--glass-border:rgba(255,255,255,.18)}
+    :root{
+      /* defaults: light theme; dark overrides below */
+      --bg:#f7f7fb; --ink:#0a0a0e; --muted:#5e5e69; --line:rgba(0,0,0,.08);
+      --accent:#5b5bd6; --accent-h:250;
+      --surface:rgba(255,255,255,.7); --surface-alt:rgba(255,255,255,.85);
+      --radius:14px; --shadow:0 10px 30px rgba(0,0,0,.12);
+      --glass-bg:rgba(255,255,255,.6); --glass-border:rgba(255,255,255,.9);
+      --blur:12px;
+      --grad1:#f9f9ff; --grad2:#f3f2fb; --grad3:#efeff7;
+      --crystal-a: rgba(120,110,255,.45); --crystal-b: rgba(255,150,190,.35);
+    }
+
+    [data-theme="dark"]{
+      --bg:#0b0e16; --ink:#f7f7fb; --muted:#b5b7c8; --line:rgba(255,255,255,.1);
+      --accent:#8bbcff; --accent-h:215;
+      --surface:rgba(255,255,255,.06); --surface-alt:rgba(255,255,255,.1);
+      --shadow:0 10px 30px rgba(0,0,0,.4);
+      --glass-bg:rgba(255,255,255,.06); --glass-border:rgba(255,255,255,.2);
+      --blur:14px;
+      --grad1:#0b0f1a; --grad2:#0a0d17; --grad3:#070a12;
+      --crystal-a: rgba(160,160,255,.35); --crystal-b: rgba(255,180,210,.28);
+      --orb-a: rgba(120,200,255,.35); --orb-b: rgba(160,130,255,.35);
+    }
+    .theme-toggle{background:var(--surface);border:1px solid var(--glass-border);border-radius:10px;padding:8px;font-size:12px;color:var(--muted);cursor:pointer;transition:all .2s ease;margin-left:16px;display:flex;align-items:center;justify-content:center}
+    .theme-toggle:hover{background:var(--surface-alt);color:var(--ink);transform:translateY(-1px)}
+    .theme-toggle svg{width:20px;height:20px;fill:currentColor}
     *{box-sizing:border-box}
-    html,body{margin:0;height:100%;color:var(--ink);font:16px/1.75 Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;background:var(--bg)}
+    html,body{margin:0;height:100%;color:var(--ink);font:16px/1.65 Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;background:var(--bg);overflow-x:hidden}
     a{color:inherit;text-decoration:none}
-    .container{max-width:840px;margin:0 auto;padding:40px 20px}
+    .container{max-width:1200px;margin:0 auto;padding:60px 40px;position:relative;z-index:1}
+    img{max-width:100%;height:auto;display:block}
     .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
     .top-actions{display:flex;align-items:center;gap:8px}
     .back{font-size:.9rem;color:var(--muted)}
@@ -29,10 +54,33 @@
   <div class="container">
     <div class="top">
       <a class="back" href="essays.html">← Back to essays</a>
-      <div class="top-actions">
-        <span style="color:var(--muted)">Marc Duboc</span>
-        <button id="theme-toggle" class="theme-toggle" aria-label="Switch to dark mode" title="Switch to dark mode"></button>
-      </div>
+      <span style="color:var(--muted)">Marc Duboc</span>
+      <button class="theme-toggle" id="theme-toggle">
+        <span id="icon-sun" style="display:inline-block;">
+          <svg viewBox="0 0 40 40" width="80" height="80" aria-hidden="true" focusable="false">
+            <!-- Soleil pixel art très grand -->
+            <rect x="19" y="2" width="2" height="8" fill="currentColor"/>
+            <rect x="19" y="30" width="2" height="8" fill="currentColor"/>
+            <rect x="2" y="19" width="8" height="2" fill="currentColor"/>
+            <rect x="30" y="19" width="8" height="2" fill="currentColor"/>
+            <rect x="8" y="8" width="4" height="4" fill="currentColor"/>
+            <rect x="28" y="8" width="4" height="4" fill="currentColor"/>
+            <rect x="8" y="28" width="4" height="4" fill="currentColor"/>
+            <rect x="28" y="28" width="4" height="4" fill="currentColor"/>
+            <!-- Disque central épais -->
+            <rect x="12" y="12" width="16" height="16" fill="currentColor"/>
+          </svg>
+        </span>
+        <span id="icon-moon" style="display:none;">
+          <svg viewBox="0 0 200 200" width="200" height="200" aria-hidden="true" focusable="false">
+            <!-- Lune pixel art très grande, croissant de lune plus réaliste -->
+            <!-- Disque principal -->
+            <ellipse cx="100" cy="100" rx="80" ry="80" fill="currentColor"/>
+            <!-- Découpe croissant : cercle intérieur décalé pour effet croissant de lune -->
+            <ellipse cx="130" cy="100" rx="60" ry="70" fill="var(--bg)"/>
+          </svg>
+        </span>
+      </button>
     </div>
     <h1>The Collapse of Money – A Journey Through the History of Exchange</h1>
     <article class="prose">
@@ -73,56 +121,53 @@
       <p>Simple: don’t put all your trust in this kind of money. Look into alternatives — real stores of value that have stood the test of time (gold) or the last decade (Bitcoin). In short: keep your shells, your bullion, and your Ledger key. Because the next “reset” won’t happen in Excel… it will happen in your wallet.</p>
     </article>
   </div>
+
   <script>
-  (function(){
-    const toggle = document.getElementById('theme-toggle');
-    const html = document.documentElement;
-    const saved = localStorage.getItem('theme');
-    const initial = saved ? saved : 'light';
-    html.setAttribute('data-theme', initial);
-    updateToggleIcon(initial);
-    toggle.addEventListener('click', function(){
-      const current = html.getAttribute('data-theme');
-      const next = current === 'dark' ? 'light' : 'dark';
-      html.setAttribute('data-theme', next);
-      localStorage.setItem('theme', next);
-      updateToggleIcon(next);
-    });
-    function updateToggleIcon(theme){
-      const sunSvg = `<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-      <rect x="7" y="0" width="2" height="2"/>
-      <rect x="13" y="2" width="2" height="2"/>
-      <rect x="14" y="7" width="2" height="2"/>
-      <rect x="13" y="12" width="2" height="2"/>
-      <rect x="7" y="14" width="2" height="2"/>
-      <rect x="2" y="12" width="2" height="2"/>
-      <rect x="0" y="7" width="2" height="2"/>
-      <rect x="2" y="2" width="2" height="2"/>
-      <rect x="5" y="5" width="6" height="6"/>
-      <rect x="6" y="4" width="4" height="1"/>
-      <rect x="4" y="6" width="1" height="4"/>
-      <rect x="11" y="6" width="1" height="4"/>
-      <rect x="6" y="11" width="4" height="1"/>
-    </svg>`;
-      const moonSvg = `<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-      <rect x="8" y="2" width="8" height="2"/>
-      <rect x="7" y="4" width="10" height="2"/>
-      <rect x="6" y="6" width="11" height="2"/>
-      <rect x="6" y="8" width="11" height="2"/>
-      <rect x="6" y="10" width="11" height="2"/>
-      <rect x="7" y="12" width="10" height="2"/>
-      <rect x="8" y="14" width="8" height="2"/>
-      <rect x="12" y="4" width="7" height="2" fill=\"var(--bg)\"/>
-      <rect x="13" y="6" width="7" height="2" fill=\"var(--bg)\"/>
-      <rect x="13" y="8" width="7" height="2" fill=\"var(--bg)\"/>
-      <rect x="13" y="10" width="7" height="2" fill=\"var(--bg)\"/>
-      <rect x="12" y="12" width="7" height="2" fill=\"var(--bg)\"/>
-    </svg>`;
-      toggle.innerHTML = theme === 'dark' ? sunSvg : moonSvg;
-      toggle.title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
-      toggle.setAttribute('aria-label', toggle.title);
-    }
-  })();
+    // Gestion du thème dark/light avec switch d'icône
+    (function(){
+      const html = document.documentElement;
+      const themeToggle = document.getElementById('theme-toggle');
+      const iconSun = document.getElementById('icon-sun');
+      const iconMoon = document.getElementById('icon-moon');
+      function updateToggleIcon(theme){
+        if(!themeToggle) return;
+        if(theme === 'dark'){
+          iconSun.style.display = 'none';
+          iconMoon.style.display = 'inline-block';
+          themeToggle.title = 'Passer en mode clair';
+        }else{
+          iconSun.style.display = 'inline-block';
+          iconMoon.style.display = 'none';
+          themeToggle.title = 'Passer en mode sombre';
+        }
+      }
+      function setTheme(theme){
+        html.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        updateToggleIcon(theme);
+      }
+      // Initialisation
+      const savedTheme = localStorage.getItem('theme');
+      if(savedTheme){
+        setTheme(savedTheme);
+      }else if(window.matchMedia('(prefers-color-scheme: dark)').matches){
+        setTheme('dark');
+      }else{
+        setTheme('light');
+      }
+      themeToggle.addEventListener('click', function(){
+        const current = html.getAttribute('data-theme');
+        setTheme(current === 'dark' ? 'light' : 'dark');
+      });
+      // Synchronisation avec le système
+      try{
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e){
+          const newTheme = e.matches ? 'dark' : 'light';
+          html.setAttribute('data-theme', newTheme);
+          updateToggleIcon(newTheme);
+        });
+      }catch(_){/* older browsers */}
+    })();
   </script>
 </body>
 </html>

@@ -1,798 +1,266 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evento Write-up — Marc Duboc</title>
-    <style>
-        :root {
-            --bg: #fafafa;
-            --ink: #0a0a0a;
-            --muted: #666666;
-            --line: #e4e4e7;
-            --surface: #ffffff;
-            --radius: 8px;
-            --shadow: 0 1px 3px rgba(0,0,0,.1);
-        }
-        
-        [data-theme="dark"] {
-            --bg: #0f0f0f;
-            --ink: #fafafa;
-            --muted: #a1a1aa;
-            --line: #27272a;
-            --surface: #18181b;
-            --shadow: 0 1px 3px rgba(0,0,0,.3);
-        }
-        
-        * { box-sizing: border-box; }
-        
-        html, body {
-            margin: 0;
-            height: 100%;
-            color: var(--ink);
-            font: 16px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,Roboto,Arial;
-            background: var(--bg);
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Evento — Web3 Event Platform on Solana (Technical Case Study)</title>
+  <meta name="description" content="Web3-first architecture, on-chain/off-chain boundary, wallet and Solana Pay flows, security model, and roadmap for a Solana-powered event platform." />
+  <style>
+  :root { --bg:#fafafa; --ink:#18181b; --muted:#444; --line:#e5e5e5; --surface:#fff; --radius:8px; --shadow:0 1px 3px rgba(0,0,0,.08); --accent:#2563eb; }
+  [data-theme="dark"] { --bg:#0f0f10; --ink:#fafafa; --muted:#a1a1aa; --line:#27272a; --surface:#18181b; --shadow:0 1px 3px rgba(0,0,0,.4); --accent:#60a5fa; }
+    *{box-sizing:border-box}
+    html,body{margin:0;font:16px/1.65 ui-sans-serif,system-ui,-apple-system,Inter,Roboto,Segoe UI,Arial;background:var(--bg);color:var(--ink)}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:980px;margin:0 auto;padding:48px 24px}
+    .back-link{display:inline-block;margin-bottom:28px;color:var(--muted)}
+    .back-link:hover{color:var(--ink)}
+    h1{margin:0 0 14px;font-size:clamp(2rem,5vw,2.7rem);line-height:1.12;font-weight:660}
+    h2{margin:46px 0 14px;font-size:1.65rem;font-weight:600}
+    h3{margin:28px 0 10px;font-size:1.15rem;font-weight:580}
+    p{margin:0 0 18px;color:var(--muted)}
+    ul,ol{margin:0 0 22px 0;padding-left:22px} li{color:var(--muted)}
+    code{background:var(--surface);border:1px solid var(--line);padding:2px 6px;border-radius:4px;font-size:.86em;font-family:ui-monospace,Menlo,Consolas,monospace}
+    pre{background:var(--surface);border:1px solid var(--line);padding:18px 20px;border-radius:var(--radius);overflow:auto;font-size:.9rem;line-height:1.5;margin:22px 0}
+    pre code{background:none;border:none;padding:0}
+    .meta-badges{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 22px}
+    .badge{background:var(--surface);border:1px solid var(--line);padding:6px 12px;border-radius:16px;font-size:.72rem;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);font-weight:600}
+    .links{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0 30px}
+    .links a{background:var(--surface);border:1px solid var(--line);padding:10px 16px;border-radius:8px}
+    .links a:hover{background:#1f1f22}
+    figure{margin:32px 0 18px}
+    figcaption{margin-top:8px;color:var(--muted);font-size:.75rem;letter-spacing:.5px;text-transform:uppercase}
+    table{border-collapse:collapse;width:100%;margin:22px 0;font-size:.9rem}
+    th,td{border-bottom:1px solid var(--line);padding:10px 10px;text-align:left;vertical-align:top}
+    th{color:var(--ink);font-weight:650}
+    td{color:var(--muted)}
+    .highlight{background:var(--surface);border:1px solid var(--line);padding:18px 20px;border-radius:8px;margin:22px 0}
+    .callout{background:var(--surface);border:1px solid var(--line);padding:16px 18px;border-radius:8px;margin:26px 0}
+    .toc{background:var(--surface);border:1px solid var(--line);padding:18px 20px;border-radius:8px;margin:20px 0 36px}
+    .toc strong{display:block;margin-bottom:8px;letter-spacing:.08em}
+    .fig-note{margin:8px 0 24px;padding:12px 14px;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:6px;background:linear-gradient(90deg,rgba(96,165,250,.18),rgba(96,165,250,.06));color:var(--muted)}
+    .footer-note{margin-top:64px;text-align:center;color:var(--muted);font-size:.8rem;opacity:.8}
+    svg text{fill:var(--ink)}
 
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-        }
-        
-        .back-link {
-            display: inline-block;
-            margin-bottom: 30px;
-            color: var(--muted);
-            text-decoration: none;
-            padding: 8px 0;
-        }
-        
-        .back-link:hover {
-            color: var(--ink);
-        }
-
-        .theme-toggle {
-            background: var(--surface);
-            border: 1px solid var(--line);
-            border-radius: var(--radius);
-            padding: 6px;
-            cursor: pointer;
-            color: var(--muted);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s ease;
-        }
-
-        .theme-toggle:hover {
-            background: var(--line);
-        }
-
-        .theme-toggle svg {
-            width: 18px;
-            height: 18px;
-            fill: currentColor;
-        }
-        
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 600;
-            margin: 0 0 20px;
-            line-height: 1.2;
-        }
-        
-        .project-meta {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-        
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 12px;
-            background: var(--surface);
-            border: 1px solid var(--line);
-            border-radius: var(--radius);
-            font-size: 0.9rem;
-        }
-        
-        .project-links {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 40px;
-        }
-        
-        .project-links a {
-            padding: 10px 20px;
-            background: var(--surface);
-            border: 1px solid var(--line);
-            border-radius: var(--radius);
-            text-decoration: none;
-            color: var(--ink);
-            transition: background 0.2s ease;
-        }
-        
-        .project-links a:hover {
-            background: var(--line);
-        }
-        
-        .content {
-            line-height: 1.7;
-        }
-        
-        .content h2 {
-            margin-top: 40px;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-            font-weight: 500;
-        }
-        
-        .content h3 {
-            margin-top: 30px;
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-            font-weight: 500;
-        }
-        
-        .content p {
-            margin-bottom: 20px;
-            color: var(--muted);
-        }
-        
-        .content ul, .content ol {
-            margin-bottom: 20px;
-            padding-left: 20px;
-        }
-        
-        .content li {
-            margin-bottom: 8px;
-            color: var(--muted);
-        }
-        
-        .content code {
-            background: var(--surface);
-            padding: 2px 6px;
-            border-radius: 4px;
-            border: 1px solid var(--line);
-            font-family: ui-monospace, Menlo, Consolas, monospace;
-            font-size: 0.9em;
-        }
-        
-        .content pre {
-            background: var(--surface);
-            padding: 20px;
-            border-radius: var(--radius);
-            border: 1px solid var(--line);
-            overflow-x: auto;
-            margin: 20px 0;
-        }
-        
-        .content pre code {
-            background: none;
-            padding: 0;
-            border: none;
-        }
-        
-        .highlight-box {
-            background: var(--surface);
-            padding: 20px;
-            border-radius: var(--radius);
-            border: 1px solid var(--line);
-            margin: 20px 0;
-        }
-        
-        .highlight-box strong {
-            color: var(--ink);
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid var(--line);
-        }
-        
-        th {
-            color: var(--ink);
-        }
-        
-        td {
-            color: var(--muted);
-        }
-        
-        .image-container {
-            text-align: center;
-            margin: 30px 0;
-        }
-        
-        .image-container img {
-            max-width: 100%;
-            height: auto;
-            border-radius: var(--radius);
-            border: 1px solid var(--line);
-            box-shadow: var(--shadow);
-        }
-        
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-        
-        .feature-card {
-            background: var(--surface);
-            padding: 20px;
-            border-radius: var(--radius);
-            border: 1px solid var(--line);
-        }
-        
-        .feature-card h4 {
-            margin: 0 0 10px;
-            color: var(--ink);
-            font-size: 1.1rem;
-        }
-        
-        .feature-card p {
-            margin: 0;
-            font-size: 0.9rem;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-    <div class="top-bar">
-        <a href="main.html" class="back-link">← Back to Portfolio</a>
-        <button id="theme-toggle" class="theme-toggle" aria-label="Switch to dark mode" title="Switch to dark mode"></button>
-    </div>
-
-        <h1>Evento — Event Management Platform</h1>
-        
-        <div class="project-links">
-            <a href="https://github.com/promaaa/evento" target="_blank" rel="noopener">View Code</a>
-        </div>
-        
-        <div class="content">
-            <h2>Project Overview</h2>
-            <p>Evento is a comprehensive event management platform developed as part of the Colosseum Hackathon by Solana. The platform provides a modern, intuitive interface for creating, managing, and participating in events with real-time interaction capabilities.</p>
-            
-            <div class="highlight-box">
-                <strong>Hackathon Context:</strong> Our proposal for Colosseum Hackaton by Solana, focusing on building innovative event management solutions leveraging modern web technologies.
-            </div>
-
-            <h2>Platform Features</h2>
-
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <h4>🎪 Event Creation & Management</h4>
-                    <p>Create and customize events with detailed descriptions, topics, and scheduling capabilities</p>
-                </div>
-                <div class="feature-card">
-                    <h4>👥 User Profiles & Authentication</h4>
-                    <p>Comprehensive user management with profiles, avatars, and personalized event tracking</p>
-                </div>
-                <div class="feature-card">
-                    <h4>🗨️ Real-time Chat System</h4>
-                    <p>Live discussion threads within event rooms with participant interaction</p>
-                </div>
-                <div class="feature-card">
-                    <h4>🔍 Advanced Search & Discovery</h4>
-                    <p>Topic-based categorization and powerful search functionality for event discovery</p>
-                </div>
-                <div class="feature-card">
-                    <h4>📊 Activity Tracking</h4>
-                    <p>Comprehensive activity feeds showing user participation and engagement metrics</p>
-                </div>
-                <div class="feature-card">
-                    <h4>📱 Responsive Design</h4>
-                    <p>Mobile-first design ensuring optimal experience across all device sizes</p>
-                </div>
-            </div>
-
-            <h2>Technical Architecture</h2>
-
-            <h3>🏗️ Backend Framework</h3>
-            <ul>
-                <li><strong>Django:</strong> Robust Python web framework for rapid development</li>
-                <li><strong>Django Templates:</strong> Server-side rendering with template inheritance</li>
-                <li><strong>SQLite/PostgreSQL:</strong> Database management for event and user data</li>
-                <li><strong>Django Authentication:</strong> Built-in user management and security</li>
-                <li><strong>Django Forms:</strong> Form validation and data processing</li>
-            </ul>
-
-            <h3>🎨 Frontend Technologies</h3>
-            <ul>
-                <li><strong>HTML5 & CSS3:</strong> Modern semantic markup and responsive styling</li>
-                <li><strong>JavaScript (Vanilla):</strong> Interactive features and dynamic content</li>
-                <li><strong>SVG Icons:</strong> Scalable vector graphics for clean interface elements</li>
-                <li><strong>Responsive Grid:</strong> Flexible layout system for all screen sizes</li>
-            </ul>
-
-            <h2>Core Functionality</h2>
-
-            <h3>Event Management System</h3>
-            <pre><code># Django Model Structure (Simplified)
-class Room(models.Model):
-    host = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True)
-    name = models.CharField(max_length=200)
-    description = models.TextField(null=True, blank=True)
-    participants = models.ManyToManyField(User, related_name='participants', blank=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        ordering = ['-updated', '-created']
-
-class Message(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)
-    body = models.TextField()
-    updated = models.DateTimeField(auto_now=True)
-    created = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ['-updated', '-created']</code></pre>
-
-            <h3>User Authentication & Profiles</h3>
-            <pre><code># User Profile Management
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(upload_to='avatars/', default='avatar.svg')
-    bio = models.TextField(max_length=500, blank=True)
-    name = models.CharField(max_length=200, null=True)
-    
-    def __str__(self):
-        return self.user.username</code></pre>
-
-            <h2>User Interface Design</h2>
-
-            <h3>Design System</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Component</th>
-                        <th>Purpose</th>
-                        <th>Features</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Header Navigation</td>
-                        <td>Site navigation and search</td>
-                        <td>Logo, search bar, user dropdown menu</td>
-                    </tr>
-                    <tr>
-                        <td>Topic Sidebar</td>
-                        <td>Event categorization</td>
-                        <td>Browse by topics, participant counts</td>
-                    </tr>
-                    <tr>
-                        <td>Event Cards</td>
-                        <td>Event display</td>
-                        <td>Host info, participant count, timestamps</td>
-                    </tr>
-                    <tr>
-                        <td>Chat Interface</td>
-                        <td>Real-time messaging</td>
-                        <td>Message threads, user avatars, timestamps</td>
-                    </tr>
-                    <tr>
-                        <td>User Profiles</td>
-                        <td>User information display</td>
-                        <td>Avatar, bio, hosted events, activities</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h3>Responsive Layout System</h3>
-            <pre><code>/* Mobile-First CSS Framework */
-.layout {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-}
-
-@media screen and (min-width: 768px) {
-  .layout--3 {
-    grid-template-columns: 1fr 3fr 1fr;
-  }
-}
-
-.container {
-  max-width: 120rem;
-  margin: 0 auto;
-  padding: 0 2rem;
-}
-
-.roomList {
-  background: var(--color-dark);
-  max-height: 90vh;
-  overflow-y: scroll;
-}</code></pre>
-
-            <h2>JavaScript Interactivity</h2>
-
-            <h3>Dynamic UI Features</h3>
-            <pre><code>// Dropdown Menu Toggle
-const dropdownMenu = document.querySelector(".dropdown-menu");
-const dropdownButton = document.querySelector(".dropdown-button");
-
-if (dropdownButton) {
-  dropdownButton.addEventListener("click", () => {
-    dropdownMenu.classList.toggle("show");
-  });
-}
-
-// Image Upload Preview
-const photoInput = document.querySelector("#avatar");
-const photoPreview = document.querySelector("#preview-avatar");
-
-if (photoInput) {
-  photoInput.onchange = () => {
-    const [file] = photoInput.files;
-    if (file) {
-      photoPreview.src = URL.createObjectURL(file);
+    /* --- Theme toggle button (identique au design précédent) --- */
+    .theme-toggle{
+      position:fixed;top:12px;right:12px;
+      border:1px solid var(--line);
+      background:var(--surface);
+      color:var(--muted);
+      padding:6px;font-size:12px;border-radius:6px;
+      cursor:pointer;display:flex;align-items:center;justify-content:center;
+      transition:background .2s ease
     }
-  };
-}
-
-// Auto-scroll Chat
-const conversationThread = document.querySelector(".room__box");
-if (conversationThread) {
-  conversationThread.scrollTop = conversationThread.scrollHeight;
-}</code></pre>
-
-            <h2>Page Structure & Navigation</h2>
-
-            <h3>Core Pages</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Page</th>
-                        <th>Functionality</th>
-                        <th>Key Features</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>index.html</td>
-                        <td>Homepage & Event Listing</td>
-                        <td>Browse events, topics, recent activities</td>
-                    </tr>
-                    <tr>
-                        <td>room.html</td>
-                        <td>Individual Event View</td>
-                        <td>Event details, chat, participant list</td>
-                    </tr>
-                    <tr>
-                        <td>profile.html</td>
-                        <td>User Profile Display</td>
-                        <td>User info, hosted events, activities</td>
-                    </tr>
-                    <tr>
-                        <td>create-room.html</td>
-                        <td>Event Creation Form</td>
-                        <td>Event details input, topic selection</td>
-                    </tr>
-                    <tr>
-                        <td>login.html / signup.html</td>
-                        <td>Authentication Forms</td>
-                        <td>User registration and login</td>
-                    </tr>
-                    <tr>
-                        <td>settings.html</td>
-                        <td>User Settings</td>
-                        <td>Profile editing, avatar upload</td>
-                    </tr>
-                    <tr>
-                        <td>activity.html</td>
-                        <td>Activity Feed</td>
-                        <td>Recent user activities and interactions</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h3>Template Inheritance</h3>
-            <pre><code># Django Template Structure
-<!-- main.html (Base Template) -->
-<!DOCTYPE html>
-{% load static %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <title>Powering Events, Together !</title>
-    <link rel="stylesheet" href="{% static 'styles/style.css' %}" />
+    .theme-toggle:hover{background:var(--line);color:var(--ink)}
+    .theme-toggle svg{width:16px;height:16px;fill:currentColor;display:block}
+  </style>
 </head>
 <body>
-    {% include 'navbar.html' %}
-    
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-    
-    {% block content %}
-    {% endblock %}
-    
-    <script src="{% static 'js/script.js' %}"></script>
-</body>
-</html></code></pre>
-
-            <h2>Event Room Features</h2>
-
-            <h3>Real-time Communication</h3>
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <h4>💬 Message Threads</h4>
-                    <p>Hierarchical conversation structure with reply capabilities and user attribution</p>
-                </div>
-                <div class="feature-card">
-                    <h4>👥 Participant Management</h4>
-                    <p>Live participant lists with join/leave functionality and user profiles</p>
-                </div>
-                <div class="feature-card">
-                    <h4>⏰ Timestamps</h4>
-                    <p>Relative time display for messages and activities using Django's timesince filter</p>
-                </div>
-                <div class="feature-card">
-                    <h4>📍 Room Persistence</h4>
-                    <p>Message history and room state maintained across sessions</p>
-                </div>
-            </div>
-
-            <h3>Room Management Interface</h3>
-            <pre><code># Room View Template Logic
-{% extends 'main.html' %}
-
-{% block content %}
-<main class="profile-page layout layout--3">
   <div class="container">
-    <div class="room__top">
-      <div class="room__topLeft">
-        <a href="{% url 'home' %}">
-          <svg><!-- Back arrow icon --></svg>
-        </a>
-        <h3>{{room.name}}</h3>
-      </div>
-      {% if request.user == room.host %}
-      <div class="room__topRight">
-        <a href="{% url 'update-room' room.id %}">
-          <svg><!-- Settings icon --></svg>
-        </a>
-      </div>
-      {% endif %}
+    <a class="back-link" href="main.html">← Back to Portfolio</a>
+    <h1>Evento — Web3 Event Platform on Solana</h1>
+
+    <div class="meta-badges">
+      <div class="badge">Solana</div>
+      <div class="badge">Web3</div>
+      <div class="badge">Web</div>
     </div>
-    
-    <div class="room__conversation">
-      <div class="threads scroll">
-        {% for message in room_messages %}
-        <div class="thread">
-          <div class="thread__top">
-            <div class="thread__author">
-              <a href="{% url 'user-profile' message.user.id %}">
-                <div class="avatar avatar--small">
-                  <img src="{{message.user.avatar.url}}" />
-                </div>
-                <span>@{{message.user.username}}</span>
-              </a>
-              <span>{{message.created|timesince}} ago</span>
-            </div>
-          </div>
-          <div class="thread__details">
-            {{message.body}}
-          </div>
-        </div>
-        {% endfor %}
-      </div>
+
+    <!-- Bouton dark/light inséré ici -->
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme"></button>
+
+    <div class="links">
+      <a href="https://github.com/promaaa/evento" target="_blank" rel="noopener">Code ↗</a>
+      <a href="#flow">Wallet Flow ↓</a>
+    </div>
+
+    <div class="highlight">
+      <strong>Abstract</strong> — Buying or funding an event ticket today is often messy:
+      fragmented platforms, mandatory accounts, hidden fees, and long settlement times.
+      Evento removes all of that.
+      It’s a wallet-native platform for event ticketing and crowdfunding, built directly on Solana.
+      Users connect their Phantom wallet, approve a single transfer, and they’re done —
+      no sign-ups, no intermediaries, no delays.
+      <code>v1</code> runs on a simple <code>SystemProgram.transfer</code> for instant, verifiable payments.
+      <code>v2</code> will add an Anchor-based escrow for refunds and NFT tickets via Metaplex for provable, transferable access.
+      The goal: a <em>trust-minimised UX</em> that organizers and attendees actually need —
+      sign locally, settle instantly, and cut out all the friction of Web2 ticketing.
+    </div>
+
+    <div class="toc">
+      <strong>Contents</strong>
+      <ol>
+        <li><a href="#motivation">Motivation & Constraints</a></li>
+        <li><a href="#boundary">On-chain vs Off-chain Boundary</a></li>
+        <li><a href="#architecture">Web3-First Architecture</a></li>
+        <li><a href="#flow">Wallet & Transaction Flow</a></li>
+        <li><a href="#solanapay">Solana Pay QR Deep Link</a></li>
+        <li><a href="#security">Security & Correctness</a></li>
+        <li><a href="#ux">UX for Failure Modes</a></li>
+        <li><a href="#tradeoffs">Trade-offs</a></li>
+        <li><a href="#roadmap">Roadmap</a></li>
+      </ol>
+    </div>
+
+    <h2 id="motivation">1. Motivation & Constraints</h2>
+    <ul>
+      <li>Deliver a <strong>wallet-first</strong> event experience — today users must create accounts, share PII, and pass through payment processors. With Evento it’s <em>connect → approve → done</em>.</li>
+      <li>Prefer <strong>static hosting</strong> (CDN) — traditional platforms hold card data and user tables (breach risk + ops). Evento serves static assets; the wallet is the trust boundary.</li>
+      <li>Start with <strong>direct SOL transfers</strong> — instant settlement (no chargebacks, no T+7 payouts). Add programs only when they solve real gaps (escrow, ticket identity).</li>
+    </ul>
+
+    <h2 id="boundary">2. On-chain vs Off-chain Boundary</h2>
+    <table>
+      <thead><tr><th>Concern</th><th>Lives On</th><th>Why (Problem → Solution)</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Payment</td>
+          <td><strong>On-chain</strong> (SOL transfer)</td>
+          <td>Chargebacks & payout delays → replaced by final, transparent settlement; organizers are paid instantly, attendees get an explorer-proof.</td>
+        </tr>
+        <tr>
+          <td>Ticket identity (v2)</td>
+          <td><strong>On-chain</strong> (NFT metadata)</td>
+          <td>Counterfeits & scalping → verifiable ownership, optional transfer rules; simple at the door: “scan wallet, verify mint.”</td>
+        </tr>
+        <tr>
+          <td>Event metadata</td>
+          <td><strong>Off-chain</strong> (static JSON / API)</td>
+          <td>Frequent edits shouldn’t cost rent → organizers update titles/times cheaply; no chain bloat for content.</td>
+        </tr>
+        <tr>
+          <td>Receipts / stats</td>
+          <td><strong>Off-chain</strong> (optional indexer)</td>
+          <td>Analytics & pagination without RPC strain → append-only receipt store; not a trust anchor.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 id="architecture">3. Web3-First Architecture</h2>
+    <figure>
+      <svg viewBox="0 0 1000 360" width="100%" role="img" aria-label="Web3-first architecture" id="arch-svg">
+        <defs>
+          <style id="arch-svg-style">
+            .b{fill:#18181b;stroke:#27272a;stroke-width:1.2}
+            .t{font:14px system-ui,sans-serif;font-weight:600}
+            .s{font:12px system-ui,sans-serif;fill:#a1a1aa}
+            .a{stroke:#fafafa;stroke-width:2.5;marker-end:url(#ar)}
+          </style>
+          <marker id="ar" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+            <path id="arch-arrow" d="M0,0 L10,3 L0,6 Z" fill="#fafafa" />
+          </marker>
+        </defs>
+        <!-- Client -->
+        <rect x="40" y="40" width="240" height="90" rx="12" class="b"/>
+        <text x="160" y="72" text-anchor="middle" class="t">Static UI</text>
+        <text x="160" y="92" text-anchor="middle" class="s">HTML/CSS/JS + Phantom</text>
+
+        <!-- RPC -->
+        <rect x="340" y="40" width="240" height="90" rx="12" class="b"/>
+        <text x="460" y="72" text-anchor="middle" class="t">Solana RPC</text>
+        <text x="460" y="92" text-anchor="middle" class="s">devnet / mainnet</text>
+
+        <!-- Optional indexer -->
+        <rect x="640" y="40" width="300" height="90" rx="12" class="b"/>
+        <text x="790" y="72" text-anchor="middle" class="t">Optional Backend</text>
+        <text x="790" y="92" text-anchor="middle" class="s">verify signature + receipts</text>
+
+        <!-- Arrows -->
+        <line x1="280" y1="85" x2="340" y2="85" class="a"/>
+        <line x1="580" y1="85" x2="640" y2="85" class="a"/>
+      </svg>
+      <figcaption>Figure 1 — UI talks directly to the cluster. Backend is an optional indexer/receipt store, not a trust anchor.</figcaption>
+    </figure>
+    <div class="fig-note"><strong>Figure insight</strong> Keep trust at the wallet boundary. If you add a server, make it append-only for receipts and easy to ignore.</div>
+
+    <h2 id="flow">4. Wallet & Transaction Flow</h2>
+    <pre><code class="language-js">// 1) Connect wallet
+const provider = window.solana;         // Phantom
+await provider.connect();               // user approval
+const connection = new solanaWeb3.Connection("https://api.devnet.solana.com", "confirmed");
+
+// 2) Build payment
+const from = provider.publicKey;
+const to   = new solanaWeb3.PublicKey(organizerPubkey);
+const lamports = Math.floor(priceSOL * solanaWeb3.LAMPORTS_PER_SOL);
+const ix = solanaWeb3.SystemProgram.transfer({ fromPubkey: from, toPubkey: to, lamports });
+
+// 3) Fresh blockhash (replay-safe)
+const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
+
+// 4) Sign & send
+const tx = new solanaWeb3.Transaction({ feePayer: from, recentBlockhash: blockhash }).add(ix);
+const signed = await provider.signTransaction(tx);
+const sig = await connection.sendRawTransaction(signed.serialize(), { skipPreflight: false });
+
+// 5) Confirm and surface the explorer link
+await connection.confirmTransaction({ signature: sig, blockhash, lastValidBlockHeight }, "confirmed");
+showExplorerLink(sig);</code></pre>
+    <div class="callout"><strong>Why this matters</strong> — No custodial keys, no server-side signing, no opaque payment processor. Users approve exactly one transfer they can verify in any explorer.</div>
+    <div class="callout"><strong>Impact</strong> — Legacy platforms take 10–15% fees and delay payouts. Evento settles immediately to the organizer’s wallet; the signature is public proof.</div>
+
+    <h2 id="solanapay">5. Solana Pay QR Deep Link</h2>
+    <p>For mobile or kiosk flows, generate a Solana Pay URL and render it as a QR code. Wallets parse the URL and pre-fill the transfer.</p>
+    <pre><code class="language-js">const params = new URLSearchParams({
+  recipient: organizerPubkey,      // base58
+  amount: priceSOL.toString(),     // decimal SOL
+  label: "Evento Ticket",
+  message: `Event: ${eventTitle}`,
+  memo: `evt:${eventId};tier:${tierName}`
+});
+const url = `solana:${organizerPubkey}?${params.toString()}`;
+// Render as QR with your preferred lib (e.g., qrcode.js)</code></pre>
+    <div class="fig-note"><strong>Note</strong> Include a concise memo to tie wallet history to a specific event/tier without leaking PII.</div>
+
+    <h2 id="security">6. Security & Correctness</h2>
+    <ul>
+      <li><strong>Replay-safe</strong>: always fetch a fresh blockhash and pass <code>lastValidBlockHeight</code> to confirmation.</li>
+      <li><strong>Destination integrity</strong>: show full pubkey, chunk it (e.g., 4-4-4-…), provide copy-to-clipboard; never let a server rewrite it.</li>
+      <li><strong>Idempotence</strong> (if you index): de-dupe by <code>signature</code>; enforce a unique index on <code>sig</code>.</li>
+      <li><strong>No pre-signed payloads</strong>: users must sign on device; avoid “click to pay” with hidden signatures.</li>
+      <li><strong>No PII storage</strong>: static frontend + wallet flow means no emails/passwords to breach.</li>
+      <li><strong>Cluster choice</strong>: expose devnet/mainnet switch; show price in SOL and fiat at render time.</li>
+    </ul>
+
+    <h2 id="ux">7. UX for Failure Modes</h2>
+    <ul>
+      <li><em>User rejects</em> → keep state, show “Try again”, no hard errors.</li>
+      <li><em>Blockhash expired</em> → re-fetch, rebuild, re-sign (“Session expired, preparing a fresh transaction.”).</li>
+      <li><em>Insufficient funds</em> → estimate lamports + fees and block before signing.</li>
+      <li><em>RPC congestion</em> → pending state with signature + direct explorer link.</li>
+    </ul>
+
+    <h2 id="tradeoffs">8. Trade-offs (v1: direct transfer)</h2>
+    <ul>
+      <li><strong>Pros</strong>: zero custody, instant settlement, easy to reason about.</li>
+      <li><strong>Cons</strong>: no refunds/escrow; no native notion of a “ticket” → cancellations and resale are manual.</li>
+      <li><strong>Mitigation</strong>: add escrow + NFT tickets in v2 to cover refunds and verifiable access, while keeping v1 ultra-simple.</li>
+    </ul>
+
+    <h2 id="roadmap">9. Roadmap for v2</h2>
+    <ol>
+      <li><strong>Anchor escrow program</strong>: protects attendees if events are canceled; timed refunds without trusting a platform.</li>
+      <li><strong>Metaplex NFT tickets</strong>: proof of authenticity, optional transfer rules (e.g., anti-scalping), and simple door checks.</li>
+      <li><strong>Webhooks & subscriptions</strong>: backend listens for confirmations; UI updates via SSE/WS for real-time status.</li>
+      <li><strong>Proof-of-attendance</strong>: mint a POAP-style token after check-in to reward community engagement.</li>
+      <li><strong>Allowlists</strong>: Merkle proofs or token-gated tiers for presales without spreadsheets or centralized registries.</li>
+    </ol>
+
+    <div class="footer-note">
+      Repo: <a href="https://github.com/promaaa/evento" target="_blank" rel="noopener">github.com/promaaa/evento</a>
     </div>
   </div>
-</main>
-{% endblock %}</code></pre>
 
-            <h2>Search & Discovery System</h2>
-
-            <h3>Topic-Based Organization</h3>
-            <pre><code>// Topic Model & View Logic
-class Topic(models.Model):
-    name = models.CharField(max_length=200)
-    
-    def __str__(self):
-        return self.name
-
-# View with search functionality
-def home(request):
-    q = request.GET.get('q', '')
-    
-    rooms = Room.objects.filter(
-        Q(topic__name__icontains=q) |
-        Q(name__icontains=q) |
-        Q(description__icontains=q)
-    )
-    
-    topics = Topic.objects.all()[:5]
-    room_count = rooms.count()
-    
-    context = {
-        'rooms': rooms,
-        'topics': topics,
-        'room_count': room_count,
-    }
-    return render(request, 'base/home.html', context)</code></pre>
-
-            <h2>User Experience Features</h2>
-
-            <h3>Profile Customization</h3>
-            <ul>
-                <li><strong>Avatar Upload:</strong> Custom profile pictures with preview functionality</li>
-                <li><strong>Bio Management:</strong> Personalized user descriptions and information</li>
-                <li><strong>Activity Tracking:</strong> Comprehensive history of user interactions</li>
-                <li><strong>Event Hosting:</strong> Track and manage created events</li>
-                <li><strong>Participation History:</strong> Record of joined events and conversations</li>
-            </ul>
-
-            <h3>Interactive Elements</h3>
-            <pre><code>/* CSS Animations & Transitions */
-.btn {
-  transition: all 0.3s ease-in-out;
-  cursor: pointer;
-}
-
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.dropdown-menu {
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-10px);
-  transition: all 0.3s ease-in-out;
-}
-
-.dropdown-menu.show {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}</code></pre>
-
-            <h2>Security & Data Management</h2>
-
-            <h3>Django Security Features</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Security Layer</th>
-                        <th>Implementation</th>
-                        <th>Purpose</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>CSRF Protection</td>
-                        <td>Django middleware & tokens</td>
-                        <td>Prevent cross-site request forgery</td>
-                    </tr>
-                    <tr>
-                        <td>User Authentication</td>
-                        <td>Django.contrib.auth</td>
-                        <td>Secure login/logout functionality</td>
-                    </tr>
-                    <tr>
-                        <td>Permission System</td>
-                        <td>Decorator-based access control</td>
-                        <td>Restrict edit/delete to room hosts</td>
-                    </tr>
-                    <tr>
-                        <td>Input Validation</td>
-                        <td>Django Forms & Models</td>
-                        <td>Sanitize and validate user input</td>
-                    </tr>
-                    <tr>
-                        <td>File Upload Security</td>
-                        <td>Restricted file types & sizes</td>
-                        <td>Safe avatar image uploads</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h2>Development Highlights</h2>
-
-            <div class="highlight-box">
-                <strong>Hackathon Achievement:</strong>
-                <ul style="margin: 10px 0 0 0;">
-                    <li><strong>Rapid Development:</strong> Built complete platform within hackathon timeframe</li>
-                    <li><strong>Modern Design:</strong> Implemented contemporary UI/UX principles</li>
-                    <li><strong>Full-Stack Implementation:</strong> End-to-end Django application development</li>
-                    <li><strong>Real-time Features:</strong> Interactive messaging and activity systems</li>
-                    <li><strong>Responsive Design:</strong> Mobile-first approach with cross-device compatibility</li>
-                </ul>
-            </div>
-
-            <h2>Deployment & Configuration</h2>
-
-            <h3>Django Project Structure</h3>
-            <pre><code>evento/
-├── base/                 # Main Django app
-│   ├── models.py        # Data models (Room, Message, User)
-│   ├── views.py         # View controllers
-│   ├── urls.py          # URL routing
-│   ├── forms.py         # Django forms
-│   └── templates/       # HTML templates
-├── static/              # Static assets
-│   ├── styles/          # CSS stylesheets
-│   ├── js/              # JavaScript files
-│   └── images/          # Static images
-├── theme/               # Template prototypes
-├── templates/           # Global templates
-│   ├── main.html        # Base template
-│   └── navbar.html      # Navigation component
-└── manage.py            # Django management script</code></pre>
-
-            <h2>Future Enhancements</h2>
-
-            <h3>Planned Features</h3>
-            <ul>
-                <li><strong>Real-time Notifications:</strong> WebSocket integration for live updates</li>
-                <li><strong>Video Conferencing:</strong> Integrated video calls within event rooms</li>
-                <li><strong>Calendar Integration:</strong> Sync events with external calendar apps</li>
-                <li><strong>Analytics Dashboard:</strong> Event metrics and participation insights</li>
-                <li><strong>Mobile App:</strong> Native iOS and Android applications</li>
-                <li><strong>API Development:</strong> RESTful API for third-party integrations</li>
-                <li><strong>Advanced Permissions:</strong> Role-based access control for events</li>
-                <li><strong>Monetization Features:</strong> Paid events and premium features</li>
-            </ul>
-
-            <h2>Skills Demonstrated</h2>
-
-            <div class="highlight-box">
-                <strong>Technical Competencies:</strong>
-                <ul style="margin: 10px 0 0 0;">
-                    <li><strong>Full-Stack Development:</strong> Complete Django web application with frontend and backend</li>
-                    <li><strong>Database Design:</strong> Relational data modeling and ORM implementation</li>
-                    <li><strong>User Interface Design:</strong> Modern, responsive web interface development</li>
-                    <li><strong>JavaScript Programming:</strong> Interactive features and dynamic content management</li>
-                    <li><strong>Security Implementation:</strong> Web application security best practices</li>
-                    <li><strong>Rapid Prototyping:</strong> Quick development cycle suitable for hackathon environment</li>
-                    <li><strong>Version Control:</strong> Git workflow and collaborative development practices</li>
-                </ul>
-            </div>
-
-            <p>Evento represents a comprehensive event management solution built with modern web technologies, demonstrating proficiency in full-stack development, user experience design, and rapid application development within the constraints of a competitive hackathon environment.</p>
-        </div>
-    </div>
-    <script>
+  <!-- Theme toggle script -->
+  <script>
     (function(){
       const toggle = document.getElementById('theme-toggle');
+      if(!toggle) return;
       const html = document.documentElement;
-      const saved = localStorage.getItem('theme');
-      const initial = saved ? saved : 'light';
-      html.setAttribute('data-theme', initial);
-      updateToggleIcon(initial);
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      html.setAttribute('data-theme', savedTheme);
+      updateToggleIcon(savedTheme);
+
       toggle.addEventListener('click', function(){
         const current = html.getAttribute('data-theme');
         const next = current === 'dark' ? 'light' : 'dark';
@@ -800,41 +268,36 @@ def home(request):
         localStorage.setItem('theme', next);
         updateToggleIcon(next);
       });
+
       function updateToggleIcon(theme){
-        const sunSvg = `<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-        <rect x="7" y="0" width="2" height="2"/>
-        <rect x="13" y="2" width="2" height="2"/>
-        <rect x="14" y="7" width="2" height="2"/>
-        <rect x="13" y="12" width="2" height="2"/>
-        <rect x="7" y="14" width="2" height="2"/>
-        <rect x="2" y="12" width="2" height="2"/>
-        <rect x="0" y="7" width="2" height="2"/>
-        <rect x="2" y="2" width="2" height="2"/>
-        <rect x="5" y="5" width="6" height="6"/>
-        <rect x="6" y="4" width="4" height="1"/>
-        <rect x="4" y="6" width="1" height="4"/>
-        <rect x="11" y="6" width="1" height="4"/>
-        <rect x="6" y="11" width="4" height="1"/>
-      </svg>`;
-        const moonSvg = `<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-        <rect x="8" y="2" width="8" height="2"/>
-        <rect x="7" y="4" width="10" height="2"/>
-        <rect x="6" y="6" width="11" height="2"/>
-        <rect x="6" y="8" width="11" height="2"/>
-        <rect x="6" y="10" width="11" height="2"/>
-        <rect x="7" y="12" width="10" height="2"/>
-        <rect x="8" y="14" width="8" height="2"/>
-        <rect x="12" y="4" width="7" height="2" fill=\"var(--bg)\"/>
-        <rect x="13" y="6" width="7" height="2" fill=\"var(--bg)\"/>
-        <rect x="13" y="8" width="7" height="2" fill=\"var(--bg)\"/>
-        <rect x="13" y="10" width="7" height="2" fill=\"var(--bg)\"/>
-        <rect x="12" y="12" width="7" height="2" fill=\"var(--bg)\"/>
-      </svg>`;
+        const sunSvg = `<svg viewBox="0 0 16 16"><rect x="7" y="0" width="2" height="2"/><rect x="13" y="2" width="2" height="2"/><rect x="14" y="7" width="2" height="2"/><rect x="13" y="12" width="2" height="2"/><rect x="7" y="14" width="2" height="2"/><rect x="2" y="12" width="2" height="2"/><rect x="0" y="7" width="2" height="2"/><rect x="2" y="2" width="2" height="2"/><rect x="5" y="5" width="6" height="6"/><rect x="6" y="4" width="4" height="1"/><rect x="4" y="6" width="1" height="4"/><rect x="11" y="6" width="1" height="4"/><rect x="6" y="11" width="4" height="1"/></svg>`;
+        const moonSvg = `<svg viewBox="0 0 16 16"><rect x="5" y="2" width="6" height="1"/><rect x="3" y="3" width="10" height="1"/><rect x="2" y="4" width="12" height="1"/><rect x="2" y="5" width="12" height="6"/><rect x="2" y="11" width="12" height="1"/><rect x="3" y="12" width="10" height="1"/><rect x="5" y="13" width="6" height="1"/><rect x="4" y="6" width="2" height="1"/><rect x="4" y="7" width="2" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="11" y="6" width="1" height="1"/><rect x="6" y="9" width="2" height="1"/><rect x="6" y="10" width="2" height="1"/></svg>`;
         toggle.innerHTML = theme === 'dark' ? sunSvg : moonSvg;
         toggle.title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
-        toggle.setAttribute('aria-label', toggle.title);
       }
     })();
-    </script>
+  </script>
+
+  <!-- SVG theme adaptation (updates the diagram colors on theme change) -->
+  <script>
+    (function(){
+      function updateArchSvgTheme(theme){
+        const style = document.getElementById('arch-svg-style');
+        if(!style) return;
+        const arrow = document.getElementById('arch-arrow');
+        if(theme === 'dark'){
+          style.textContent = `.b{fill:#18181b;stroke:#27272a;stroke-width:1.2}.t{font:14px system-ui,sans-serif;font-weight:600}.s{font:12px system-ui,sans-serif;fill:#a1a1aa}.a{stroke:#fafafa;stroke-width:2.5;marker-end:url(#ar)}`;
+          if(arrow) arrow.setAttribute('fill', '#fafafa');
+        }else{
+          style.textContent = `.b{fill:#fff;stroke:#e5e5e5;stroke-width:1.2}.t{font:14px system-ui,sans-serif;font-weight:600}.s{font:12px system-ui,sans-serif;fill:#444}.a{stroke:#2563eb;stroke-width:2.5;marker-end:url(#ar)}`;
+          if(arrow) arrow.setAttribute('fill', '#2563eb');
+        }
+      }
+      const html = document.documentElement;
+      updateArchSvgTheme(html.getAttribute('data-theme') || 'light');
+      const observer = new MutationObserver(()=>updateArchSvgTheme(html.getAttribute('data-theme')));
+      observer.observe(html, {attributes:true, attributeFilter:['data-theme']});
+    })();
+  </script>
 </body>
 </html>
