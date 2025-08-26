@@ -24,7 +24,7 @@ portfolio/
 - **Smart Grid** - Real-time data ingestion and APIs with Java/Vert.x
 
 ### Software & Web
-- **Chef Claude** - AI recipe generator using LLM APIs and React
+- **Chef Gen** - AI recipe finder using LLM APIs and React
 - **Evento** - Event management platform built for Solana hackathon
 - **Tenzies** - Interactive dice game showcasing React state management
 
