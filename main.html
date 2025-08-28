@@ -165,11 +165,11 @@
     /* Reading section - special styling for book comments */
     #reading .card .comment{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);font-style:italic}
     #reading .card .comment p{margin:0;line-height:1.4}    /* Background Section - Complete redesign */
+    /* Background section: keep original 2-col layout, use card visuals */
     .background-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
     @media(max-width:768px){.background-grid{grid-template-columns:1fr}}
-    
-    .background-item{position:relative;padding:28px;border-radius:var(--radius);border:1px solid var(--glass-border);background:var(--glass-bg);backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));box-shadow:var(--shadow)}
-    .background-item::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--line)}
+    .background-item{position:relative}
+    .background-item::before{display:none}
     
     .background-icon{font-size:20px;margin-bottom:16px;color:var(--muted)}
     .background-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
@@ -190,11 +190,11 @@
     }
     
     /* Connect Section - Modern design */
-    .connect-wrapper{max-width:880px;margin:0 auto}
+    .connect-wrapper{max-width:100%;margin:0 auto}
     .connect-intro{text-align:center;margin-bottom:8px}
     .connect-intro p{margin:0 0 6px;font-size:15px;color:var(--muted);line-height:1.6}
-    .connect-inline{display:flex;flex-wrap:nowrap;gap:22px;align-items:center;justify-content:center;padding:10px 0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-    .connect-inline::-webkit-scrollbar{display:none}
+    #contact h2{text-align:center}
+    .connect-inline{display:flex;flex-wrap:nowrap;gap:22px;align-items:center;justify-content:center;padding:10px 0;overflow:visible}
     .contact-link{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);position:relative;white-space:nowrap}
     .contact-link::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;opacity:.25;transition:transform .25s ease,opacity .25s ease}
     .contact-link:hover::after{transform:scaleX(1);opacity:.45}
@@ -492,13 +492,13 @@
           <div class="actions"><a href="smart-grid-writeup.html">Write‑up ↗</a><a href="https://github.com/promaaa/smart_grid_JPA" target="_blank" rel="noopener">Code ↗</a></div>
         </article>
 
-  <!-- Tenzies -->
-  <article class="card col-12 col-6" id="tenzies-mini-game" role="link" tabindex="0" aria-label="Open tenzies write-up" data-href="tenzies-writeup.html">
-          <div class="thumb"><img src="pictures/tenzies.png" alt="Tenzies" onerror="this.parentNode.textContent='(poster missing)';this.remove();"></div>
-          <h3>tenzies — mini game</h3>
-          <p class="blurb">Small, polished, fun. Highlights UX/UI details, animations, and state management.</p>
-          <div class="tags"><span class="tag">React</span><span class="tag">UI/UX</span><span class="tag">Animations</span></div>
-          <div class="actions"><a href="tenzies-writeup.html">Write‑up ↗</a><a href="https://github.com/promaaa/tenzies" target="_blank" rel="noopener">Code ↗</a></div>
+  <!-- Physical Chess-Playing Robot -->
+  <article class="card col-12 col-6" id="physical-chess-playing-robot" role="link" tabindex="0" aria-label="Open physical chess-playing robot write-up" data-href="physical-chess-playing-robot-writeup.html">
+          <div class="thumb"><img src="pictures/chess-board.jpg" alt="Physical Chess-Playing Robot" onerror="this.parentNode.textContent='(poster missing)';this.remove();"></div>
+          <h3>physical chess-playing robot</h3>
+          <p class="blurb">Vision detects human moves; Stockfish plans; a robot arm plays on a real board. In progress — demo‑ready reliability.</p>
+          <div class="tags"><span class="tag">Robotics</span><span class="tag">Computer Vision</span><span class="tag">AI</span></div>
+          <div class="actions"><a href="physical-chess-playing-robot-writeup.html">Write‑up ↗</a><a href="https://github.com/promaaa/physical-chess-playing-robot" target="_blank" rel="noopener">Code ↗</a></div>
         </article>
       </div>
     </section>
@@ -506,7 +506,7 @@
     <section id="education">
       <h2>Background</h2>
       <div class="background-grid">
-        <div class="background-item engineering">
+        <div class="background-item card engineering">
           <div class="background-icon">🎓</div>
           <div class="background-content">
             <div class="background-meta">
@@ -523,7 +523,7 @@
           </div>
         </div>
         
-        <div class="background-item prep">
+        <div class="background-item card prep">
           <div class="background-icon">⚡</div>
           <div class="background-content">
             <div class="background-meta">
@@ -704,6 +704,24 @@
     }catch(_){/* older browsers */}
   })();
   
+  // Propagate theme to internal links via ?theme= param
+  (function(){
+    const html = document.documentElement;
+    function applyThemeParam(){
+      const theme = html.getAttribute('data-theme') || 'light';
+      document.querySelectorAll('a[href$=".html"]:not([href^="http"])').forEach(a=>{
+        try{
+          const url = new URL(a.getAttribute('href'), location.href);
+          url.searchParams.set('theme', theme);
+          a.setAttribute('href', url.pathname + url.search + url.hash);
+        }catch(_){/* ignore */}
+      });
+    }
+    applyThemeParam();
+    const obs = new MutationObserver(applyThemeParam);
+    obs.observe(html, {attributes:true, attributeFilter:['data-theme']});
+  })();
+  
   // Reveal on scroll (fade/slide)
   (function(){
     const root = document.documentElement;
@@ -739,10 +757,30 @@
     style.textContent = `#projects .card[data-href]{cursor:pointer}#projects .card[data-href] .actions{cursor:auto}`;
     document.head.appendChild(style);
     cards.forEach(card=>{
-      function go(){ const href = card.getAttribute('data-href'); if(href) window.location = href; }
+      function go(){
+        const href = card.getAttribute('data-href');
+        if(!href) return;
+        const url = new URL(href, location.href);
+        const theme = document.documentElement.getAttribute('data-theme') || 'light';
+        url.searchParams.set('theme', theme);
+        window.location.href = url.pathname + url.search + url.hash;
+      }
       card.addEventListener('click', (e)=>{ if(e.target.closest('.actions')) return; go(); });
       card.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { if(e.target.closest('.actions')) return; e.preventDefault(); go(); }});
     });
+  })();
+  // Ensure we start at the top when loading (no anchor)
+  (function(){
+    function toTop(){ if(!location.hash){ window.scrollTo(0,0); } }
+    // Prevent browser from restoring a previous scroll on fresh navigation
+    try{ if('scrollRestoration' in history) { history.scrollRestoration = 'manual'; } }catch(_){}
+    if(document.readyState === 'complete' || document.readyState === 'interactive'){
+      toTop();
+    }else{
+      window.addEventListener('DOMContentLoaded', toTop, { once:true });
+    }
+    // Also handle BFCache restores and late paints
+    window.addEventListener('pageshow', function(){ toTop(); }, { once:true });
   })();
   </script>
 </body>

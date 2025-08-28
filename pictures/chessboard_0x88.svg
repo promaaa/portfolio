@@ -1,0 +1,171 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 504 280" role="img" aria-label="0x88 chessboard: 8x8 playable grid with off-board columns 8..15">
+  <defs>
+    <style>
+      .grid { stroke:#bfc3c8; stroke-width:1; }
+      .board { fill:#ffffff; }
+      .off { fill:#eceff1; }
+      .label { font-family: system-ui, -apple-system, Segoe UI, Inter, Roboto, Arial, sans-serif; fill:#1f2937; font-size:10px; }
+      .axis { font-family: system-ui, -apple-system, Segoe UI, Inter, Roboto, Arial, sans-serif; fill:#6b7280; font-size:11px; font-weight:600; }
+      .legend { font-family: system-ui, -apple-system, Segoe UI, Inter, Roboto, Arial, sans-serif; fill:#374151; font-size:12px; font-weight:600; }
+    </style>
+  </defs>
+
+  <!-- Layout constants (documented):
+       left margin L=36, top margin T=30, square size S=28,
+       grid width 16*S=448, height 8*S=224. -->
+  <rect x="36" y="30" width="224" height="224" class="board"/>
+  <rect x="260" y="30" width="224" height="224" class="off"/>
+
+  <!-- Grid lines (vertical) -->
+  <g class="grid">
+    <!-- 17 vertical lines from x=36 to x=36+16*28 (=484) -->
+    <path d="M36 30 V254"/>
+    <path d="M64 30 V254"/>
+    <path d="M92 30 V254"/>
+    <path d="M120 30 V254"/>
+    <path d="M148 30 V254"/>
+    <path d="M176 30 V254"/>
+    <path d="M204 30 V254"/>
+    <path d="M232 30 V254"/>
+    <path d="M260 30 V254"/>
+    <path d="M288 30 V254"/>
+    <path d="M316 30 V254"/>
+    <path d="M344 30 V254"/>
+    <path d="M372 30 V254"/>
+    <path d="M400 30 V254"/>
+    <path d="M428 30 V254"/>
+    <path d="M456 30 V254"/>
+    <path d="M484 30 V254"/>
+    <!-- Horizontal lines (9 from y=30 to y=254) -->
+    <path d="M36 30 H484"/>
+    <path d="M36 58 H484"/>
+    <path d="M36 86 H484"/>
+    <path d="M36 114 H484"/>
+    <path d="M36 142 H484"/>
+    <path d="M36 170 H484"/>
+    <path d="M36 198 H484"/>
+    <path d="M36 226 H484"/>
+    <path d="M36 254 H484"/>
+  </g>
+
+  <!-- Axis labels -->
+  <g class="axis">
+    <!-- Files 0..15 centered above each column -->
+    <text x="50" y="22" text-anchor="middle">0</text>
+    <text x="78" y="22" text-anchor="middle">1</text>
+    <text x="106" y="22" text-anchor="middle">2</text>
+    <text x="134" y="22" text-anchor="middle">3</text>
+    <text x="162" y="22" text-anchor="middle">4</text>
+    <text x="190" y="22" text-anchor="middle">5</text>
+    <text x="218" y="22" text-anchor="middle">6</text>
+    <text x="246" y="22" text-anchor="middle">7</text>
+    <text x="274" y="22" text-anchor="middle">8</text>
+    <text x="302" y="22" text-anchor="middle">9</text>
+    <text x="330" y="22" text-anchor="middle">10</text>
+    <text x="358" y="22" text-anchor="middle">11</text>
+    <text x="386" y="22" text-anchor="middle">12</text>
+    <text x="414" y="22" text-anchor="middle">13</text>
+    <text x="442" y="22" text-anchor="middle">14</text>
+    <text x="470" y="22" text-anchor="middle">15</text>
+
+    <!-- Ranks 7..0 centered on each row at the left gutter -->
+    <text x="26" y="44" text-anchor="end">7</text>
+    <text x="26" y="72" text-anchor="end">6</text>
+    <text x="26" y="100" text-anchor="end">5</text>
+    <text x="26" y="128" text-anchor="end">4</text>
+    <text x="26" y="156" text-anchor="end">3</text>
+    <text x="26" y="184" text-anchor="end">2</text>
+    <text x="26" y="212" text-anchor="end">1</text>
+    <text x="26" y="240" text-anchor="end">0</text>
+  </g>
+
+  <!-- Off-board label -->
+  <text class="legend" x="372" y="14" text-anchor="middle">Off-board (files 8..15)</text>
+
+  <!-- 0x88 hex indices inside playable 8x8 (files 0..7) -->
+  <g class="label">
+    <!-- Row rank=7 (top visual row) -->
+    <text x="50" y="44" text-anchor="middle">0x70</text>
+    <text x="78" y="44" text-anchor="middle">0x71</text>
+    <text x="106" y="44" text-anchor="middle">0x72</text>
+    <text x="134" y="44" text-anchor="middle">0x73</text>
+    <text x="162" y="44" text-anchor="middle">0x74</text>
+    <text x="190" y="44" text-anchor="middle">0x75</text>
+    <text x="218" y="44" text-anchor="middle">0x76</text>
+    <text x="246" y="44" text-anchor="middle">0x77</text>
+
+    <!-- Row rank=6 -->
+    <text x="50" y="72" text-anchor="middle">0x60</text>
+    <text x="78" y="72" text-anchor="middle">0x61</text>
+    <text x="106" y="72" text-anchor="middle">0x62</text>
+    <text x="134" y="72" text-anchor="middle">0x63</text>
+    <text x="162" y="72" text-anchor="middle">0x64</text>
+    <text x="190" y="72" text-anchor="middle">0x65</text>
+    <text x="218" y="72" text-anchor="middle">0x66</text>
+    <text x="246" y="72" text-anchor="middle">0x67</text>
+
+    <!-- Row rank=5 -->
+    <text x="50" y="100" text-anchor="middle">0x50</text>
+    <text x="78" y="100" text-anchor="middle">0x51</text>
+    <text x="106" y="100" text-anchor="middle">0x52</text>
+    <text x="134" y="100" text-anchor="middle">0x53</text>
+    <text x="162" y="100" text-anchor="middle">0x54</text>
+    <text x="190" y="100" text-anchor="middle">0x55</text>
+    <text x="218" y="100" text-anchor="middle">0x56</text>
+    <text x="246" y="100" text-anchor="middle">0x57</text>
+
+    <!-- Row rank=4 -->
+    <text x="50" y="128" text-anchor="middle">0x40</text>
+    <text x="78" y="128" text-anchor="middle">0x41</text>
+    <text x="106" y="128" text-anchor="middle">0x42</text>
+    <text x="134" y="128" text-anchor="middle">0x43</text>
+    <text x="162" y="128" text-anchor="middle">0x44</text>
+    <text x="190" y="128" text-anchor="middle">0x45</text>
+    <text x="218" y="128" text-anchor="middle">0x46</text>
+    <text x="246" y="128" text-anchor="middle">0x47</text>
+
+    <!-- Row rank=3 -->
+    <text x="50" y="156" text-anchor="middle">0x30</text>
+    <text x="78" y="156" text-anchor="middle">0x31</text>
+    <text x="106" y="156" text-anchor="middle">0x32</text>
+    <text x="134" y="156" text-anchor="middle">0x33</text>
+    <text x="162" y="156" text-anchor="middle">0x34</text>
+    <text x="190" y="156" text-anchor="middle">0x35</text>
+    <text x="218" y="156" text-anchor="middle">0x36</text>
+    <text x="246" y="156" text-anchor="middle">0x37</text>
+
+    <!-- Row rank=2 -->
+    <text x="50" y="184" text-anchor="middle">0x20</text>
+    <text x="78" y="184" text-anchor="middle">0x21</text>
+    <text x="106" y="184" text-anchor="middle">0x22</text>
+    <text x="134" y="184" text-anchor="middle">0x23</text>
+    <text x="162" y="184" text-anchor="middle">0x24</text>
+    <text x="190" y="184" text-anchor="middle">0x25</text>
+    <text x="218" y="184" text-anchor="middle">0x26</text>
+    <text x="246" y="184" text-anchor="middle">0x27</text>
+
+    <!-- Row rank=1 -->
+    <text x="50" y="212" text-anchor="middle">0x10</text>
+    <text x="78" y="212" text-anchor="middle">0x11</text>
+    <text x="106" y="212" text-anchor="middle">0x12</text>
+    <text x="134" y="212" text-anchor="middle">0x13</text>
+    <text x="162" y="212" text-anchor="middle">0x14</text>
+    <text x="190" y="212" text-anchor="middle">0x15</text>
+    <text x="218" y="212" text-anchor="middle">0x16</text>
+    <text x="246" y="212" text-anchor="middle">0x17</text>
+
+    <!-- Row rank=0 (bottom visual row) -->
+    <text x="50" y="240" text-anchor="middle">0x00</text>
+    <text x="78" y="240" text-anchor="middle">0x01</text>
+    <text x="106" y="240" text-anchor="middle">0x02</text>
+    <text x="134" y="240" text-anchor="middle">0x03</text>
+    <text x="162" y="240" text-anchor="middle">0x04</text>
+    <text x="190" y="240" text-anchor="middle">0x05</text>
+    <text x="218" y="240" text-anchor="middle">0x06</text>
+    <text x="246" y="240" text-anchor="middle">0x07</text>
+  </g>
+
+  <!-- Notes -->
+  <text class="axis" x="252" y="270" text-anchor="middle">Index = (rank &lt;&lt; 4) | file • Off-board columns set the 0x88 bit</text>
+</svg>
+

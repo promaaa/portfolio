@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physical Chess‑Playing Robot — In‑Progress Case Study</title>
+  <meta name="description" content="Engineering school project (&lt;6 months, €600–1000) to build a physical chess‑playing robot: vision (OpenCV + ArUco), move calculation (Stockfish + python‑chess), and robotic manipulation (SCARA or XY+Z gantry)." />
+  <link rel="stylesheet" href="css/physical-chess-playing-robot-writeup.css" />
+</head>
+<body>
+  <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme"></button>
+  <div class="container">
+    <a class="back-link" href="main.html">← Back to Portfolio</a>
+    <h1>Physical Chess‑Playing Robot</h1>
+    <p class="lead">Vision detects human moves • Stockfish thinks • A robot arm moves the pieces. Built for a smooth, reliable over‑the‑board experience.</p>
+    <div class="meta-badges">
+      <span class="badge">Robotics</span>
+      <span class="badge">Computer Vision</span>
+      <span class="badge">Embedded</span>
+      <span class="badge">In Progress</span>
+    </div>
+    <div class="links">
+      <a href="https://github.com/promaaa/physical-chess-playing-robot" target="_blank" rel="noopener">Repo ↗</a>
+    </div>
+
+    <div class="highlight">
+      <strong>Abstract</strong> — A portfolio‑grade, physical chess‑playing robot designed for a public demo: detect human moves with OpenCV + ArUco, compute replies with Stockfish via python‑chess, and manipulate pieces with a SCARA or XY+Z gantry. Emphasis on reliability, gentle handling, and a smooth over‑the‑board UX.
+      <div class="chips">
+        <span class="chip-s"><span class="dot todo"></span> Target: ≥99% reliability</span>
+        <span class="chip-s"><span class="dot todo"></span> Target: ≤3s move latency</span>
+        <span class="chip-s"><span class="dot todo"></span> Target: ≤±1.5mm placement</span>
+      </div>
+    </div>
+
+    <div class="toc">
+      <strong>Contents</strong>
+      <a href="#chess-engine">1. Chess Engine Architecture (0x88)</a>
+      <a href="#vision-system">2. Vision System & Board Tracking</a>
+      <a href="#mechanical-robot">3. Mechanical Platform & Manipulator</a>
+      <a href="#game-ai">4. Game AI & Search</a>
+    </div>
+
+    
+
+    <h2 id="chess-engine">1. Chess Engine Architecture (0x88)</h2>
+    <div class="section">
+      <p class="section-lead">A small, readable engine built on the 0x88 board model: compact indexing, fast bounds checks, simple move generation, and a reversible state with perft validation.</p>
+      <h3>0x88 Board Model</h3>
+      <p>For fast, simple move generation I use the classic <strong>0x88</strong> board representation. The idea: store the board in a 128‑element array (8 ranks × 16 files). Playable squares are indices where <code>(sq &amp; 0x88) == 0</code>. Any step that crosses the board boundary flips bit 0x88, so out‑of‑bounds is a single, branch‑cheap check.</p>
+      <h3>Indexing & Coordinates</h3>
+      <ul>
+        <li><code>rank = sq &gt;&gt; 4</code>, <code>file = sq &amp; 0x0F</code> (0‑based).</li>
+        <li>Square index from (file, rank): <code>sq = (rank &lt;&lt; 4) | file</code>.</li>
+        <li>Algebraic, e.g., <code>e2</code> → <code>file=4</code>, <code>rank=1</code> → <code>sq = 0x14</code> (20).</li>
+      </ul>
+      <pre><code>// Directions (delta in 0x88 space)
+const int KNIGHT[8] = {-33,-31,-18,-14,14,18,31,33};
+const int KING[8]   = {-17,-16,-15,-1,1,15,16,17};
+const int BISHOP[4] = {-17,-15,15,17};
+const int ROOK[4]   = {-16,-1,1,16};
+
+inline bool on_board(int sq){ return (sq & 0x88) == 0; }
+
+// Map file/rank to 0x88 square
+inline int sq88(int file, int rank){ return (rank << 4) | file; }
+
+// Example: sliding moves (rook/bishop/queen)
+void gen_slides(int from, const int* DIRS, int nDirs){
+  for(int d=0; d<nDirs; ++d){
+    int to = from + DIRS[d];
+    while(on_board(to)){
+      if(empty(to)) add_move(from,to);
+      else { if(enemy(to)) add_capture(from,to); break; }
+      to += DIRS[d];
+    }
+  }
+}
+
+// Knights/kings iterate fixed offsets once and check on_board + occupancy.</code></pre>
+      <h3>Why 0x88 (vs. Bitboards)?</h3>
+      <ul>
+        <li><strong>Fast bounds check</strong>: <code>(sq &amp; 0x88)</code> replaces file/rank comparisons.</li>
+        <li><strong>Compact move deltas</strong>: add direction constants; no tables per square needed.</li>
+        <li><strong>Clean encoding</strong>: algebraic ↔ 0x88 via bit ops; easy mailbox for debugging.</li>
+      </ul>
+      <p>Bitboards are faster for bulk operations, but 0x88 is excellent for a small, readable engine that must integrate cleanly with vision/game state.</p>
+      <h3>Engine Architecture (MVP)</h3>
+      <ul>
+        <li><strong>State</strong>: mailbox[128] + side, castling rights, ep square, halfmove clock.</li>
+        <li><strong>Move gen</strong>: pseudo‑legal via 0x88 deltas → legality (in‑check) filter.</li>
+        <li><strong>Make/Unmake</strong>: incremental update with reversible stack (captures, ep, promotions).</li>
+        <li><strong>Validation</strong>: perft sanity tests (startpos, ep/castling cases) to lock correctness.</li>
+      </ul>
+      <div class="callout">
+        <strong>Highlights</strong>
+        <ul>
+          <li>O(1) bounds check via <code>sq &amp; 0x88</code> (no file/rank branches).</li>
+          <li>Compact deltas for sliders/knights/kings; minimal tables.</li>
+          <li>Reversible make/unmake stack for fast search/backtracking.</li>
+          <li>Clean algebraic ↔ 0x88 mapping; easy mailbox debugging.</li>
+          <li>Perft‑based validation to lock rules and edge cases early.</li>
+        </ul>
+      </div>
+      <figure class="figure-0x88">
+        <div class="svg-card">
+          <svg viewBox="0 0 504 280" role="img" aria-label="0x88 chessboard: 8x8 playable grid with off-board columns 8..15">
+            <defs>
+              <style>
+                .grid { stroke:var(--line); stroke-width:1; }
+                .board { fill:var(--surface); }
+                .off { fill:var(--surface-alt); }
+                .label { font-family:inherit; fill:var(--ink); font-size:10px; }
+                .axis { font-family:inherit; fill:var(--muted); font-size:11px; font-weight:600; }
+                .legend { font-family:inherit; fill:var(--ink); font-size:12px; font-weight:600; }
+                .co-line{stroke:var(--ink);stroke-width:1}
+                .co-box{fill:var(--surface);stroke:var(--line)}
+                .co-text{font-family:inherit;fill:var(--ink);font-size:9.5px}
+              </style>
+              <!-- Subtle checker pattern for the playable 8x8 -->
+              <pattern id="chk" width="56" height="56" patternUnits="userSpaceOnUse">
+                <rect width="56" height="56" fill="var(--surface)"/>
+                <rect width="28" height="28" fill="var(--surface-alt)"/>
+                <rect x="28" y="28" width="28" height="28" fill="var(--surface-alt)"/>
+              </pattern>
+            </defs>
+            <!-- Playable board (files 0..7) and off-board (8..15) -->
+            <rect x="36" y="30" width="224" height="224" rx="6" class="board" fill="url(#chk)"/>
+            <rect x="260" y="30" width="224" height="224" rx="6" class="off"/>
+
+            <!-- Grid lines -->
+            <g class="grid">
+              <!-- vertical -->
+              <path d="M36 30 V254"/>
+              <path d="M64 30 V254"/>
+              <path d="M92 30 V254"/>
+              <path d="M120 30 V254"/>
+              <path d="M148 30 V254"/>
+              <path d="M176 30 V254"/>
+              <path d="M204 30 V254"/>
+              <path d="M232 30 V254"/>
+              <path d="M260 30 V254"/>
+              <path d="M288 30 V254"/>
+              <path d="M316 30 V254"/>
+              <path d="M344 30 V254"/>
+              <path d="M372 30 V254"/>
+              <path d="M400 30 V254"/>
+              <path d="M428 30 V254"/>
+              <path d="M456 30 V254"/>
+              <path d="M484 30 V254"/>
+              <!-- horizontal -->
+              <path d="M36 30 H484"/>
+              <path d="M36 58 H484"/>
+              <path d="M36 86 H484"/>
+              <path d="M36 114 H484"/>
+              <path d="M36 142 H484"/>
+              <path d="M36 170 H484"/>
+              <path d="M36 198 H484"/>
+              <path d="M36 226 H484"/>
+              <path d="M36 254 H484"/>
+            </g>
+
+            <!-- Axis labels -->
+            <g class="axis">
+              <!-- files 0..15 -->
+              <text x="50" y="22" text-anchor="middle">0</text>
+              <text x="78" y="22" text-anchor="middle">1</text>
+              <text x="106" y="22" text-anchor="middle">2</text>
+              <text x="134" y="22" text-anchor="middle">3</text>
+              <text x="162" y="22" text-anchor="middle">4</text>
+              <text x="190" y="22" text-anchor="middle">5</text>
+              <text x="218" y="22" text-anchor="middle">6</text>
+              <text x="246" y="22" text-anchor="middle">7</text>
+              <text x="274" y="22" text-anchor="middle">8</text>
+              <text x="302" y="22" text-anchor="middle">9</text>
+              <text x="330" y="22" text-anchor="middle">10</text>
+              <text x="358" y="22" text-anchor="middle">11</text>
+              <text x="386" y="22" text-anchor="middle">12</text>
+              <text x="414" y="22" text-anchor="middle">13</text>
+              <text x="442" y="22" text-anchor="middle">14</text>
+              <text x="470" y="22" text-anchor="middle">15</text>
+
+              <!-- ranks 7..0 -->
+              <text x="26" y="44" text-anchor="end">7</text>
+              <text x="26" y="72" text-anchor="end">6</text>
+              <text x="26" y="100" text-anchor="end">5</text>
+              <text x="26" y="128" text-anchor="end">4</text>
+              <text x="26" y="156" text-anchor="end">3</text>
+              <text x="26" y="184" text-anchor="end">2</text>
+              <text x="26" y="212" text-anchor="end">1</text>
+              <text x="26" y="240" text-anchor="end">0</text>
+            </g>
+
+            <!-- Off-board legend (boxed, inside off-board region) -->
+            <rect x="268" y="36" width="208" height="38" rx="6" fill="var(--surface)" stroke="var(--line)" />
+            <text class="legend" x="372" y="54" text-anchor="middle">Off-board</text>
+            <text class="axis" x="372" y="68" text-anchor="middle">(files 8..15)</text>
+
+            <!-- Hex indices in playable 8x8 -->
+            <g class="label">
+              <!-- rank 7 -->
+              <text x="50" y="44" text-anchor="middle">0x70</text>
+              <text x="78" y="44" text-anchor="middle">0x71</text>
+              <text x="106" y="44" text-anchor="middle">0x72</text>
+              <text x="134" y="44" text-anchor="middle">0x73</text>
+              <text x="162" y="44" text-anchor="middle">0x74</text>
+              <text x="190" y="44" text-anchor="middle">0x75</text>
+              <text x="218" y="44" text-anchor="middle">0x76</text>
+              <text x="246" y="44" text-anchor="middle">0x77</text>
+              <!-- rank 6 -->
+              <text x="50" y="72" text-anchor="middle">0x60</text>
+              <text x="78" y="72" text-anchor="middle">0x61</text>
+              <text x="106" y="72" text-anchor="middle">0x62</text>
+              <text x="134" y="72" text-anchor="middle">0x63</text>
+              <text x="162" y="72" text-anchor="middle">0x64</text>
+              <text x="190" y="72" text-anchor="middle">0x65</text>
+              <text x="218" y="72" text-anchor="middle">0x66</text>
+              <text x="246" y="72" text-anchor="middle">0x67</text>
+              <!-- rank 5 -->
+              <text x="50" y="100" text-anchor="middle">0x50</text>
+              <text x="78" y="100" text-anchor="middle">0x51</text>
+              <text x="106" y="100" text-anchor="middle">0x52</text>
+              <text x="134" y="100" text-anchor="middle">0x53</text>
+              <text x="162" y="100" text-anchor="middle">0x54</text>
+              <text x="190" y="100" text-anchor="middle">0x55</text>
+              <text x="218" y="100" text-anchor="middle">0x56</text>
+              <text x="246" y="100" text-anchor="middle">0x57</text>
+              <!-- rank 4 -->
+              <text x="50" y="128" text-anchor="middle">0x40</text>
+              <text x="78" y="128" text-anchor="middle">0x41</text>
+              <text x="106" y="128" text-anchor="middle">0x42</text>
+              <text x="134" y="128" text-anchor="middle">0x43</text>
+              <text x="162" y="128" text-anchor="middle">0x44</text>
+              <text x="190" y="128" text-anchor="middle">0x45</text>
+              <text x="218" y="128" text-anchor="middle">0x46</text>
+              <text x="246" y="128" text-anchor="middle">0x47</text>
+              <!-- rank 3 -->
+              <text x="50" y="156" text-anchor="middle">0x30</text>
+              <text x="78" y="156" text-anchor="middle">0x31</text>
+              <text x="106" y="156" text-anchor="middle">0x32</text>
+              <text x="134" y="156" text-anchor="middle">0x33</text>
+              <text x="162" y="156" text-anchor="middle">0x34</text>
+              <text x="190" y="156" text-anchor="middle">0x35</text>
+              <text x="218" y="156" text-anchor="middle">0x36</text>
+              <text x="246" y="156" text-anchor="middle">0x37</text>
+              <!-- rank 2 -->
+              <text x="50" y="184" text-anchor="middle">0x20</text>
+              <text x="78" y="184" text-anchor="middle">0x21</text>
+              <text x="106" y="184" text-anchor="middle">0x22</text>
+              <text x="134" y="184" text-anchor="middle">0x23</text>
+              <text x="162" y="184" text-anchor="middle">0x24</text>
+              <text x="190" y="184" text-anchor="middle">0x25</text>
+              <text x="218" y="184" text-anchor="middle">0x26</text>
+              <text x="246" y="184" text-anchor="middle">0x27</text>
+              <!-- rank 1 -->
+              <text x="50" y="212" text-anchor="middle">0x10</text>
+              <text x="78" y="212" text-anchor="middle">0x11</text>
+              <text x="106" y="212" text-anchor="middle">0x12</text>
+              <text x="134" y="212" text-anchor="middle">0x13</text>
+              <text x="162" y="212" text-anchor="middle">0x14</text>
+              <text x="190" y="212" text-anchor="middle">0x15</text>
+              <text x="218" y="212" text-anchor="middle">0x16</text>
+              <text x="246" y="212" text-anchor="middle">0x17</text>
+              <!-- rank 0 -->
+              <text x="50" y="240" text-anchor="middle">0x00</text>
+              <text x="78" y="240" text-anchor="middle">0x01</text>
+              <text x="106" y="240" text-anchor="middle">0x02</text>
+              <text x="134" y="240" text-anchor="middle">0x03</text>
+              <text x="162" y="240" text-anchor="middle">0x04</text>
+              <text x="190" y="240" text-anchor="middle">0x05</text>
+              <text x="218" y="240" text-anchor="middle">0x06</text>
+              <text x="246" y="240" text-anchor="middle">0x07</text>
+            </g>
+
+            <!-- Callouts for a1, e2, h8 -->
+            <g>
+              <!-- a1 at center (50,240) -->
+              <line class="co-line" x1="50" y1="240" x2="76" y2="240"/>
+              <rect class="co-box" x="76" y="230" width="66" height="20" rx="4"/>
+              <text class="co-text" x="109" y="244" text-anchor="middle">a1 = 0x00</text>
+
+              <!-- e2 at center (162,212) -->
+              <line class="co-line" x1="162" y1="212" x2="188" y2="200"/>
+              <rect class="co-box" x="188" y="190" width="74" height="20" rx="4"/>
+              <text class="co-text" x="225" y="204" text-anchor="middle">e2 = 0x14</text>
+
+              <!-- h8 at center (246,44) -->
+              <line class="co-line" x1="246" y1="44" x2="272" y2="44"/>
+              <rect class="co-box" x="272" y="34" width="72" height="20" rx="4"/>
+              <text class="co-text" x="308" y="48" text-anchor="middle">h8 = 0x77</text>
+            </g>
+
+            <!-- Footnote -->
+            <text class="axis" x="252" y="270" text-anchor="middle">Index = (rank &lt;&lt; 4) | file • Off-board columns set the 0x88 bit</text>
+          </svg>
+        </div>
+        <figcaption>0x88: an 8×8 board for play; the extra 8 columns (8..15) are off‑board and flip the 0x88 bit.</figcaption>
+      </figure>
+      <p class="fig-note"><strong>Figure insight</strong> A standard board is indexed with 0x88: a1 = 0x00, e2 = 0x14, h8 = 0x77. Any move stepping past file 7 sets the 0x88 bit, giving an O(1) bounds check and simple directional stepping.</p>
+    </div>
+
+    <h2 id="vision-system">2. Vision System & Board Tracking</h2>
+    <div class="section"><p class="section-lead">Work in progress.</p></div>
+
+    <h2 id="mechanical-robot">3. Mechanical Platform & Manipulator</h2>
+    <div class="section"><p class="section-lead">Coming soon.</p></div>
+
+    <h2 id="game-ai">4. Game AI & Search</h2>
+    <div class="section"><p class="section-lead">Coming soon.</p></div>
+  </div>
+
+  <script>
+    (function(){
+      var toggle=document.getElementById('theme-toggle');
+      var html=document.documentElement; if(!toggle) return;
+      var urlTheme=(new URLSearchParams(location.search)).get('theme');
+      var saved=urlTheme||localStorage.getItem('theme')||'light';
+      if(urlTheme) localStorage.setItem('theme', urlTheme);
+      html.setAttribute('data-theme', saved);
+      function updateIcon(theme){ toggle.innerHTML = theme==='dark'
+        ? '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="7" y="0" width="2" height="2"/><rect x="13" y="2" width="2" height="2"/><rect x="14" y="7" width="2" height="2"/><rect x="13" y="12" width="2" height="2"/><rect x="7" y="14" width="2" height="2"/><rect x="2" y="12" width="2" height="2"/><rect x="0" y="7" width="2" height="2"/><rect x="2" y="2" width="2" height="2"/><rect x="5" y="5" width="6" height="6"/><rect x="6" y="4" width="4" height="1"/><rect x="4" y="6" width="1" height="4"/><rect x="11" y="6" width="1" height="4"/><rect x="6" y="11" width="4" height="1"/></svg>'
+        : '<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="8" y="2" width="8" height="2"/><rect x="7" y="4" width="10" height="2"/><rect x="6" y="6" width="11" height="2"/><rect x="6" y="8" width="11" height="2"/><rect x="6" y="10" width="11" height="2"/><rect x="7" y="12" width="10" height="2"/><rect x="8" y="14" width="8" height="2"/><rect x="12" y="4" width="7" height="2" fill="var(--bg)"/><rect x="13" y="6" width="7" height="2" fill="var(--bg)"/><rect x="13" y="8" width="7" height="2" fill="var(--bg)"/><rect x="13" y="10" width="7" height="2" fill="var(--bg)"/><rect x="12" y="12" width="7" height="2" fill="var(--bg)"/></svg>'; }
+      updateIcon(saved);
+      toggle.addEventListener('click', function(){
+        var cur=html.getAttribute('data-theme')==='dark'?'light':'dark';
+        html.setAttribute('data-theme', cur); localStorage.setItem('theme', cur); updateIcon(cur);
+      });
+    })();
+  </script>
+</body>
+</html>

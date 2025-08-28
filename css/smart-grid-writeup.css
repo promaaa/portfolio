@@ -1,0 +1,28 @@
+:root { --bg:#fff; --ink:#111; --muted:#555; --line:#e5e7eb; --surface:#fafafa; --surface-alt:#f3f4f6; --radius:8px; --accent:#2563eb; --shadow:0 1px 2px rgba(0,0,0,.05); }
+[data-theme="dark"] { --bg:#0f0f10; --ink:#fafafa; --muted:#a1a1aa; --line:#27272a; --surface:#18181b; --surface-alt:#1f1f22; --accent:#60a5fa; --shadow:0 1px 3px rgba(0,0,0,.4); }
+html,body{margin:0;padding:0;height:100%}
+body{font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);}
+main{max-width:900px;margin:0 auto;padding:32px 16px 80px}
+h1{font-size:2.25rem;margin:8px 0 4px}
+h2{font-size:1.25rem;margin:28px 0 12px;padding-top:60px;margin-top:-40px;border-top:1px solid transparent}
+p{margin:10px 0}
+small, .muted{color:var(--muted)}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+code, pre{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:.95em}
+pre{background:var(--surface);border:1px solid var(--line);padding:14px;border-radius:6px;overflow:auto}
+.kbd{font:12px ui-monospace,monospace;border:1px solid var(--line);padding:1px 4px;border-radius:4px;background:var(--surface);}
+.toc{background:var(--surface);border:1px solid var(--line);padding:18px 20px;border-radius:8px;margin:20px 0 36px}
+.toc strong{display:block;margin-bottom:8px;letter-spacing:.08em;text-transform:uppercase;font-size:.8rem;color:var(--muted)}
+.toc a{display:block;color:var(--muted);padding:2px 0;text-decoration:none}
+.toc a:hover{color:var(--ink)}
+.callout{background:linear-gradient(90deg,rgba(96,165,250,.18),rgba(96,165,250,.06));border-left:3px solid var(--accent);padding:12px 14px;border-radius:6px;margin:12px 0}
+figure{margin:14px 0}
+figcaption{font-size:.9rem;color:var(--muted);margin-top:6px}
+.theme-toggle{position:fixed;top:12px;right:12px;border:1px solid var(--line);background:var(--surface);color:var(--muted);padding:8px;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s ease}
+.theme-toggle:hover{background:var(--surface-alt);color:var(--ink)}
+.theme-toggle svg{width:20px;height:20px;fill:currentColor;display:block}
+table{border-collapse:collapse;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);font-size:.95rem;vertical-align:top}
+th{background:var(--surface-alt);text-align:left}
+@media (max-width:680px){ h1{font-size:1.75rem} }
