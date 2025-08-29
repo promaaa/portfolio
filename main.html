@@ -111,6 +111,7 @@
     section{margin-top:100px}
     h2{font-family:'Sora', 'Space Grotesk', Inter, ui-sans-serif, system-ui; font-size:clamp(26px,3.2vw,38px);margin:0 0 24px;font-weight:700;letter-spacing:-.01em}
     h1, h3{font-family:'Space Grotesk', Inter, ui-sans-serif, system-ui}
+    
 
     /* ===== Project cards ===== */
     .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:20px}
@@ -401,8 +402,8 @@
         <a href="#projects">Projects</a>
         <a href="#education">Education</a>
         <a href="#reading">Reading</a>
-        <a href="#contact">Contact</a>
         <a href="essays.html">Essays</a>
+        <a href="#contact">Contact</a>
         <button class="theme-toggle" id="theme-toggle">
           <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
             <!-- Pixel moon crescent -->
@@ -552,9 +553,9 @@
           </div>
           <h3>Superintelligence — Nick Bostrom</h3>
           <p class="blurb">Essential reading on AI alignment and existential risk. Rigorous analysis of what happens when machines surpass human intelligence.</p>
-          <div class="tags"><span class="tag">AI Ethics</span><span class="tag">Philosophy</span><span class="tag">Future Tech</span></div>
+          <div class="tags"><span class="tag">Philosophy essay</span><span class="tag">UK</span></div>
           <div class="comment">
-            <p>Framed how I approach advanced AI: rigorous alignment thinking, modeling multipolar race dynamics, and baking governance + fail‑safe option value into architectures rather than chasing raw capability curves.</p>
+            <p>I used to treat “progress” as an automatic good; this made me pace my optimism. Now when a system promises scale, I ask three calm questions: who stays in control if it works, how failure spreads when it doesn’t, and what off‑switch actually exists. It’s a book I read in quiet evenings — two pages can seed a week of thinking — and it left me more reflective than alarmed. I’m kinder to uncertainty now: it’s fine not to know, as long as I can name the bet I’m making.</p>
           </div>
         </article>
 
@@ -565,9 +566,9 @@
           </div>
           <h3>Le Comte de Monte-Cristo — Alexandre Dumas</h3>
           <p class="blurb">Masterpiece of French literature. Revenge, justice, and redemption woven into an epic tale of transformation and strategy.</p>
-          <div class="tags"><span class="tag">Classic Literature</span><span class="tag">French</span><span class="tag">Strategy</span></div>
+          <div class="tags"><span class="tag">Novel</span><span class="tag">France</span></div>
           <div class="comment">
-            <p>A narrative masterclass in long‑horizon strategy: patient information gathering, principled leverage, protecting allies, timing inflection points; it reinforced my bias for deliberate architectures over reactive fixes and for channeling adversity into structured, value‑aligned execution.</p>
+            <p>Pure fuel for the 12‑year‑old tactician in me: secret tunnels, borrowed names, long games played with a smile. I eat chapters like chocolate — slow, a little dramatic, entirely fun. It nudges me to keep some theater in the plans, repay kindness with interest, and save a flourish for the last page. Also: bring snacks. It’s huge and delightful.</p>
           </div>
         </article>
 
@@ -578,12 +579,35 @@
           </div>
           <h3>Manufacturing Consent — Chomsky & Herman</h3>
           <p class="blurb">Critical analysis of mass media's role in shaping public opinion. Essential for understanding information systems and bias.</p>
-          <div class="tags"><span class="tag">Media Analysis</span><span class="tag">Critical Thinking</span><span class="tag">Politics</span></div>
+          <div class="tags"><span class="tag">Political essay</span><span class="tag">USA</span></div>
           <div class="comment">
-            <p>This book reshaped how I approach product and data ethics: it trained me to interrogate hidden filters (ownership, incentives, ad economics) before trusting engagement metrics or algorithmic "neutrality", and to design systems that surface marginalized signals instead of amplifying convenient noise.</p>
+            <p>After this I stopped treating the news like weather and more like architecture. I notice the frame first, then the facts. It hasn’t made me bitter; just slower. I rotate sources, ask “whose incentives?” and keep a little log of when I change my mind. It reads like media theory, but it’s really a practice book about attention and humility.</p>
           </div>
         </article>
       </div>
+    </section>
+    
+    <!-- Essays teaser section, placed below Current Reading -->
+    <section id="essays-teaser">
+      <h2>Latest Essays</h2>
+      <div class="grid">
+        <article class="card col-12 col-4">
+          <h3>Lucid Hope</h3>
+          <p class="blurb">Disciplined optimism, attention, and craft over cynicism.</p>
+          <div class="actions"><a href="essay-lucid-hope.html">Read →</a></div>
+        </article>
+        <article class="card col-12 col-4">
+          <h3>Domestic Sovereignty</h3>
+          <p class="blurb">On running your own services and choosing dependencies.</p>
+          <div class="actions"><a href="essay-domestic-sovereignty.html">Read →</a></div>
+        </article>
+        <article class="card col-12 col-4">
+          <h3>The Collapse of Money</h3>
+          <p class="blurb">History of exchange, fiat, and programmable money.</p>
+          <div class="actions"><a href="essay-collapse-of-money.html">Read →</a></div>
+        </article>
+      </div>
+      <p style="margin-top:14px"><a href="essays.html">All essays →</a></p>
     </section>
 
     <section id="contact">

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Domestic Sovereignty — Marc Duboc</title>
+  <meta name="color-scheme" content="light dark" />
+  <link rel="stylesheet" href="css/essay-collapse-of-money.css" />
+  <meta name="description" content="On the quiet freedom of running your own services and choosing dependencies that deserve you." />
+</head>
+<body>
+  <div class="container">
+    <div class="top">
+      <a class="back" href="essays.html">← Back to essays</a>
+      <span class="byline">Marc Duboc • Jan 20, 2025</span>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme"></button>
+    </div>
+    <h1>Domestic Sovereignty</h1>
+    <article class="prose">
+      <p>There is a quiet kind of freedom you only feel when a service answers to your name. Not a corporate hostname, not somebody’s cloud, but a machine humming in the next room, a wire you ran, a rule you understand. Convenience is a sweet narcotic; it does not make you free. Craft does.</p>
+      <p>You can tell the turning point by how you read error messages. Before, a blocked page is “just how the internet is.” After, it’s a misbehaving list in your own border guard and you know where to look. The difference isn’t paranoia; it’s posture. A router you configured, with ad‑lists you chose, with a VPN that opens one door instead of ten, changes more than requests per second. It changes the temperature of your attention.</p>
+      <p>The first hours are not romantic. A bare server, two small drives in a mirror that promises not speed but conversation with catastrophe, a console that asks more questions than it answers. You create a name that follows your home as your ISP changes its mind. You open a single port for the tunnel that brings you back to your files without begging. You discover that a good default is a human virtue disguised as a checkbox.</p>
+      <p>Virtual machines teach humility and mercy. Mercy, because backups are two files you can pick up with your hands. Humility, because you will still break things and will need yesterday’s image. Containers teach thrift: the habit of starting fresh without ceremony. Between the two, you learn a culture more than a stack — to keep state where it belongs and to mistrust the myth that “sync” is a backup. Mirrors are for when the night is loud.</p>
+      <p>Photos stop being hostage when a small service in your house starts answering your phone. Notes stop being vapor when they live on a share you could explain to a cousin. A password becomes less nervous when the vault is your own. These are not acts of rebellion; they are substitutions. The same gestures as before — open, write, share — but your hand is closer to the thing.</p>
+      <p>It helps to keep a laptop configured like a piece of text. A system you can read, a configuration you can diff, an environment that does not pretend to be immortal. The point isn’t fanatic purity; it’s the habit of making decisions once and making them visible. Machines rot like all living things. Declarative work is a way to die gracefully and start again without superstition.</p>
+      <p>People say it is complicated. It is. So is the alternative — only you don’t see the complexity because it’s offstage, and your bill for it is paid in small cuts: a broken account recovery, a lost album, an inbox that trains your brain to expect interruption, a family group that does not know where anything lives. Complexity will not leave you alone; you get to choose where it sleeps.</p>
+      <p>There is also the matter of manners. A network that blocks shouting at the door is not a moral stance, it’s politeness to the mind. A mail system that you can lift and move when a provider changes rules is not a manifesto, it’s just keeping your address book honest. A camera feed that tells you what happened without subscription is not a bunker, it’s literacy.</p>
+      <p>In time, you notice side effects that look suspiciously like character. You tolerate ambiguity better when your services are boring. You scroll less when your files have a place. You grow fonder of the small ritual — a weekly snapshot, a monthly update window, a note on a maintenance log — than of the jump‑scare feature release. You begin to admire invisible capital: the quiet pile of resilience no one claps for.</p>
+      <p>Domestic sovereignty is not isolation. It is choosing which dependencies deserve you. The world is still out there and it is not less messy. But the surface where it touches you is yours. You can run a photo archive that respects your dead‑zone hours, a notes app that doesn’t leak when you sleep, a share that your child can find without an ad. You can be reachable to your future self when the cloud forgets your name.</p>
+      <p>The tools matter less than the tone. A small, well‑kept table. Services that are few and know each other by name. Defaults that favor silence. Routines that forgive failure — a mirror to replace a disk, a backup to replace pride, a second path when the first is stupid. Nothing here is heroic. It is housekeeping.</p>
+      <p>You will still break things. You will still spend a weekend in the weeds, talking to a screen as if it were an animal. You will also sleep better. And when the power comes back after a storm and your little network starts breathing on its own, you will feel something that has nothing to do with tech and everything to do with dignity: the world did not decide for you this time.</p>
+    </article>
+  </div>
+
+  <script>
+    (function(){
+      const html = document.documentElement;
+      const toggle = document.getElementById('theme-toggle');
+      const urlTheme = new URLSearchParams(location.search).get('theme');
+      const saved = urlTheme || localStorage.getItem('theme') || 'light';
+      html.setAttribute('data-theme', saved);
+      if(urlTheme) localStorage.setItem('theme', urlTheme);
+      updateToggleIcon(saved);
+      toggle.addEventListener('click', function(){
+        const current = html.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        updateToggleIcon(next);
+      });
+      function updateToggleIcon(theme){
+        const sunSvg = `<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="7" y="0" width="2" height="2"/><rect x="13" y="2" width="2" height="2"/><rect x="14" y="7" width="2" height="2"/><rect x="13" y="12" width="2" height="2"/><rect x="7" y="14" width="2" height="2"/><rect x="2" y="12" width="2" height="2"/><rect x="0" y="7" width="2" height="2"/><rect x="2" y="2" width="2" height="2"/><rect x="5" y="5" width="6" height="6"/><rect x="6" y="4" width="4" height="1"/><rect x="4" y="6" width="1" height="4"/><rect x="11" y="6" width="1" height="4"/><rect x="6" y="11" width="4" height="1"/></svg>`;
+        const moonSvg = `<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="8" y="2" width="8" height="2"/><rect x="7" y="4" width="10" height="2"/><rect x="6" y="6" width="11" height="2"/><rect x="6" y="8" width="11" height="2"/><rect x="6" y="10" width="11" height="2"/><rect x="7" y="12" width="10" height="2"/><rect x="8" y="14" width="8" height="2"/><rect x="12" y="4" width="7" height="2" fill="var(--bg)"/><rect x="13" y="6" width="7" height="2" fill="var(--bg)"/><rect x="13" y="8" width="7" height="2" fill="var(--bg)"/><rect x="13" y="10" width="7" height="2" fill="var(--bg)"/><rect x="12" y="12" width="7" height="2" fill="var(--bg)"/></svg>`;
+        toggle.innerHTML = (theme === 'dark') ? sunSvg : moonSvg;
+        toggle.title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+        toggle.setAttribute('aria-label', toggle.title);
+      }
+    })();
+  </script>
+</body>
+</html>
