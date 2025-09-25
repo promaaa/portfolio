@@ -64,6 +64,8 @@ figure{margin:40px auto 34px;padding:0;max-width:860px;display:block;text-align:
 figure img{width:100%;max-width:100%;height:auto;display:block;margin:0 auto;border:1px solid var(--line);border-radius:6px;background:var(--surface);image-rendering:auto;transition:box-shadow .25s ease,transform .25s ease}
 figure img.pixel-perfect{margin-left:auto;margin-right:auto;}
 figcaption{margin:8px auto 0;font-size:.70rem;letter-spacing:.08em;line-height:1.4;text-transform:uppercase;color:var(--muted);max-width:100%;text-align:center}
+.hero-illustration{margin:36px auto 34px}
+.hero-illustration img{border-radius:12px;box-shadow:var(--shadow)}
 .two-up figure{margin:24px 0 18px;text-align:left}
 .two-up figure figcaption{text-align:left;margin-top:8px}
 .img-zoomable{cursor:zoom-in;max-width:100%;height:auto;display:block}

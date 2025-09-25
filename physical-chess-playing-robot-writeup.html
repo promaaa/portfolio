@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Physical Chess‑Playing Robot — In‑Progress Case Study</title>
-  <meta name="description" content="Engineering school project (&lt;6 months, €600–1000) to build a physical chess‑playing robot: vision (OpenCV + ArUco), move calculation (Stockfish + python‑chess), and robotic manipulation (SCARA or XY+Z gantry)." />
+  <meta name="description" content="Engineering school project (&lt;6 months, €600–1000) to build a physical chess‑playing robot: vision (OpenCV + ArUco), a custom chess engine with scalable difficulty, and robotic manipulation (SCARA or XY+Z gantry)." />
   <link rel="stylesheet" href="css/physical-chess-playing-robot-writeup.css" />
 </head>
 <body>
@@ -12,7 +12,7 @@
   <div class="container">
     <a class="back-link" href="main.html">← Back to Portfolio</a>
     <h1>Physical Chess‑Playing Robot</h1>
-    <p class="lead">Vision detects human moves • Stockfish thinks • A robot arm moves the pieces. Built for a smooth, reliable over‑the‑board experience.</p>
+    <p class="lead">Vision detects human moves • Our custom engine thinks • A robot arm moves the pieces. Built for a smooth, reliable over‑the‑board experience.</p>
     <div class="meta-badges">
       <span class="badge">Robotics</span>
       <span class="badge">Computer Vision</span>
@@ -24,13 +24,17 @@
     </div>
 
     <div class="highlight">
-      <strong>Abstract</strong> — A portfolio‑grade, physical chess‑playing robot designed for a public demo: detect human moves with OpenCV + ArUco, compute replies with Stockfish via python‑chess, and manipulate pieces with a SCARA or XY+Z gantry. Emphasis on reliability, gentle handling, and a smooth over‑the‑board UX.
+      <strong>Abstract</strong> — A portfolio‑grade, physical chess‑playing robot designed for a public demo: detect human moves with OpenCV + ArUco, compute replies with an in-house chess engine that supports adjustable difficulty, and manipulate pieces with a SCARA or XY+Z gantry. Emphasis on reliability, gentle handling, and a smooth over-the-board UX.
       <div class="chips">
         <span class="chip-s"><span class="dot todo"></span> Target: ≥99% reliability</span>
         <span class="chip-s"><span class="dot todo"></span> Target: ≤3s move latency</span>
         <span class="chip-s"><span class="dot todo"></span> Target: ≤±1.5mm placement</span>
       </div>
     </div>
+
+    <figure class="hero-illustration">
+      <img src="pictures/chess-board.png" alt="Prototype chessboard with embedded electronics and pieces" loading="lazy" />
+    </figure>
 
     <div class="toc">
       <strong>Contents</strong>
@@ -318,7 +322,7 @@ void gen_slides(int from, const int* DIRS, int nDirs){
         <li>Mask with the square map; classify occupancy using piece color templates captured during setup.</li>
       </ol>
       <h3>Move Extraction & Synchronization</h3>
-      <p>Each frame emits a board hash. When a piece lifts, we flag the originating square; drop detection confirms the destination. This two-phase approach removes false positives from hand shadows. The verified move is pushed over ZeroMQ to the engine, which cross-checks legality before updating Stockfish's search tree.</p>
+      <p>Each frame emits a board hash. When a piece lifts, we flag the originating square; drop detection confirms the destination. This two-phase approach removes false positives from hand shadows. The verified move is pushed over ZeroMQ to the engine, which cross-checks legality before updating the active search tree.</p>
       <p class="fig-note"><strong>Current status</strong> False positives are down to &lt;0.5% across 40 recorded games. The next milestone is onboarding piece classification with a lightweight CNN to replace template matching for better knight/bishop discrimination.</p>
     </div>
 
@@ -397,18 +401,18 @@ void gen_slides(int from, const int* DIRS, int nDirs){
 
     <h2 id="game-ai">6. Game AI & Search</h2>
     <div class="section">
-      <p class="section-lead">Stockfish (NNUE build) delivers move quality, while our glue code guarantees the robot always has a legal, human-understandable plan.</p>
+      <p class="section-lead">Our in-house 0x88 engine scales from casual play to tournament strength while keeping plans explainable for the audience.</p>
       <h3>Integration Strategy</h3>
-      <p>The engine runs Stockfish 16 via the python-chess UCI wrapper. We stream moves from the vision and robotic subsystems into a single arbiter that maintains a synchronized PGN and handles promotions, takebacks, and illegal move recovery.</p>
+      <p>The engine runs as a C++ module embedded in the control stack, with a lightweight Python bridge that synchronizes game state across the vision and motion planners. A central arbiter maintains a PGN log, applies promotions, and supervises takebacks or illegal move recovery.</p>
       <ul>
-        <li>Default time control is 3&nbsp;s per move with an incremental aspiration window based on previous evaluations.</li>
-        <li>Custom heuristics bias toward quieter moves when the robot faces congested boards to reduce arm travel distance.</li>
-        <li>All moves log to SQLite for later analysis, including move time, evaluation swing, and mechanical travel distance.</li>
+        <li>Difficulty slider (1‒10) adjusts search depth, quiescence budget, and randomness for human-friendly play.</li>
+        <li>Custom heuristics down-rank moves that require long robot travel paths when an equivalent alternative exists.</li>
+        <li>All moves log to SQLite for post-game analytics: time spent, evaluation swing, and XY travel distance.</li>
       </ul>
       <h3>Human Interaction Layer</h3>
-      <p>An onboard tablet displays Stockfish's principal variation and highlights squares that will light up on the board. If the user nudges a piece incorrectly, the system flashes the destination square and waits before calling a penalty.</p>
+      <p>An onboard tablet displays the engine's principal variation, highlights the upcoming target square, and offers hints at lower levels. If the user nudges a piece incorrectly, the system flashes the destination square and waits before escalating.</p>
       <h3>Testing & Next Steps</h3>
-      <p>Perft results up to depth 5 match the reference outputs (e.g., perft(5) = 4,865,609), confirming legality handling. Next we will run 100 simulated rapid games against Lichess-bot traces to tune evaluation limits and confirm the robot never over-commits time in tense endgames.</p>
+      <p>Perft results up to depth 5 match the reference outputs (e.g., perft(5) = 4,865,609), validating legality. Next we will pit the engine against archived Lichess rapid games at multiple levels to tune evaluation weights and guarantee the robot never over-commits time in tense endgames.</p>
     </div>
   </div>
 
