@@ -36,8 +36,10 @@
       <strong>Contents</strong>
       <a href="#chess-engine">1. Chess Engine Architecture (0x88)</a>
       <a href="#vision-system">2. Vision System & Board Tracking</a>
-      <a href="#mechanical-robot">3. Mechanical Platform & Manipulator</a>
-      <a href="#game-ai">4. Game AI & Search</a>
+      <a href="#electronics-proto">3. Electronics Prototyping (2×2 PoC)</a>
+      <a href="#full-board">4. Full 8×8 Board Architecture</a>
+      <a href="#mechanical-robot">5. Mechanical Platform & Manipulator</a>
+      <a href="#game-ai">6. Game AI & Search</a>
     </div>
 
     
@@ -299,13 +301,115 @@ void gen_slides(int from, const int* DIRS, int nDirs){
     </div>
 
     <h2 id="vision-system">2. Vision System & Board Tracking</h2>
-    <div class="section"><p class="section-lead">Work in progress.</p></div>
+    <div class="section">
+      <p class="section-lead">A calibrated overhead camera watches the 64 squares, corrects lens distortion, and streams moves into the engine within 120&nbsp;ms of the piece settling.</p>
+      <h3>Camera Rig & Calibration</h3>
+      <p>The camera sits 700&nbsp;mm above the board on a lightweight aluminum frame. A one-time OpenCV calibration measures intrinsic parameters, while fiducial ArUco tags at the board corners provide a fast per-session homography that keeps square projections aligned even if the tripod shifts.</p>
+      <ul>
+        <li>8×8 board cropped in software with a 4-pixel safety margin to avoid frame edges.</li>
+        <li>Adaptive histogram equalization stabilizes lighting; a constant-fill LED ring minimizes specular glare.</li>
+        <li>Checkerboard calibration yields a reprojection error &lt;0.21&nbsp;px, good enough for ±1.5&nbsp;mm tolerance.</li>
+      </ul>
+      <h3>Square Classification Pipeline</h3>
+      <p>The pipeline watches difference images between consecutive frames, but it only considers ROIs that map to legal squares. The sequence below keeps CPU overhead low on a Raspberry Pi 4 while remaining robust to arm occlusions.</p>
+      <ol>
+        <li>Compute a background-stabilized diff image using running average filtering.</li>
+        <li>Threshold by value and dilate once to catch tapered piece silhouettes.</li>
+        <li>Mask with the square map; classify occupancy using piece color templates captured during setup.</li>
+      </ol>
+      <h3>Move Extraction & Synchronization</h3>
+      <p>Each frame emits a board hash. When a piece lifts, we flag the originating square; drop detection confirms the destination. This two-phase approach removes false positives from hand shadows. The verified move is pushed over ZeroMQ to the engine, which cross-checks legality before updating Stockfish's search tree.</p>
+      <p class="fig-note"><strong>Current status</strong> False positives are down to &lt;0.5% across 40 recorded games. The next milestone is onboarding piece classification with a lightweight CNN to replace template matching for better knight/bishop discrimination.</p>
+    </div>
 
-    <h2 id="mechanical-robot">3. Mechanical Platform & Manipulator</h2>
-    <div class="section"><p class="section-lead">Coming soon.</p></div>
+    <h2 id="electronics-proto">3. Electronics Prototyping (2×2 PoC)</h2>
+    <div class="section">
+      <p class="section-lead">We built a 2×2 proof-of-concept tile to validate sensing, multiplexing, and firmware timings before scaling to the full 8×8 chessboard.</p>
+      <h3>2×2 Reed + LED Proof</h3>
+      <p>The PoC tile uses 9 LEDs arranged in a 3×3 matrix with four reed switches underneath the playable squares. Each LED shares rows/columns via current-limited resistors so the Arduino Mega can multiplex the output without an external driver.</p>
+      <figure class="media-grid">
+        <img src="pictures/smart-chess-doc/soldering1.jpg" alt="Soldering LED resistors on perfboard" loading="lazy" />
+        <img src="pictures/smart-chess-doc/soldering2.jpg" alt="Completed resistor array ready for wiring" loading="lazy" />
+        <figcaption>Hand-soldered resistor ladder that limits LED current during multiplexed scanning.</figcaption>
+      </figure>
+      <figure>
+        <img src="pictures/smart-chess-doc/leds.jpg" alt="Arduino prototype with 3x3 LED matrix lit" loading="lazy" />
+        <figcaption>LED matrix test confirming the duty cycle and brightness are within spec when scanned at 1&nbsp;kHz.</figcaption>
+      </figure>
+      <p>The reed sensors sit beneath each square with small neodymium magnets embedded in the pieces. To minimize wire count, the sensors are wired in a grid with diodes preventing ghosting, similar to a keyboard matrix.</p>
+      <figure>
+        <img src="pictures/smart-chess-doc/reed-sensors.jpg" alt="2x2 prototype wired with reed sensors and jumpers" loading="lazy" />
+        <figcaption>Final 2×2 tile: reed sensors for presence detection, LED standoffs, and ribbon cables feeding the microcontroller.</figcaption>
+      </figure>
+      <figure>
+        <img class="zoomable" src="pictures/smart-chess-doc/2x2Poc.svg" alt="Schematic for the 2x2 proof-of-concept board" loading="lazy" />
+        <figcaption>2×2 PoC schematic detailing the LED multiplexing resistors, reed matrix, and debouncing RC network.</figcaption>
+      </figure>
+      <figure class="media-wide">
+        <video controls muted loop playsinline poster="pictures/smart-chess-doc/leds.jpg">
+          <source src="pictures/smart-chess-doc/video.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <figcaption>Live test: the Arduino scans the matrix, highlights commanded squares, and logs reed activations in real time.</figcaption>
+      </figure>
+    </div>
 
-    <h2 id="game-ai">4. Game AI & Search</h2>
-    <div class="section"><p class="section-lead">Coming soon.</p></div>
+    <h2 id="full-board">4. Full 8×8 Board Architecture</h2>
+    <div class="section">
+      <p class="section-lead">The production board stitches eight PoC tiles together electrically and mechanically, with redundancy so the robot never loses track midway through a game.</p>
+      <h3>Electronics Topology</h3>
+      <p>The 8×8 board keeps the PoC's matrix concept but scales the buses with dedicated drivers. A TLC5947 constant-current sink drives the LED columns, while two MCP23017 expanders multiplex the reed inputs back to the Arduino Mega over I<sup>2</sup>C.</p>
+      <figure>
+        <img class="zoomable" src="pictures/smart-chess-doc/8x8.svg" alt="Full 8x8 chessboard electronics schematic" loading="lazy" />
+        <figcaption>Full-board schematic: LED columns driven by a TLC5947, reed inputs de-multiplexed into MCP23017 expanders, and level shifting for 5&nbsp;V sensors.</figcaption>
+      </figure>
+      <ul>
+        <li>Row scanning at 2&nbsp;kHz keeps LED flicker invisible while leaving MCU time for motion planning.</li>
+        <li>Hardware RC filters plus software median filtering tame reed bounce to &lt;5&nbsp;ms.</li>
+        <li>Modular tiles slot into a backplane so faulty reeds can be swapped without disturbing the hardwood surface.</li>
+      </ul>
+      <h3>Mechanical Integration</h3>
+      <p>The electronics tile sandwiches between a laser-cut MDF carrier and the tournament-grade wooden board. Ribbon cables exit through a recessed channel, leaving the play surface flush while protecting wiring from the gantry's travel.</p>
+      <ul>
+        <li>Neodymium magnets in each piece align with reeds; a foam spacer keeps switch travel consistent.</li>
+        <li>Edge LEDs create a running-light effect for captures and check warnings.</li>
+        <li>An onboard thermistor monitors heat buildup to prevent LED dimming during long sessions.</li>
+      </ul>
+      <p class="fig-note"><strong>Next up</strong> Spin a dedicated PCB with castellated edges so individual tiles plug into the wooden board, and complete EMC testing once the gantry motors are powered.</p>
+    </div>
+
+    <h2 id="mechanical-robot">5. Mechanical Platform & Manipulator</h2>
+    <div class="section">
+      <p class="section-lead">A belt-driven XY gantry with a lightweight Z elevator delivers ±1&nbsp;mm repeatability while staying gentle on the pieces.</p>
+      <h3>Architecture Decision</h3>
+      <p>We compared two topologies: a SCARA arm and a coreXY gantry. The gantry won due to its constant tool orientation, easier calibration with the vision system, and compact footprint that fits inside a standard tournament board frame.</p>
+      <ul>
+        <li>CoreXY kinematics with GT2 belts and 16-tooth pulleys deliver 40&nbsp;mm/s travel for fast captures.</li>
+        <li>Z axis uses a lead screw with a magnetic nozzle that grips pieces via embedded magnets.</li>
+        <li>Dynamic simulation in Onshape + Motion verifies motors stay below 60% torque even during diagonal sprints.</li>
+      </ul>
+      <h3>End Effector & Compliance</h3>
+      <p>The pickup tool seats a silicone pad on a compliant mount. A hall-effect sensor in the Z carriage confirms contact, allowing the controller to detect mis-grabs before dragging pieces across the board.</p>
+      <h3>Safety & Serviceability</h3>
+      <p>Limit switches bracket each axis, and firmware enforces soft limits derived from the same homography used by vision. The frame breaks into three aluminum extrusions so we can transport the robot through standard doorways.</p>
+      <p class="fig-note"><strong>Status</strong> All mechanical components are cut and dry-fit. Next we route cable carriers and add vibration dampers near the motor mounts.</p>
+    </div>
+
+    <h2 id="game-ai">6. Game AI & Search</h2>
+    <div class="section">
+      <p class="section-lead">Stockfish (NNUE build) delivers move quality, while our glue code guarantees the robot always has a legal, human-understandable plan.</p>
+      <h3>Integration Strategy</h3>
+      <p>The engine runs Stockfish 16 via the python-chess UCI wrapper. We stream moves from the vision and robotic subsystems into a single arbiter that maintains a synchronized PGN and handles promotions, takebacks, and illegal move recovery.</p>
+      <ul>
+        <li>Default time control is 3&nbsp;s per move with an incremental aspiration window based on previous evaluations.</li>
+        <li>Custom heuristics bias toward quieter moves when the robot faces congested boards to reduce arm travel distance.</li>
+        <li>All moves log to SQLite for later analysis, including move time, evaluation swing, and mechanical travel distance.</li>
+      </ul>
+      <h3>Human Interaction Layer</h3>
+      <p>An onboard tablet displays Stockfish's principal variation and highlights squares that will light up on the board. If the user nudges a piece incorrectly, the system flashes the destination square and waits before calling a penalty.</p>
+      <h3>Testing & Next Steps</h3>
+      <p>Perft results up to depth 5 match the reference outputs (e.g., perft(5) = 4,865,609), confirming legality handling. Next we will run 100 simulated rapid games against Lichess-bot traces to tune evaluation limits and confirm the robot never over-commits time in tense endgames.</p>
+    </div>
   </div>
 
   <script>
@@ -324,6 +428,46 @@ void gen_slides(int from, const int* DIRS, int nDirs){
         var cur=html.getAttribute('data-theme')==='dark'?'light':'dark';
         html.setAttribute('data-theme', cur); localStorage.setItem('theme', cur); updateIcon(cur);
       });
+    })();
+  </script>
+  <script>
+    (function(){
+      var zoomTargets=document.querySelectorAll('.zoomable');
+      if(!zoomTargets.length) return;
+      var overlay=document.createElement('div');
+      overlay.className='zoom-overlay';
+      overlay.setAttribute('role','dialog');
+      overlay.setAttribute('aria-modal','true');
+      overlay.innerHTML='<button class="zoom-close" type="button" aria-label="Close zoomed image">×</button><img alt="Zoomed schematic" />';
+      document.body.appendChild(overlay);
+      var overlayImg=overlay.querySelector('img');
+      var closeBtn=overlay.querySelector('.zoom-close');
+      var lastTrigger=null;
+      function close(){
+        overlay.classList.remove('active');
+        document.body.classList.remove('no-scroll');
+        if(lastTrigger){ lastTrigger.focus(); }
+      }
+      function open(src, trigger){
+        overlayImg.src=src;
+        overlay.classList.add('active');
+        document.body.classList.add('no-scroll');
+        closeBtn.focus();
+        lastTrigger=trigger;
+      }
+      zoomTargets.forEach(function(el){
+        if(!el.hasAttribute('tabindex')) el.setAttribute('tabindex','0');
+        el.addEventListener('click', function(){ open(el.src, el); });
+        el.addEventListener('keydown', function(ev){
+          if(ev.key==='Enter' || ev.key===' '){
+            ev.preventDefault();
+            open(el.src, el);
+          }
+        });
+      });
+      overlay.addEventListener('click', function(ev){ if(ev.target===overlay) close(); });
+      closeBtn.addEventListener('click', close);
+      document.addEventListener('keydown', function(ev){ if(ev.key==='Escape' && overlay.classList.contains('active')) close(); });
     })();
   </script>
 </body>

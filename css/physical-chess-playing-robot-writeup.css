@@ -8,6 +8,7 @@
 }
 *, *::before, *::after { box-sizing:border-box; font-family: inherit }
 html,body{margin:0;padding:0;height:100%;color:var(--ink);background:var(--bg);font:16px/1.65 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,Roboto,Arial}
+body.no-scroll{overflow:hidden}
 /* Force consistent text font across content (exclude code/pre) */
 .container, .container :where(p, li, h1, h2, h3, h4, a, figcaption, table, th, td, strong, em, .badge, .chip-s){
   font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,Roboto,Arial;
@@ -45,9 +46,23 @@ code, pre{font-family:ui-monospace,Menlo,Consolas,monospace}
 pre{background:var(--surface-alt);border:1px solid var(--line);padding:14px;border-radius:8px;overflow:auto;font-size:.9rem;line-height:1.5}
 figure{margin:28px 0 18px}
 figcaption{margin-top:6px;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+figure img, figure video{display:block;width:100%;height:auto;border-radius:12px;box-shadow:var(--shadow)}
+.zoomable{cursor:zoom-in;transition:transform .18s ease}
+.zoomable:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+.media-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;align-items:start}
+.media-grid img{aspect-ratio:4/3;object-fit:cover;border-radius:10px}
+.media-grid figcaption{grid-column:1 / -1}
+.media-wide video,.media-wide img{max-height:420px;object-fit:cover}
+video{max-width:100%;height:auto}
 .container svg text{font-family:inherit}
 .figure-0x88 .svg-card{background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);padding:12px}
 .figure-0x88 svg{display:block;width:100%;height:auto}
+.zoom-overlay{position:fixed;inset:0;background:rgba(12,14,18,.86);display:none;align-items:center;justify-content:center;padding:32px;z-index:2400}
+.zoom-overlay.active{display:flex}
+.zoom-overlay img{max-width:min(1200px,92vw);max-height:92vh;border-radius:14px;box-shadow:0 18px 36px rgba(0,0,0,.45)}
+.zoom-close{position:absolute;top:18px;right:22px;background:rgba(24,24,27,.8);color:#f5f5f5;border:none;border-radius:999px;width:38px;height:38px;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.zoom-close:hover{background:rgba(39,39,42,.92)}
+.zoom-close:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 /* Clean status pill for Coming soon */
 .status-pill{display:inline-block;border:1px solid var(--line);background:var(--surface-alt);color:var(--muted);padding:6px 10px;border-radius:999px;font-size:.78rem;letter-spacing:.4px;text-transform:uppercase}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}
