@@ -19,6 +19,9 @@ pre{background:var(--surface);border:1px solid var(--line);padding:14px;border-r
 .callout{background:linear-gradient(90deg,rgba(96,165,250,.18),rgba(96,165,250,.06));border-left:3px solid var(--accent);padding:12px 14px;border-radius:6px;margin:12px 0}
 figure{margin:14px 0}
 figcaption{font-size:.9rem;color:var(--muted);margin-top:6px}
+.hero-figure{margin:28px auto 32px;max-width:760px}
+.hero-figure img{display:block;width:100%;height:auto;border-radius:12px;box-shadow:var(--shadow);object-fit:cover}
+.hero-figure figcaption{text-align:center;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase}
 .theme-toggle{position:fixed;top:12px;right:12px;border:1px solid var(--line);background:var(--surface);color:var(--muted);padding:8px;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s ease}
 .theme-toggle:hover{background:var(--surface-alt);color:var(--ink)}
 .theme-toggle svg{width:20px;height:20px;fill:currentColor;display:block}
