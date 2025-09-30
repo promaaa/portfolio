@@ -585,6 +585,10 @@
           </div>
         </article>
       </div>
+      <div class="reading-lists" style="margin-top: 24px; text-align: center;">
+        <a href="https://pdflink.to/bd2550a1/" target="_blank" rel="noopener" class="btn" style="margin-right: 8px;">Reading List (English) ↗</a>
+        <a href="https://pdflink.to/b332db13/" target="_blank" rel="noopener" class="btn">Reading List (Français) ↗</a>
+      </div>
     </section>
     
     <!-- Essays teaser section, placed below Current Reading -->
@@ -773,24 +777,79 @@
       cleanup();
     }
   })();
-  // Make all project cards with data-href clickable (excluding inner action links)
+  // Make cards with data-href or a single action link clickable
   (function(){
-    const cards = document.querySelectorAll('#projects .card[data-href]');
+    const cards = document.querySelectorAll('.card');
     if(!cards.length) return;
+    
     const style = document.createElement('style');
-    style.textContent = `#projects .card[data-href]{cursor:pointer}#projects .card[data-href] .actions{cursor:auto}`;
+    style.textContent = `.card.is-clickable { cursor: pointer; }`;
     document.head.appendChild(style);
-    cards.forEach(card=>{
-      function go(){
-        const href = card.getAttribute('data-href');
-        if(!href) return;
-        const url = new URL(href, location.href);
-        const theme = document.documentElement.getAttribute('data-theme') || 'light';
-        url.searchParams.set('theme', theme);
-        window.location.href = url.pathname + url.search + url.hash;
+
+    cards.forEach(card => {
+      let href = card.getAttribute('data-href');
+      let isCardClickable = false;
+      let targetBlank = false;
+
+      // Case 1: Card has data-href (for projects)
+      if (href) {
+        isCardClickable = true;
+      } 
+      // Case 2: Card has exactly one link in its actions (for reading list, essays)
+      else {
+        const actions = card.querySelectorAll('.actions a');
+        if (actions.length === 1) {
+          const link = actions[0];
+          href = link.getAttribute('href');
+          if (href) {
+            isCardClickable = true;
+            if (link.getAttribute('target') === '_blank') {
+              targetBlank = true;
+            }
+          }
+        }
       }
-      card.addEventListener('click', (e)=>{ if(e.target.closest('.actions')) return; go(); });
-      card.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { if(e.target.closest('.actions')) return; e.preventDefault(); go(); }});
+
+      if (!isCardClickable || !href) return;
+
+      card.classList.add('is-clickable');
+
+      function navigate() {
+        // Open external links and PDFs in a new tab
+        if (targetBlank || href.startsWith('http') || href.endsWith('.pdf')) {
+          window.open(href, '_blank', 'noopener');
+        } 
+        // Navigate internal .html links, propagating the theme
+        else if (href.endsWith('.html')) {
+          try {
+            const url = new URL(href, location.href);
+            const theme = document.documentElement.getAttribute('data-theme') || 'light';
+            url.searchParams.set('theme', theme);
+            window.location.href = url.pathname + url.search + url.hash;
+          } catch(_) {
+            window.location.href = href; // Fallback
+          }
+        } else {
+            window.location.href = href; // Fallback for other cases
+        }
+      }
+
+      card.addEventListener('click', (e) => {
+        // If the click is on any link inside the card, let the browser handle it.
+        if (e.target.closest('a')) {
+          return;
+        }
+        navigate();
+      });
+
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          // Ignore if focus is on a link itself
+          if (document.activeElement.closest('a')) return;
+          e.preventDefault();
+          navigate();
+        }
+      });
     });
   })();
   // Ensure we start at the top when loading (no anchor)
