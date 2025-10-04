@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Physical Chess‑Playing Robot — In‑Progress Case Study</title>
   <meta name="description" content="Engineering school project (&lt;6 months, €600–1000) to build a physical chess‑playing robot: vision (OpenCV + ArUco), a custom chess engine with scalable difficulty, and robotic manipulation (SCARA or XY+Z gantry)." />
+  <link rel="icon" type="image/png" href="pictures/saturn.png" />
   <link rel="stylesheet" href="css/physical-chess-playing-robot-writeup.css" />
 </head>
 <body>
@@ -414,6 +415,8 @@ void gen_slides(int from, const int* DIRS, int nDirs){
       <h3>Testing & Next Steps</h3>
       <p>Perft results up to depth 5 match the reference outputs (e.g., perft(5) = 4,865,609), validating legality. Next we will pit the engine against archived Lichess rapid games at multiple levels to tune evaluation weights and guarantee the robot never over-commits time in tense endgames.</p>
     </div>
+    </div>
+    <div class="footer-note">Repo: <a href="https://github.com/promaaa/physical-chess-playing-robot" target="_blank" rel="noopener">github.com/promaaa/physical-chess-playing-robot</a></div>
   </div>
 
   <script>
