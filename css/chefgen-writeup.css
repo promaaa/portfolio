@@ -52,3 +52,9 @@ td{color:var(--muted)}
 .section-title{font-weight:600;margin:6px 0 4px}
 .list-compact{margin:0 0 8px 18px;color:var(--muted)}
 .figcaption-full{grid-column:1/-1}
+
+@media(max-width:720px){
+  .container{padding:40px 18px}
+  .two-up{grid-template-columns:1fr}
+  .links a{flex:1 1 100%;text-align:center}
+}

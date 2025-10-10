@@ -42,3 +42,13 @@ h2,h3{font-family:'Sora', 'Space Grotesk', Inter, ui-sans-serif}
 #icon-sun{display:inline-block}
 #icon-moon{display:none}
 .byline{color:var(--muted)}
+
+@media(max-width:640px){
+  .container{padding:48px 20px}
+  .top{flex-direction:column;align-items:flex-start;gap:12px}
+  .top-actions{width:100%;justify-content:space-between}
+}
+
+@media(max-width:480px){
+  .container{padding:40px 16px}
+}

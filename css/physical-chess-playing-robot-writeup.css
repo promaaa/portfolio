@@ -80,3 +80,10 @@ th,td{padding:10px 12px;border-bottom:1px solid var(--line);font-size:.95rem;ver
 th{background:var(--surface-alt);text-align:left;color:var(--ink)}
 .fig-note{margin:-4px auto 28px;max-width:860px;font-size:.85rem;line-height:1.5;color:var(--muted);background:linear-gradient(90deg,rgba(59,130,246,.12),rgba(59,130,246,.04));border:1px solid var(--line);border-left:4px solid #3b82f6;padding:14px 18px;border-radius:6px}
 [data-theme="dark"] .fig-note{background:linear-gradient(90deg,rgba(96,165,250,.20),rgba(96,165,250,.06));border-left-color:#60a5fa}
+
+@media(max-width:640px){
+  .container{padding:40px 18px}
+  .links a{flex:1 1 100%;text-align:center}
+  table{font-size:.9rem}
+  th,td{padding:8px 10px}
+}

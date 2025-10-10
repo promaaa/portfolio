@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Marc Duboc — Portfolio (promaa)</title>
   <meta name="color-scheme" content="light dark" />
-  <link rel="icon" type="image/png" href="pictures/saturn.png" />
+  <link rel="icon" type="image/png" href="pictures/logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
@@ -36,7 +36,7 @@
     *{box-sizing:border-box}
     html,body{margin:0;height:100%;color:var(--ink);font:16px/1.65 Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;background:var(--bg);overflow-x:hidden}
     a{color:inherit;text-decoration:none}
-    .container{max-width:1200px;margin:0 auto;padding:60px 40px;position:relative;z-index:1}
+  .container{width:min(100%,1200px);max-width:1200px;margin:0 auto;padding:clamp(32px,6vw,60px) clamp(16px,6vw,40px);position:relative;z-index:1}
     img{max-width:100%;height:auto;display:block}
 
     /* BACKGROUND: subtle grainy gradients + floating crystals */
@@ -73,59 +73,65 @@
     [data-theme="dark"] .bg-gears{display:block}
     
     /* NAV */
-    .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border:1px solid var(--glass-border);border-radius:12px;margin-bottom:28px;background:var(--glass-bg);backdrop-filter:saturate(130%) blur(var(--blur));-webkit-backdrop-filter:saturate(130%) blur(var(--blur));
+    .nav{display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;gap:12px 24px;padding:14px 16px;border:1px solid var(--glass-border);border-radius:12px;margin-bottom:28px;background:var(--glass-bg);backdrop-filter:saturate(130%) blur(var(--blur));-webkit-backdrop-filter:saturate(130%) blur(var(--blur));
       box-shadow:inset 0 1px 0 rgba(255,255,255,.18), 0 10px 24px rgba(0,0,0,.18)}
-    .brand{font-weight:700;font-size:1.05rem;letter-spacing:.2px}
-    .brand .badge{margin-left:.8rem;font-size:.8rem;font-weight:600;padding:.3rem .7rem;border:1px solid var(--glass-border);border-radius:999px;background:var(--surface-alt);color:var(--muted)}
-    .links{display:flex;gap:32px;align-items:center}
+    .brand{font-weight:700;font-size:1.05rem;letter-spacing:.2px;margin-right:auto;display:flex;align-items:center;gap:.6rem;flex:1 1 auto}
+    .brand .badge{font-size:.8rem;font-weight:600;padding:.3rem .7rem;border:1px solid var(--glass-border);border-radius:999px;background:var(--surface-alt);color:var(--muted)}
+    .links{display:flex;gap:clamp(12px,3vw,28px);align-items:center;flex-wrap:wrap;justify-content:flex-end;flex:1 1 auto}
     .links a{position:relative;padding:8px 0;font-weight:400;transition:color .2s ease;color:var(--muted)}
     .links a:hover{color:var(--ink)}
     
     /* Theme Toggle */
-    .theme-toggle{background:var(--surface);border:1px solid var(--glass-border);border-radius:10px;padding:8px;font-size:12px;color:var(--muted);cursor:pointer;transition:all .2s ease;margin-left:16px;display:flex;align-items:center;justify-content:center}
+    .theme-toggle{background:var(--surface);border:1px solid var(--glass-border);border-radius:10px;padding:8px;font-size:12px;color:var(--muted);cursor:pointer;transition:all .2s ease;margin-left:0;display:flex;align-items:center;justify-content:center}
     .theme-toggle:hover{background:var(--surface-alt);color:var(--ink);transform:translateY(-1px)}
     .theme-toggle svg{width:20px;height:20px;fill:currentColor}
 
     /* HERO */
-    .hero{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;margin-top:60px}
+  .hero{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,7vw,60px);align-items:center;margin-top:clamp(40px,8vw,60px)}
     .hero h1{font-size:clamp(34px,6vw,72px);line-height:1.05;margin:0 0 20px;font-weight:800;letter-spacing:-.02em}
     .spark{background:linear-gradient(90deg, rgba(160,160,255,1), rgba(255,180,210,1));-webkit-background-clip:text;background-clip:text;color:transparent}
     .amp{font-family:Inter, ui-sans-serif, system-ui; font-weight:800; letter-spacing:0}
     .hero p{color:var(--muted);margin:0 0 18px;font-size:1.05rem;line-height:1.7}
-    .focus{display:flex;align-items:baseline;gap:10px;margin:4px 0 26px}
+  .focus{display:flex;align-items:baseline;gap:10px;margin:4px 0 26px;flex-wrap:wrap}
     .focus-label{font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);opacity:.9;position:relative;padding-left:12px}
     .focus-label::before{content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);width:8px;height:8px;border-radius:50%;background:linear-gradient(90deg, rgba(160,160,255,1), rgba(255,180,210,1))}
-    .focus-items{display:flex;align-items:center;gap:8px}
-    .chip{padding:0;border:none;background:none;font-size:1.02rem;font-weight:800;letter-spacing:-.01em;color:var(--ink)}
+  .focus-items{display:flex;align-items:center;gap:8px;flex-wrap:wrap;row-gap:4px}
+  .chip{padding:0;border:none;background:none;font-size:1.02rem;font-weight:800;letter-spacing:-.01em;color:var(--ink);white-space:nowrap}
     .dot{color:var(--muted);opacity:.65;margin:0 4px;font-weight:700}
-    .btn{display:inline-block;padding:12px 20px;border-radius:10px;background:var(--surface);border:1px solid var(--glass-border);font-size:14px;font-weight:500;transition:all .2s ease}
+  .btn{display:inline-block;padding:12px 20px;border-radius:10px;background:var(--surface);border:1px solid var(--glass-border);font-size:14px;font-weight:500;transition:all .2s ease;text-align:center}
     .btn:hover{background:var(--surface-alt);transform:translateY(-1px)}
     .btn + .btn{margin-left:12px}
 
     /* ASCII */
-    .ascii-wrap{position:relative;border-radius:var(--radius);overflow:hidden;border:1px solid var(--glass-border);background:var(--glass-bg);backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));min-height:320px;box-shadow:var(--shadow);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 18px 40px rgba(0,0,0,.28)}
-    #ascii{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:13px;letter-spacing:.5px;margin:0;padding:24px;white-space:pre;user-select:none;color:var(--muted)}
-    .overlay-tip{position:absolute;right:16px;bottom:16px;background:var(--surface-alt);border:1px solid var(--glass-border);padding:6px 12px;border-radius:8px;color:var(--muted);font-size:11px}
-    .debug{position:absolute;left:16px;bottom:16px;font-size:11px;color:var(--muted);opacity:.6}
+    .ascii-wrap{position:relative;border-radius:var(--radius);overflow:hidden;border:1px solid var(--glass-border);background:var(--glass-bg);backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));min-height:clamp(220px,52vw,320px);box-shadow:var(--shadow);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 18px 40px rgba(0,0,0,.28);display:flex;align-items:center;justify-content:center}
+    #ascii-art{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:clamp(12px,2.5vw,18px);line-height:1.1;text-align:center;white-space:pre;user-select:none;background-image:linear-gradient(45deg, var(--crystal-a), var(--crystal-b));-webkit-background-clip:text;background-clip:text;color:transparent;
+      text-shadow:0 0 8px color-mix(in oklab, var(--accent) 20%, transparent)}
+    [data-theme="dark"] #ascii-art{background-image:linear-gradient(45deg, var(--orb-a), var(--orb-b));text-shadow:0 0 8px color-mix(in oklab, var(--accent) 30%, transparent)}
+    .ascii-wrap .markers{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .4s ease}
+    [data-theme="dark"] .ascii-wrap .markers{opacity:1}
+    .ascii-wrap .marker{position:absolute;font-family:monospace;font-size:18px;color:var(--accent);text-shadow:0 0 8px color-mix(in oklab, var(--accent) 40%, transparent);animation:blink-ascii 3s infinite ease-in-out}
+    .ascii-wrap .marker:nth-child(2){animation-delay:-.6s}
+    .ascii-wrap .marker:nth-child(3){animation-delay:-1.2s}
+    .ascii-wrap .marker:nth-child(4){animation-delay:-1.8s}
+    .ascii-wrap .marker:nth-child(5){animation-delay:-2.4s;font-size:20px}
+    @keyframes blink-ascii{0%,100%{opacity:.25}50%{opacity:1}}
 
-    section{margin-top:100px}
+  section{margin-top:clamp(72px,10vw,100px)}
     h2{font-family:'Sora', 'Space Grotesk', Inter, ui-sans-serif, system-ui; font-size:clamp(26px,3.2vw,38px);margin:0 0 24px;font-weight:700;letter-spacing:-.01em}
     h1, h3{font-family:'Space Grotesk', Inter, ui-sans-serif, system-ui}
     
 
     /* ===== Project cards ===== */
-    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:20px}
-    @media(min-width:880px){.grid>.col-6{grid-column:span 6}} .grid>.col-12{grid-column:span 12}
-    /* 3 colonnes pour les projets sur les écrans larges */
-    @media(min-width:1080px){#projects .grid>.col-6{grid-column:span 4}}
-    
-    /* 3 colonnes pour les livres sur les écrans larges */
-    @media(min-width:1080px){#reading .grid>.col-4{grid-column:span 4}}
-    @media(min-width:880px){.grid>.col-4{grid-column:span 6}}
-    .grid>.col-4{grid-column:span 12}
+  .grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:clamp(16px,3vw,24px)}
+  .grid>[class*="col-"]{grid-column:span 12}
+  .grid>.col-12{grid-column:span 12}
+  @media(min-width:680px){.grid>.col-6{grid-column:span 6}}
+  @media(min-width:900px){#reading .grid>.col-4{grid-column:span 6}}
+  @media(min-width:1080px){#projects .grid>.col-6{grid-column:span 4}}
+  @media(min-width:1200px){#reading .grid>.col-4{grid-column:span 4}}
 
-    .card{position:relative;display:flex;flex-direction:column;border-radius:16px;padding:20px;gap:16px;transition:transform .25s ease, box-shadow .25s ease, background .25s ease, border-color .25s ease;
+  .card{position:relative;display:flex;flex-direction:column;border-radius:16px;padding:clamp(18px,3vw,24px);gap:clamp(12px,2vw,16px);transition:transform .25s ease, box-shadow .25s ease, background .25s ease, border-color .25s ease;
       border:1px solid var(--glass-border);background:var(--glass-bg);backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));
       box-shadow:0 8px 26px rgba(0,0,0,.12)}
     [data-theme="dark"] .card{background:linear-gradient(180deg, rgba(20,24,34,.78), rgba(12,16,26,.62));
@@ -184,11 +190,32 @@
     .background-skills span{font-size:12px;color:var(--muted);background:var(--surface-alt);padding:4px 8px;border-radius:4px;border:1px solid var(--line)}
 
     
-    @media(max-width:768px){
-      .container{padding:40px 24px}
-      .nav{flex-direction:column;align-items:flex-start;gap:12px}
-      .links{flex-wrap:wrap;gap:16px}
-      .hero{grid-template-columns:1fr;gap:40px}
+    @media(max-width:900px){
+      .hero{grid-template-columns:1fr;gap:32px}
+    }
+
+    @media(max-width:720px){
+      .nav{padding:12px 14px}
+      .links{width:100%;justify-content:flex-start}
+    }
+
+    @media(max-width:600px){
+      .hero h1{font-size:clamp(28px,8vw,44px)}
+      .focus-label{font-size:.68rem}
+      .btn{width:100%}
+      .btn + .btn{margin-left:0;margin-top:12px}
+      section{margin-top:72px}
+      .card .actions{gap:.5rem}
+      .connect-inline{justify-content:flex-start}
+      .contact-link{white-space:normal;padding:10px 14px;border:1px solid var(--glass-border);border-radius:12px}
+      .links a{padding:6px 0}
+      .contact-link::after{display:none}
+    }
+
+    @media(max-width:480px){
+      .nav{gap:10px 16px}
+      .brand{font-size:.95rem}
+      .footer{margin:60px 0 32px;font-size:13px}
     }
     
     /* Connect Section - Modern design */
@@ -196,8 +223,8 @@
     .connect-intro{text-align:center;margin-bottom:8px}
     .connect-intro p{margin:0 0 6px;font-size:15px;color:var(--muted);line-height:1.6}
     #contact h2{text-align:center}
-    .connect-inline{display:flex;flex-wrap:nowrap;gap:22px;align-items:center;justify-content:center;padding:10px 0;overflow:visible}
-    .contact-link{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);position:relative;white-space:nowrap}
+  .connect-inline{display:flex;flex-wrap:wrap;gap:16px 22px;align-items:center;justify-content:center;padding:10px 0;overflow:visible}
+  .contact-link{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);position:relative;white-space:nowrap;padding:8px 0}
     .contact-link::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;opacity:.25;transition:transform .25s ease,opacity .25s ease}
     .contact-link:hover::after{transform:scaleX(1);opacity:.45}
     .contact-label{font-size:11px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
@@ -438,9 +465,11 @@
         <a class="btn" href="https://www.youtube.com/watch?v=wIBkvQ6MfKQ" target="_blank" rel="noopener">YouTube ↗</a>
       </div>
       <div class="ascii-wrap">
-        <pre id="ascii" aria-label="Interactive ASCII field"></pre>
-        <div class="overlay-tip">Move your mouse • Click to switch mode</div>
-        <div class="debug" id="ascii-debug">init…</div>
+        <pre id="ascii-art"></pre>
+        <div class="markers">
+          <span class="marker" style="top: 45%; left: 35%;">o</span>
+          <span class="marker" style="top: 55%; left: 70%;">o</span>
+        </div>
       </div>
     </header>
 
@@ -635,27 +664,201 @@
   </div>
 
   <script>
-  // === SUPER‑SAFE ASCII (ES5 only, interval) — 7×7 font, centered ===
+  // === ASCII animation (crystal ↔ gears) ===
   (function(){
-    var pre=document.getElementById('ascii'); var dbg=document.getElementById('ascii-debug'); if(!pre) return;
-    var chars=" .'`^,:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$";
-    var cols=90, rows=28, t=0, frames=0, timer=null; var pointerX=.5, pointerY=.5, mode=0;
-    var FONT={
-      'p':["######.","#.....#","#.....#","######.","#......","#......","#......"],
-      'r':["######.","#.....#","#.....#","######.","#.#....","#..#...","#...#.."],
-      'o':[".#####.","#.....#","#.....#","#.....#","#.....#","#.....#",".#####."],
-      'm':["#.....#","##...##","#.#.#.#","#.#.#.#","#..#..#","#.....#","#.....#"],
-      'a':[".#####.","#.....#","#.....#","#######","#.....#","#.....#","#.....#"]
-    };
-    var WORD='promaa'; var glyphW=7, glyphH=7, space=1; var wordPixW=WORD.length*glyphW+(WORD.length-1)*space;
-    function on(x,y){ var scaleX=Math.floor(0.75*cols/wordPixW); var scaleY=Math.floor(0.50*rows/glyphH); var s=Math.max(1,Math.min(scaleX,scaleY)); var totalW=wordPixW*s,totalH=glyphH*s; var startX=Math.floor((cols-totalW)/10); var startY=Math.floor((rows-totalH)/2 + s*0.10); var rx=x-startX, ry=y-startY; if(rx<0||ry<0||rx>=totalW||ry>=totalH) return 0; var pixX=Math.floor(rx/s), pixY=Math.floor(ry/s); var acc=0; for(var i=0;i<WORD.length;i++){ var gStart=acc,gEnd=acc+glyphW; if(pixX>=gStart&&pixX<gEnd){ var row=FONT[WORD.charAt(i)][pixY]; return row.charAt(pixX-gStart)==='#'?1:0; } acc+=glyphW+(i<WORD.length-1?space:0);} return 0; }
-    function hash2d(x,y){ var n=(x*374761393 ^ y*668265263)>>>0; n=(n^(n>>>13))*1274126177>>>0; return (n&0xffff)/0xffff; }
-    function density(x,y,time){ var gx=x/cols,gy=y/rows; var base=0.15*gx+0.12*gy+0.08*Math.sin((gx+gy+time)*2.8); var noise=0.12*(hash2d(x+time*2.5,y-time*1.8)-0.5); var dx=gx-pointerX,dy=gy-pointerY,d2=dx*dx+dy*dy; var ripple=0; if(mode===0){ripple=0.35*Math.sin(15*Math.sqrt(d2)-time*5)*Math.exp(-12*d2);} else if(mode===1){ripple=0.48*Math.cos(22*Math.sqrt(d2)-time*7)*Math.exp(-15*d2);} else {var ang=Math.atan2(dy,dx); ripple=0.38*Math.sin(10*ang+time*4)*Math.exp(-11*d2);} var pulse=0.06*Math.sin(time*1.5); var v=base+noise+ripple+pulse; if(v<0)v=0; if(v>1)v=1; return v; }
-    function render(){ t+=0.08; frames++; var progress=Math.min(1,t/1.2); var out=''; for(var y=0;y<rows;y++){ for(var x=0;x<cols;x++){ var d=density(x,y,t), m=on(x,y), h=hash2d(x*13+y*7,12345); var v=d*0.38; if(m){ var reveal=progress-h*0.6; var r=reveal*1.8; if(r<0) r=0; if(r>1) r=1; v=Math.max(v,0.95*r+0.05);} var ci=Math.floor(v*(chars.length-1)); if(ci<0) ci=0; if(ci>=chars.length) ci=chars.length-1; out+=chars.charAt(ci);} if(y<rows-1) out+='\n'; } pre.textContent=out; }
-    function start(){ if(timer) clearInterval(timer); pre.textContent='loading…'; frames=0; t=0; render(); timer=setInterval(render,42); }
-    function setPointer(ev){ var r=pre.parentElement.getBoundingClientRect(); if(!r.width||!r.height) return; pointerX=Math.min(1,Math.max(0,(ev.clientX-r.left)/r.width)); pointerY=Math.min(1,Math.max(0,(ev.clientY-r.top)/r.height)); }
-    pre.parentElement.addEventListener('mousemove',setPointer); pre.parentElement.addEventListener('touchmove',function(e){ if(e.touches&&e.touches[0]) setPointer(e.touches[0]); },{passive:true}); pre.parentElement.addEventListener('click',function(){ mode=(mode+1)%3;});
-    start();
+    const asciiArtElement = document.getElementById('ascii-art');
+    if(!asciiArtElement) return;
+
+    const width = 48, height = 24;
+    const grid = Array.from({length:height}, () => Array(width).fill(' '));
+    const fadeGrid = Array.from({length:height}, () => Array(width).fill(' '));
+    let currentAnimationId = null;
+    let lastTime = 0;
+    let activeTheme = null;
+
+    // --- Animation 1: Generative 3D Crystal (Light Theme) ---
+    const crystalPoints = [
+      {x:0, y:-1.2, z:0}, {x:1, y:0, z:0}, {x:0, y:0, z:1},
+      {x:-1, y:0, z:0}, {x:0, y:0, z:-1}, {x:0, y:1.2, z:0}
+    ];
+    const crystalEdges = [
+      [0,1],[0,2],[0,3],[0,4],[1,2],[2,3],
+      [3,4],[4,1],[5,1],[5,2],[5,3],[5,4]
+    ];
+    let crystalAngleX = 0.2, crystalAngleY = 0;
+    let sparkles = [];
+    const MAX_SPARKLES = 7;
+
+    function animateCrystal(time){
+      if(lastTime>0){
+        const delta = time - lastTime;
+        crystalAngleX += 0.0003 * delta;
+        crystalAngleY += 0.0005 * delta;
+      }
+      lastTime = time;
+      renderCrystal();
+      currentAnimationId = requestAnimationFrame(animateCrystal);
+    }
+
+    function renderCrystal(){
+      for(let y=0; y<height; y++){
+        for(let x=0; x<width; x++){
+          const char = fadeGrid[y][x];
+          let nextChar = ' ';
+          if(char === '*') nextChar = '-';
+          else if(char === '-') nextChar = '·';
+          grid[y][x] = nextChar;
+          fadeGrid[y][x] = nextChar;
+        }
+      }
+
+      const rotated = crystalPoints.map(p => rotate(p, crystalAngleX, crystalAngleY));
+      const projected = rotated.map(project);
+
+      crystalEdges.forEach(edge => {
+        const p3d1 = rotated[edge[0]];
+        const p3d2 = rotated[edge[1]];
+        drawCrystalLine(projected[edge[0]], projected[edge[1]], p3d1, p3d2);
+      });
+
+      updateSparkles();
+      drawGrid();
+    }
+
+    function updateSparkles(){
+      sparkles = sparkles.filter(s => s.life > 0);
+      sparkles.forEach(s => s.life--);
+
+      if(Math.random() > 0.6 && sparkles.length < MAX_SPARKLES){
+        const x = Math.floor(Math.random() * width);
+        const y = Math.floor(Math.random() * height);
+        if(grid[y][x] === ' '){
+          sparkles.push({x, y, life: Math.random() * 30 + 15});
+        }
+      }
+
+      sparkles.forEach(s => {
+        const char = s.life > 15 ? '+' : '·';
+        grid[s.y][s.x] = char;
+      });
+    }
+
+    function getCharForCrystal(p3d1, p3d2){
+      const z = (p3d1.z + p3d2.z) / 2;
+      const charsByZ = ['·','-','*','#'];
+      const zIndex = Math.floor((z + 2) / 4 * (charsByZ.length - 1));
+      return charsByZ[Math.max(0, Math.min(zIndex, charsByZ.length - 1))];
+    }
+
+    function drawCrystalLine(p2d1, p2d2, p3d1, p3d2){
+      let x0 = p2d1.x, y0 = p2d1.y, x1 = p2d2.x, y1 = p2d2.y;
+      const dx = Math.abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
+      const dy = -Math.abs(y1 - y0), sy = y0 < y1 ? 1 : -1;
+      let err = dx + dy;
+      const char = getCharForCrystal(p3d1, p3d2);
+      while(true){
+        if(x0>=0 && x0<width && y0>=0 && y0<height){
+          grid[y0][x0] = char;
+          fadeGrid[y0][x0] = char;
+        }
+        if(x0 === x1 && y0 === y1) break;
+        const e2 = 2 * err;
+        if(e2 >= dy){ err += dy; x0 += sx; }
+        if(e2 <= dx){ err += dx; y0 += sy; }
+      }
+    }
+
+    // --- Animation 2: Generative Gears (Dark Theme) ---
+    let gearAngle1 = 0, gearAngle2 = 0;
+
+    function animateGears(time){
+      if(lastTime>0){
+        const delta = time - lastTime;
+        gearAngle1 += 0.0005 * delta;
+        gearAngle2 -= 0.0007 * delta;
+      }
+      lastTime = time;
+      renderGears();
+      currentAnimationId = requestAnimationFrame(animateGears);
+    }
+
+    function renderGears(){
+      clearGrid();
+      drawGear(width * 0.35, height * 0.45, 7, gearAngle1, '*', '-');
+      drawGear(width * 0.7, height * 0.55, 5, gearAngle2, 'o', '|');
+      drawGrid();
+    }
+
+    function drawGear(cx, cy, r, angle, charRing, charTooth){
+      for(let i=0; i<360; i+=15){
+        const rad = (i * Math.PI) / 180 + angle;
+        const x = Math.round(cx + Math.cos(rad) * r * 1.8);
+        const y = Math.round(cy + Math.sin(rad) * r);
+        if(x>=0 && x<width && y>=0 && y<height) grid[y][x] = charRing;
+      }
+      for(let i=0; i<360; i+=45){
+        const rad = (i * Math.PI) / 180 + angle;
+        const x = Math.round(cx + Math.cos(rad) * (r + 1.5) * 1.8);
+        const y = Math.round(cy + Math.sin(rad) * (r + 1.5));
+        if(x>=0 && x<width && y>=0 && y<height) grid[y][x] = charTooth;
+      }
+    }
+
+    // --- Common helpers ---
+    function clearGrid(){
+      for(let i=0; i<height; i++) grid[i].fill(' ');
+    }
+
+    function drawGrid(){
+      asciiArtElement.textContent = grid.map(row => row.join('')).join('\n');
+    }
+
+    function rotate(p, ax, ay){
+      const sx = Math.sin(ax), cx = Math.cos(ax);
+      const sy = Math.sin(ay), cy = Math.cos(ay);
+      let {x, y, z} = p;
+      let newX = x * cy - z * sy, newZ = x * sy + z * cy; x = newX; z = newZ;
+      let newY = y * cx - z * sx; newZ = y * sx + z * cx; y = newY; z = newZ;
+      return {x, y, z};
+    }
+
+    function project(p){
+      const fov = 10;
+      const zFactor = fov / (fov + p.z + 3);
+      return {
+        x: Math.round(p.x * zFactor * width / 3 + width / 2),
+        y: Math.round(p.y * zFactor * height / 2.5 + height / 2)
+      };
+    }
+
+    function applyTheme(theme){
+      const nextTheme = theme === 'dark' ? 'dark' : 'light';
+      if(nextTheme === activeTheme) return;
+      activeTheme = nextTheme;
+      if(currentAnimationId) cancelAnimationFrame(currentAnimationId);
+      lastTime = 0;
+      clearGrid();
+      fadeGrid.forEach(row => row.fill(' '));
+      sparkles = [];
+      crystalAngleX = 0.2;
+      crystalAngleY = 0;
+      gearAngle1 = 0;
+      gearAngle2 = 0;
+      if(activeTheme === 'dark'){
+        animateGears(0);
+      }else{
+        animateCrystal(0);
+      }
+    }
+
+    function currentThemeFromDom(){
+      return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    }
+
+    const observer = new MutationObserver(() => applyTheme(currentThemeFromDom()));
+    observer.observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
+
+    applyTheme(currentThemeFromDom());
   })();
   
   // Theme Toggle

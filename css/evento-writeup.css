@@ -47,3 +47,8 @@ svg text{fill:var(--ink)}
 }
 .theme-toggle:hover{background:var(--line);color:var(--ink)}
 .theme-toggle svg{width:20px;height:20px;fill:currentColor;display:block}
+
+@media(max-width:720px){
+  .container{padding:40px 18px}
+  .links a{flex:1 1 100%;text-align:center}
+}
