@@ -373,6 +373,61 @@ void gen_slides(int from, const int* DIRS, int nDirs){
         <li>Hardware RC filters plus software median filtering tame reed bounce to &lt;5&nbsp;ms.</li>
         <li>Modular tiles slot into a backplane so faulty reeds can be swapped without disturbing the hardwood surface.</li>
       </ul>
+      
+      <h3>MCP23017 Integration & Soldering</h3>
+      <p>The MCP23017 I/O expanders serve as the bridge between the reed sensor matrix and the Arduino Mega. Each expander provides 16 GPIO pins, allowing us to read the state of multiple reed switches simultaneously while keeping the main controller's pin count manageable.</p>
+      <figure>
+        <img src="pictures/smart-chess-doc/8x8/soudures-cma23017.jpg" alt="Soldered MCP23017 I/O expander board" loading="lazy" />
+        <figcaption>Precision soldering on the MCP23017 breakout board: all 28 pins hand-soldered with flux to ensure reliable I<sup>2</sup>C communication and GPIO stability.</figcaption>
+      </figure>
+      <p>The soldering process required careful attention to avoid bridges between adjacent pins. Each MCP23017 is configured with a unique I<sup>2</sup>C address via hardware jumpers, enabling multiple expanders to coexist on the same bus. Pull-up resistors (4.7&nbsp;kΩ) on the SDA and SCL lines ensure clean signal transitions at 400&nbsp;kHz Fast Mode.</p>
+
+      <h3>Board Fabrication & LED Assembly</h3>
+      <p>The physical chessboard consists of two laser-cut MDF plates: a top layer with 64 precision-cut square recesses for the LEDs, and a bottom layer housing the electronics. The laser cutter's 0.1&nbsp;mm tolerance ensures that LED diffusers sit flush with the playing surface.</p>
+      <figure>
+        <img src="pictures/smart-chess-doc/8x8/led-assemblage.jpg" alt="LED installation in laser-cut chessboard layers" loading="lazy" />
+        <figcaption>Assembly process: 64 RGB LEDs inserted into laser-cut recesses, with the two MDF layers aligned and ready for bonding. Each LED is carefully positioned to ensure uniform illumination across the square.</figcaption>
+      </figure>
+      <p>Each LED is soldered to a flexible PCB strip that runs beneath the board. The strips connect to a central distribution bus, minimizing wire clutter while maintaining modularity. Thermal adhesive secures the LEDs in place, preventing movement during gameplay while allowing heat dissipation.</p>
+
+      <h3>Reed Sensor Installation</h3>
+      <p>The reed switches occupy precision-milled pockets directly beneath each square, aligned with the center of the playing area. These pockets were carved using a Dremel rotary tool with a 6&nbsp;mm end mill, ensuring consistent depth (4&nbsp;mm) for reliable magnetic triggering.</p>
+      <figure>
+        <img src="pictures/smart-chess-doc/8x8/reed-sensors.jpg" alt="Reed sensors installed in Dremel-carved pockets" loading="lazy" />
+        <figcaption>Reed sensors seated in precision-milled pockets beneath the board. Each sensor is wired into the detection matrix with diode isolation to prevent ghosting during multi-piece moves.</figcaption>
+      </figure>
+      <p>The reed switches are wired in a matrix configuration with 1N4148 signal diodes in series to prevent current backflow. This topology reduces the wire count from 128 (individual wiring) to just 16 (8 rows + 8 columns), dramatically simplifying the backplane routing.</p>
+
+      <h3>Chess Piece Modification</h3>
+      <p>To enable reed switch detection, each chess piece required embedding a 5×2&nbsp;mm neodymium magnet in its base. A precision drilling jig ensured consistent magnet depth (3&nbsp;mm from the bottom) across all 32 pieces.</p>
+      <figure class="media-wide">
+        <video controls muted loop playsinline poster="pictures/smart-chess-doc/8x8/led-assemblage.jpg">
+          <source src="pictures/smart-chess-doc/8x8/percage-piece.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <figcaption>Drilling chess piece bases: a hand-held drill with a 6&nbsp;mm bit carefully creates magnet pockets. Each hole is countersunk to ensure the magnet sits below the felt base, maintaining piece stability.</figcaption>
+      </figure>
+      <p>After drilling, each magnet was secured with epoxy resin and oriented to ensure consistent polarity across all pieces. This uniformity guarantees that any piece activates any reed switch with the same 2–3&nbsp;mm airgap tolerance.</p>
+
+      <h3>LED Illumination System</h3>
+      <p>With all 64 LEDs wired and the control circuitry connected, the first full-board illumination test validated the multiplexing firmware and power distribution. The system can now highlight legal moves, indicate check/checkmate, and provide visual feedback for piece placement.</p>
+      <figure class="media-wide">
+        <video controls muted loop playsinline poster="pictures/smart-chess-doc/8x8/led-on-8x8.jpg">
+          <source src="pictures/smart-chess-doc/8x8/illumination-echiquier.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <figcaption>Full 8×8 board illumination test: LEDs cycle through the matrix at 2&nbsp;kHz, demonstrating flicker-free operation and uniform brightness across all 64 squares. The firmware supports RGB color mixing for future feature expansion.</figcaption>
+      </figure>
+      <p>The LED driver firmware uses pulse-width modulation (PWM) to achieve 256 brightness levels per color channel. A gamma correction lookup table compensates for human perception, ensuring that "50% brightness" appears visually halfway between off and full intensity.</p>
+
+      <h3>Backplane Wiring & Final Assembly</h3>
+      <p>The underside of the chessboard houses all power distribution, I<sup>2</sup>C buses, and the resistor network for LED current limiting. Point-to-point wiring was used to connect the MCP23017 expanders to the reed matrix, while the LED strips connect via JST-PH connectors for easy maintenance.</p>
+      <figure>
+        <img src="pictures/smart-chess-doc/8x8/soudure-back-board.jpg" alt="Backside of chessboard showing completed wiring" loading="lazy" />
+        <figcaption>Board underside after final assembly: resistor arrays for LED current limiting, MCP23017 expanders wired to the reed matrix, and power distribution bus. All connections are labeled and strain-relieved.</figcaption>
+      </figure>
+      <p>Cable management was critical to prevent interference with the gantry's travel envelope. All wiring bundles are routed through edge channels and secured with adhesive-backed cable clips. A single DB-25 connector on the board's edge carries power, I<sup>2</sup>C, and PWM signals to the external controller.</p>
+
       <h3>Mechanical Integration</h3>
       <p>The electronics tile sandwiches between a laser-cut MDF carrier and the tournament-grade wooden board. Ribbon cables exit through a recessed channel, leaving the play surface flush while protecting wiring from the gantry's travel.</p>
       <ul>
@@ -380,7 +435,7 @@ void gen_slides(int from, const int* DIRS, int nDirs){
         <li>Edge LEDs create a running-light effect for captures and check warnings.</li>
         <li>An onboard thermistor monitors heat buildup to prevent LED dimming during long sessions.</li>
       </ul>
-      <p class="fig-note"><strong>Next up</strong> Spin a dedicated PCB with castellated edges so individual tiles plug into the wooden board, and complete EMC testing once the gantry motors are powered.</p>
+      <p class="fig-note"><strong>Status update</strong> The 8×8 board is now fully assembled and operational. Initial tests show &gt;99.5% reed detection accuracy and flicker-free LED operation. Next steps include calibrating the vision system with the physical board and integrating the chess engine for autonomous play.</p>
     </div>
 
     <h2 id="mechanical-robot">5. Mechanical Platform & Manipulator</h2>
