@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Unspoken Dialogue — Marc Duboc</title>
+  <meta name="color-scheme" content="light dark" />
+  <link rel="stylesheet" href="css/essay-collapse-of-money.css" />
+  <meta name="description" content="On the grounding honesty of physical effort and its dialogue with the intellectual mind." />
+</head>
+<body>
+  <div class="container">
+    <div class="top">
+      <a class="back" href="essays.html">← Back to essays</a>
+      <span class="byline">Marc Duboc • Oct 17, 2025</span>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme"></button>
+    </div>
+    <h1>The Unspoken Dialogue</h1>
+    <article class="prose">
+      <p>The mind likes to believe it is sovereign. It builds worlds from logic, floats in the clean ether of abstraction, and forgets the machine of blood and bone that carries it. We spend our days in the quiet hum of screens, where the only effort is the click of a key, the scroll of a mouse. The body becomes a ghost, a background process we notice only when it fails. But thought without a body is a kite without a string. It drifts, untethered, and mistakes its own altitude for truth.</p>
+      <p>There is another way: the unspoken dialogue. It is the conversation you have with yourself when the only interface is effort. For twelve years, my dialogue was the sprint. A language of explosive power, of pure, violent presence. The hundred-meter dash is a brutal education in honesty. There is no room for negotiation. The body speaks in milliseconds, in the precise angle of the foot, in the burn of lactic acid. It teaches the mind to be here, now, entirely. You cannot cheat the clock. You learn that peak performance is not a mood; it is a physical state, earned through relentless, focused repetition.</p>
+      <p>Then the dialogue changed. The sprint’s sharp monologue became the long, patient conversation of the run. Four years of endurance, where the currency is not power, but resilience. The body learns a new grammar. A 17-minute 5k is not a burst; it is a sustained argument against the desire to quit. A 38-minute 10k is a lesson in pacing, in knowing when to push and when to hold back. An hour and twenty-five minutes for a half-marathon teaches you the art of managing discomfort, of making a home in the pain. And a three-hour marathon is a full-blown treaty with your own limits. These are not just numbers; they are the documented history of a negotiation with the self.</p>
+      <p>This dialogue is not a distraction from intellectual work; it is its foundation. The same focus required to hold a pace in the tenth kilometer is the focus needed to untangle a complex piece of code. The same resilience that carries you through the thirtieth kilometer of a marathon is the resilience that allows you to face a difficult problem without flinching. The body teaches the mind a form of structural integrity. It provides a ground truth, a non-negotiable reality that cuts through the fog of abstraction. You cannot fake a sub-three-hour marathon, just as you cannot fake a sound argument.</p>
+      <p>The body becomes an anchor, not a burden. It reminds the mind that all thought is embodied, that clarity is a physical state as much as a mental one. The fatigue after a long run is a clean fatigue. It quiets the anxious chatter of the brain and leaves a space for a different kind of thinking to emerge—slower, deeper, more grounded. The daily ritual of training is a contract. It is a promise to show up, to listen to the body’s feedback, to respect its limits, and to push them with intelligence.</p>
+      <p>We live in an age that celebrates the disembodied mind. We want the insights without the effort, the knowledge without the practice. But the unspoken dialogue with the physical self offers a more robust form of wisdom. It teaches that mastery is not an idea, but a practice. That resilience is not a mindset, but a trained response. And that the most profound thoughts are often born not in the quiet of the office, but in the rhythmic, breathing silence of the run, where the only thing you hear is the steady beat of your own heart, speaking a language older and more honest than words.</p>
+    </article>
+  </div>
+
+  <script>
+    (function(){
+      const html = document.documentElement;
+      const toggle = document.getElementById('theme-toggle');
+      const urlTheme = new URLSearchParams(location.search).get('theme');
+      const saved = urlTheme || localStorage.getItem('theme') || 'light';
+      html.setAttribute('data-theme', saved);
+      if(urlTheme) localStorage.setItem('theme', urlTheme);
+      updateToggleIcon(saved);
+      toggle.addEventListener('click', function(){
+        const current = html.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        updateToggleIcon(next);
+      });
+      function updateToggleIcon(theme){
+        const sunSvg = `<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="7" y="0" width="2" height="2"/><rect x="13" y="2" width="2" height="2"/><rect x="14" y="7" width="2" height="2"/><rect x="13" y="12" width="2" height="2"/><rect x="7" y="14" width="2" height="2"/><rect x="2" y="12" width="2" height="2"/><rect x="0" y="7" width="2" height="2"/><rect x="2" y="2" width="2" height="2"/><rect x="5" y="5" width="6" height="6"/><rect x="6" y="4" width="4" height="1"/><rect x="4" y="6" width="1" height="4"/><rect x="11" y="6" width="1" height="4"/><rect x="6" y="11" width="4" height="1"/></svg>`;
+        const moonSvg = `<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="8" y="2" width="8" height="2"/><rect x="7" y="4" width="10" height="2"/><rect x="6" y="6" width="11" height="2"/><rect x="6" y="8" width="11" height="2"/><rect x="6" y="10" width="11" height="2"/><rect x="7" y="12" width="10" height="2"/><rect x="8" y="14" width="8" height="2"/><rect x="12" y="4" width="7" height="2" fill="var(--bg)"/><rect x="13" y="6" width="7" height="2" fill="var(--bg)"/><rect x="13" y="8" width="7" height="2" fill="var(--bg)"/><rect x="13" y="10" width="7" height="2" fill="var(--bg)"/><rect x="12" y="12" width="7" height="2" fill="var(--bg)"/></svg>`;
+        toggle.innerHTML = (theme === 'dark') ? sunSvg : moonSvg;
+        toggle.title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+        toggle.setAttribute('aria-label', toggle.title);
+      }
+    })();
+  </script>
+</body>
+</html>

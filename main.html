@@ -1,890 +1,2625 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Marc Duboc — Portfolio (promaa)</title>
-  <meta name="color-scheme" content="light dark" />
-  <link rel="icon" type="image/png" href="pictures/logo.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      /* defaults: light theme; dark overrides below */
-      --bg:#f7f7fb; --ink:#0a0a0e; --muted:#5e5e69; --line:rgba(0,0,0,.08);
-      --accent:#5b5bd6; --accent-h:250;
-      --surface:rgba(255,255,255,.7); --surface-alt:rgba(255,255,255,.85);
-      --radius:14px; --shadow:0 10px 30px rgba(0,0,0,.12);
-      --glass-bg:rgba(255,255,255,.6); --glass-border:rgba(255,255,255,.9);
-      --blur:12px;
-      --grad1:#f9f9ff; --grad2:#f3f2fb; --grad3:#efeff7;
-      --crystal-a: rgba(120,110,255,.45); --crystal-b: rgba(255,150,190,.35);
-    }
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Marc Duboc — Portfolio (promaa)</title>
+        <meta name="color-scheme" content="light dark" />
+        <link rel="icon" type="image/png" href="pictures/logo.png" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&family=Sora:wght@500;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                /* defaults: light theme; dark overrides below */
+                --bg: #f7f7fb;
+                --ink: #0a0a0e;
+                --muted: #5e5e69;
+                --line: rgba(0, 0, 0, 0.08);
+                --accent: #5b5bd6;
+                --accent-h: 250;
+                --surface: rgba(255, 255, 255, 0.7);
+                --surface-alt: rgba(255, 255, 255, 0.85);
+                --radius: 14px;
+                --shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+                --glass-bg: rgba(255, 255, 255, 0.6);
+                --glass-border: rgba(255, 255, 255, 0.9);
+                --blur: 12px;
+                --grad1: #f9f9ff;
+                --grad2: #f3f2fb;
+                --grad3: #efeff7;
+                --crystal-a: rgba(120, 110, 255, 0.45);
+                --crystal-b: rgba(255, 150, 190, 0.35);
+            }
 
-    [data-theme="dark"]{
-      --bg:#0b0e16; --ink:#f7f7fb; --muted:#b5b7c8; --line:rgba(255,255,255,.1);
-      --accent:#8bbcff; --accent-h:215;
-      --surface:rgba(255,255,255,.06); --surface-alt:rgba(255,255,255,.1);
-      --shadow:0 10px 30px rgba(0,0,0,.4);
-      --glass-bg:rgba(255,255,255,.06); --glass-border:rgba(255,255,255,.2);
-      --blur:14px;
-      --grad1:#0b0f1a; --grad2:#0a0d17; --grad3:#070a12;
-      --crystal-a: rgba(160,160,255,.35); --crystal-b: rgba(255,180,210,.28);
-      --orb-a: rgba(120,200,255,.35); --orb-b: rgba(160,130,255,.35);
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;height:100%;color:var(--ink);font:16px/1.65 Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;background:var(--bg);overflow-x:hidden}
-    a{color:inherit;text-decoration:none}
-  .container{width:min(100%,1200px);max-width:1200px;margin:0 auto;padding:clamp(32px,6vw,60px) clamp(16px,6vw,40px);position:relative;z-index:1}
-    img{max-width:100%;height:auto;display:block}
+            [data-theme="dark"] {
+                --bg: #0b0e16;
+                --ink: #f7f7fb;
+                --muted: #b5b7c8;
+                --line: rgba(255, 255, 255, 0.1);
+                --accent: #8bbcff;
+                --accent-h: 215;
+                --surface: rgba(255, 255, 255, 0.06);
+                --surface-alt: rgba(255, 255, 255, 0.1);
+                --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+                --glass-bg: rgba(255, 255, 255, 0.06);
+                --glass-border: rgba(255, 255, 255, 0.2);
+                --blur: 14px;
+                --grad1: #0b0f1a;
+                --grad2: #0a0d17;
+                --grad3: #070a12;
+                --crystal-a: rgba(160, 160, 255, 0.35);
+                --crystal-b: rgba(255, 180, 210, 0.28);
+                --orb-a: rgba(120, 200, 255, 0.35);
+                --orb-b: rgba(160, 130, 255, 0.35);
+            }
+            * {
+                box-sizing: border-box;
+            }
+            html,
+            body {
+                margin: 0;
+                height: 100%;
+                color: var(--ink);
+                font:
+                    16px/1.65 Inter,
+                    ui-sans-serif,
+                    system-ui,
+                    -apple-system,
+                    Segoe UI,
+                    Roboto,
+                    Arial;
+                background: var(--bg);
+                overflow-x: hidden;
+            }
+            a {
+                color: inherit;
+                text-decoration: none;
+            }
+            .container {
+                width: min(100%, 1200px);
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: clamp(32px, 6vw, 60px) clamp(16px, 6vw, 40px);
+                position: relative;
+                z-index: 1;
+            }
+            img {
+                max-width: 100%;
+                height: auto;
+                display: block;
+            }
 
-    /* BACKGROUND: subtle grainy gradients + floating crystals */
-    .bg{position:fixed;inset:0;z-index:0;pointer-events:none;background:
-      radial-gradient(1200px 800px at 110% -10%, color-mix(in oklab, var(--crystal-a) 38%, transparent), transparent 60%),
-      radial-gradient(900px 700px at -10% 110%, color-mix(in oklab, var(--crystal-b) 32%, transparent), transparent 55%),
-      radial-gradient(700px 500px at 50% -20%, rgba(80,200,180,.06), transparent 60%),
-      linear-gradient(180deg, var(--grad1), var(--grad2) 40%, var(--grad3));
-    }
-    .bg::after{content:"";position:absolute;inset:0;background:radial-gradient(100px 100px at 10% 15%, rgba(255,255,255,.06), transparent 60%) repeat;opacity:.06;mix-blend-mode:overlay;}
-    .noise{position:fixed;inset:0;opacity:.06;mix-blend-mode:soft-light}
-    .bg-crystals{position:absolute;inset:0}
-    .crystal{position:absolute;opacity:.6;filter:blur(.1px);-webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 75%);mask-image:linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 75%)}
-    .crystal polygon{stroke:rgba(255,255,255,.35);stroke-width:0.8;mix-blend-mode:screen}
-    .crystal.c1{top:6%;left:6%;width:140px;height:140px;animation:float 11s ease-in-out infinite}
-    .crystal.c2{top:14%;left:16%;width:180px;height:180px;animation:float 14s ease-in-out infinite reverse}
-    .crystal.c3{top:10%;right:10%;width:160px;height:160px;animation:float 13s ease-in-out infinite}
-    .crystal.c4{top:18%;right:22%;width:220px;height:220px;animation:float 17s ease-in-out infinite reverse}
-    @keyframes float{0%{transform:translateY(0) rotate(0)}50%{transform:translateY(-12px) rotate(3deg)}100%{transform:translateY(0) rotate(0)}}
-    /* Dark theme 3D-like gears (top only) */
-    .bg-gears{position:absolute;inset:0;display:none}
-    .gear{position:absolute;opacity:.6;-webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 75%);mask-image:linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 75%);filter:drop-shadow(0 12px 24px rgba(0,0,0,.35))}
-    .gear .ring{fill:url(#gearGrad)}
-    .gear .tooth{fill:rgba(190,210,255,.18);stroke:rgba(190,210,255,.25);stroke-width:1}
-    .gear .hub{fill:rgba(255,255,255,.08);stroke:rgba(190,210,255,.25);stroke-width:1}
-    .gear .shine{fill:url(#gearShine)}
-    .gear.g1{top:6%;left:6%;width:140px;height:140px;animation:float 12s ease-in-out infinite}
-    .gear.g2{top:14%;left:16%;width:180px;height:180px;animation:float 15s ease-in-out infinite reverse}
-    .gear.g3{top:10%;right:10%;width:160px;height:160px;animation:float 14s ease-in-out infinite}
-    .gear.g4{top:18%;right:22%;width:220px;height:220px;animation:float 17s ease-in-out infinite reverse}
+            /* BACKGROUND: subtle grainy gradients + floating crystals */
+            .bg {
+                position: fixed;
+                inset: 0;
+                z-index: 0;
+                pointer-events: none;
+                background:
+                    radial-gradient(
+                        1200px 800px at 110% -10%,
+                        color-mix(in oklab, var(--crystal-a) 38%, transparent),
+                        transparent 60%
+                    ),
+                    radial-gradient(
+                        900px 700px at -10% 110%,
+                        color-mix(in oklab, var(--crystal-b) 32%, transparent),
+                        transparent 55%
+                    ),
+                    radial-gradient(
+                        700px 500px at 50% -20%,
+                        rgba(80, 200, 180, 0.06),
+                        transparent 60%
+                    ),
+                    linear-gradient(
+                        180deg,
+                        var(--grad1),
+                        var(--grad2) 40%,
+                        var(--grad3)
+                    );
+            }
+            .bg::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: radial-gradient(
+                        100px 100px at 10% 15%,
+                        rgba(255, 255, 255, 0.06),
+                        transparent 60%
+                    )
+                    repeat;
+                opacity: 0.06;
+                mix-blend-mode: overlay;
+            }
+            .noise {
+                position: fixed;
+                inset: 0;
+                opacity: 0.06;
+                mix-blend-mode: soft-light;
+            }
+            .bg-crystals {
+                position: absolute;
+                inset: 0;
+            }
+            .crystal {
+                position: absolute;
+                opacity: 0.6;
+                filter: blur(0.1px);
+                -webkit-mask-image: linear-gradient(
+                    to bottom,
+                    rgba(0, 0, 0, 1) 0%,
+                    rgba(0, 0, 0, 1) 40%,
+                    rgba(0, 0, 0, 0) 75%
+                );
+                mask-image: linear-gradient(
+                    to bottom,
+                    rgba(0, 0, 0, 1) 0%,
+                    rgba(0, 0, 0, 1) 40%,
+                    rgba(0, 0, 0, 0) 75%
+                );
+            }
+            .crystal polygon {
+                stroke: rgba(255, 255, 255, 0.35);
+                stroke-width: 0.8;
+                mix-blend-mode: screen;
+            }
+            .crystal.c1 {
+                top: 6%;
+                left: 6%;
+                width: 140px;
+                height: 140px;
+                animation: float 11s ease-in-out infinite;
+            }
+            .crystal.c2 {
+                top: 14%;
+                left: 16%;
+                width: 180px;
+                height: 180px;
+                animation: float 14s ease-in-out infinite reverse;
+            }
+            .crystal.c3 {
+                top: 10%;
+                right: 10%;
+                width: 160px;
+                height: 160px;
+                animation: float 13s ease-in-out infinite;
+            }
+            .crystal.c4 {
+                top: 18%;
+                right: 22%;
+                width: 220px;
+                height: 220px;
+                animation: float 17s ease-in-out infinite reverse;
+            }
+            @keyframes float {
+                0% {
+                    transform: translateY(0) rotate(0);
+                }
+                50% {
+                    transform: translateY(-12px) rotate(3deg);
+                }
+                100% {
+                    transform: translateY(0) rotate(0);
+                }
+            }
+            /* Dark theme 3D-like gears (top only) */
+            .bg-gears {
+                position: absolute;
+                inset: 0;
+                display: none;
+            }
+            .gear {
+                position: absolute;
+                opacity: 0.6;
+                -webkit-mask-image: linear-gradient(
+                    to bottom,
+                    rgba(0, 0, 0, 1) 0%,
+                    rgba(0, 0, 0, 1) 40%,
+                    rgba(0, 0, 0, 0) 75%
+                );
+                mask-image: linear-gradient(
+                    to bottom,
+                    rgba(0, 0, 0, 1) 0%,
+                    rgba(0, 0, 0, 1) 40%,
+                    rgba(0, 0, 0, 0) 75%
+                );
+                filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.35));
+            }
+            .gear .ring {
+                fill: url(#gearGrad);
+            }
+            .gear .tooth {
+                fill: rgba(190, 210, 255, 0.18);
+                stroke: rgba(190, 210, 255, 0.25);
+                stroke-width: 1;
+            }
+            .gear .hub {
+                fill: rgba(255, 255, 255, 0.08);
+                stroke: rgba(190, 210, 255, 0.25);
+                stroke-width: 1;
+            }
+            .gear .shine {
+                fill: url(#gearShine);
+            }
+            .gear.g1 {
+                top: 6%;
+                left: 6%;
+                width: 140px;
+                height: 140px;
+                animation: float 12s ease-in-out infinite;
+            }
+            .gear.g2 {
+                top: 14%;
+                left: 16%;
+                width: 180px;
+                height: 180px;
+                animation: float 15s ease-in-out infinite reverse;
+            }
+            .gear.g3 {
+                top: 10%;
+                right: 10%;
+                width: 160px;
+                height: 160px;
+                animation: float 14s ease-in-out infinite;
+            }
+            .gear.g4 {
+                top: 18%;
+                right: 22%;
+                width: 220px;
+                height: 220px;
+                animation: float 17s ease-in-out infinite reverse;
+            }
 
-    /* Theme-conditional visibility */
-    [data-theme="dark"] .bg-crystals{display:none}
-    [data-theme="dark"] .bg-gears{display:block}
-    
-    /* NAV */
-    .nav{display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;gap:12px 24px;padding:14px 16px;border:1px solid var(--glass-border);border-radius:12px;margin-bottom:28px;background:var(--glass-bg);backdrop-filter:saturate(130%) blur(var(--blur));-webkit-backdrop-filter:saturate(130%) blur(var(--blur));
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.18), 0 10px 24px rgba(0,0,0,.18)}
-    .brand{font-weight:700;font-size:1.05rem;letter-spacing:.2px;margin-right:auto;display:flex;align-items:center;gap:.6rem;flex:1 1 auto}
-    .brand .badge{font-size:.8rem;font-weight:600;padding:.3rem .7rem;border:1px solid var(--glass-border);border-radius:999px;background:var(--surface-alt);color:var(--muted)}
-    .links{display:flex;gap:clamp(12px,3vw,28px);align-items:center;flex-wrap:wrap;justify-content:flex-end;flex:1 1 auto}
-    .links a{position:relative;padding:8px 0;font-weight:400;transition:color .2s ease;color:var(--muted)}
-    .links a:hover{color:var(--ink)}
-    
-    /* Theme Toggle */
-    .theme-toggle{background:var(--surface);border:1px solid var(--glass-border);border-radius:10px;padding:8px;font-size:12px;color:var(--muted);cursor:pointer;transition:all .2s ease;margin-left:0;display:flex;align-items:center;justify-content:center}
-    .theme-toggle:hover{background:var(--surface-alt);color:var(--ink);transform:translateY(-1px)}
-    .theme-toggle svg{width:20px;height:20px;fill:currentColor}
+            /* Theme-conditional visibility */
+            [data-theme="dark"] .bg-crystals {
+                display: none;
+            }
+            [data-theme="dark"] .bg-gears {
+                display: block;
+            }
 
-    /* HERO */
-  .hero{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,7vw,60px);align-items:center;margin-top:clamp(40px,8vw,60px)}
-    .hero h1{font-size:clamp(34px,6vw,72px);line-height:1.05;margin:0 0 20px;font-weight:800;letter-spacing:-.02em}
-    .spark{background:linear-gradient(90deg, rgba(160,160,255,1), rgba(255,180,210,1));-webkit-background-clip:text;background-clip:text;color:transparent}
-    .amp{font-family:Inter, ui-sans-serif, system-ui; font-weight:800; letter-spacing:0}
-    .hero p{color:var(--muted);margin:0 0 18px;font-size:1.05rem;line-height:1.7}
-  .focus{display:flex;align-items:baseline;gap:10px;margin:4px 0 26px;flex-wrap:wrap}
-    .focus-label{font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);opacity:.9;position:relative;padding-left:12px}
-    .focus-label::before{content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);width:8px;height:8px;border-radius:50%;background:linear-gradient(90deg, rgba(160,160,255,1), rgba(255,180,210,1))}
-  .focus-items{display:flex;align-items:center;gap:8px;flex-wrap:wrap;row-gap:4px}
-  .chip{padding:0;border:none;background:none;font-size:1.02rem;font-weight:800;letter-spacing:-.01em;color:var(--ink);white-space:nowrap}
-    .dot{color:var(--muted);opacity:.65;margin:0 4px;font-weight:700}
-  .btn{display:inline-block;padding:12px 20px;border-radius:10px;background:var(--surface);border:1px solid var(--glass-border);font-size:14px;font-weight:500;transition:all .2s ease;text-align:center}
-    .btn:hover{background:var(--surface-alt);transform:translateY(-1px)}
-    .btn + .btn{margin-left:12px}
+            /* NAV */
+            .nav {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+                gap: 12px 24px;
+                padding: 14px 16px;
+                border: 1px solid var(--glass-border);
+                border-radius: 12px;
+                margin-bottom: 28px;
+                background: var(--glass-bg);
+                backdrop-filter: saturate(130%) blur(var(--blur));
+                -webkit-backdrop-filter: saturate(130%) blur(var(--blur));
+                box-shadow:
+                    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+                    0 10px 24px rgba(0, 0, 0, 0.18);
+            }
+            .brand {
+                font-weight: 700;
+                font-size: 1.05rem;
+                letter-spacing: 0.2px;
+                margin-right: auto;
+                display: flex;
+                align-items: center;
+                gap: 0.6rem;
+                flex: 1 1 auto;
+            }
+            .brand .badge {
+                font-size: 0.8rem;
+                font-weight: 600;
+                padding: 0.3rem 0.7rem;
+                border: 1px solid var(--glass-border);
+                border-radius: 999px;
+                background: var(--surface-alt);
+                color: var(--muted);
+            }
+            .links {
+                display: flex;
+                gap: clamp(12px, 3vw, 28px);
+                align-items: center;
+                flex-wrap: wrap;
+                justify-content: flex-end;
+                flex: 1 1 auto;
+            }
+            .links a {
+                position: relative;
+                padding: 8px 0;
+                font-weight: 400;
+                transition: color 0.2s ease;
+                color: var(--muted);
+            }
+            .links a:hover {
+                color: var(--ink);
+            }
 
-    /* ASCII */
-    .ascii-wrap{position:relative;border-radius:var(--radius);overflow:hidden;border:1px solid var(--glass-border);background:var(--glass-bg);backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));min-height:clamp(220px,52vw,320px);box-shadow:var(--shadow);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 18px 40px rgba(0,0,0,.28);display:flex;align-items:center;justify-content:center}
-    #ascii-art{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:clamp(12px,2.5vw,18px);line-height:1.1;text-align:center;white-space:pre;user-select:none;background-image:linear-gradient(45deg, var(--crystal-a), var(--crystal-b));-webkit-background-clip:text;background-clip:text;color:transparent;
-      text-shadow:0 0 8px color-mix(in oklab, var(--accent) 20%, transparent)}
-    [data-theme="dark"] #ascii-art{background-image:linear-gradient(45deg, var(--orb-a), var(--orb-b));text-shadow:0 0 8px color-mix(in oklab, var(--accent) 30%, transparent)}
-    .ascii-wrap .markers{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .4s ease}
-    [data-theme="dark"] .ascii-wrap .markers{opacity:1}
-    .ascii-wrap .marker{position:absolute;font-family:monospace;font-size:18px;color:var(--accent);text-shadow:0 0 8px color-mix(in oklab, var(--accent) 40%, transparent);animation:blink-ascii 3s infinite ease-in-out}
-    .ascii-wrap .marker:nth-child(2){animation-delay:-.6s}
-    .ascii-wrap .marker:nth-child(3){animation-delay:-1.2s}
-    .ascii-wrap .marker:nth-child(4){animation-delay:-1.8s}
-    .ascii-wrap .marker:nth-child(5){animation-delay:-2.4s;font-size:20px}
-    @keyframes blink-ascii{0%,100%{opacity:.25}50%{opacity:1}}
+            /* Theme Toggle */
+            .theme-toggle {
+                background: var(--surface);
+                border: 1px solid var(--glass-border);
+                border-radius: 10px;
+                padding: 8px;
+                font-size: 12px;
+                color: var(--muted);
+                cursor: pointer;
+                transition: all 0.2s ease;
+                margin-left: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .theme-toggle:hover {
+                background: var(--surface-alt);
+                color: var(--ink);
+                transform: translateY(-1px);
+            }
+            .theme-toggle svg {
+                width: 20px;
+                height: 20px;
+                fill: currentColor;
+            }
 
-  section{margin-top:clamp(72px,10vw,100px)}
-    h2{font-family:'Sora', 'Space Grotesk', Inter, ui-sans-serif, system-ui; font-size:clamp(26px,3.2vw,38px);margin:0 0 24px;font-weight:700;letter-spacing:-.01em}
-    h1, h3{font-family:'Space Grotesk', Inter, ui-sans-serif, system-ui}
-    
+            /* HERO */
+            .hero {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: clamp(32px, 7vw, 60px);
+                align-items: center;
+                margin-top: clamp(40px, 8vw, 60px);
+            }
+            .hero h1 {
+                font-size: clamp(34px, 6vw, 72px);
+                line-height: 1.05;
+                margin: 0 0 20px;
+                font-weight: 800;
+                letter-spacing: -0.02em;
+            }
+            .spark {
+                background: linear-gradient(
+                    90deg,
+                    rgba(160, 160, 255, 1),
+                    rgba(255, 180, 210, 1)
+                );
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+            }
+            .amp {
+                font-family: Inter, ui-sans-serif, system-ui;
+                font-weight: 800;
+                letter-spacing: 0;
+            }
+            .hero p {
+                color: var(--muted);
+                margin: 0 0 18px;
+                font-size: 1.05rem;
+                line-height: 1.7;
+            }
+            .focus {
+                display: flex;
+                align-items: baseline;
+                gap: 10px;
+                margin: 4px 0 26px;
+                flex-wrap: wrap;
+            }
+            .focus-label {
+                font-size: 0.72rem;
+                font-weight: 800;
+                letter-spacing: 0.14em;
+                text-transform: uppercase;
+                color: var(--muted);
+                opacity: 0.9;
+                position: relative;
+                padding-left: 12px;
+            }
+            .focus-label::before {
+                content: "";
+                position: absolute;
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: linear-gradient(
+                    90deg,
+                    rgba(160, 160, 255, 1),
+                    rgba(255, 180, 210, 1)
+                );
+            }
+            .focus-items {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: wrap;
+                row-gap: 4px;
+            }
+            .chip {
+                padding: 0;
+                border: none;
+                background: none;
+                font-size: 1.02rem;
+                font-weight: 800;
+                letter-spacing: -0.01em;
+                color: var(--ink);
+                white-space: nowrap;
+            }
+            .dot {
+                color: var(--muted);
+                opacity: 0.65;
+                margin: 0 4px;
+                font-weight: 700;
+            }
+            .btn {
+                display: inline-block;
+                padding: 12px 20px;
+                border-radius: 10px;
+                background: var(--surface);
+                border: 1px solid var(--glass-border);
+                font-size: 14px;
+                font-weight: 500;
+                transition: all 0.2s ease;
+                text-align: center;
+            }
+            .btn:hover {
+                background: var(--surface-alt);
+                transform: translateY(-1px);
+            }
+            .btn + .btn {
+                margin-left: 12px;
+            }
 
-    /* ===== Project cards ===== */
-  .grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:clamp(16px,3vw,24px)}
-  .grid>[class*="col-"]{grid-column:span 12}
-  .grid>.col-12{grid-column:span 12}
-  @media(min-width:680px){.grid>.col-6{grid-column:span 6}}
-  @media(min-width:900px){#reading .grid>.col-4{grid-column:span 6}}
-  @media(min-width:1080px){#projects .grid>.col-6{grid-column:span 4}}
-  @media(min-width:1200px){#reading .grid>.col-4{grid-column:span 4}}
+            /* ASCII */
+            .ascii-wrap {
+                position: relative;
+                border-radius: var(--radius);
+                overflow: hidden;
+                border: 1px solid var(--glass-border);
+                background: var(--glass-bg);
+                backdrop-filter: blur(var(--blur));
+                -webkit-backdrop-filter: blur(var(--blur));
+                min-height: clamp(220px, 52vw, 320px);
+                box-shadow: var(--shadow);
+                box-shadow:
+                    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+                    0 18px 40px rgba(0, 0, 0, 0.28);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            #ascii-art {
+                font-family: ui-monospace, Menlo, Consolas, monospace;
+                font-size: clamp(12px, 2.5vw, 18px);
+                line-height: 1.1;
+                text-align: center;
+                white-space: pre;
+                user-select: none;
+                background-image: linear-gradient(
+                    45deg,
+                    var(--crystal-a),
+                    var(--crystal-b)
+                );
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+                text-shadow: 0 0 8px
+                    color-mix(in oklab, var(--accent) 20%, transparent);
+            }
+            [data-theme="dark"] #ascii-art {
+                background-image: linear-gradient(
+                    45deg,
+                    var(--orb-a),
+                    var(--orb-b)
+                );
+                text-shadow: 0 0 8px
+                    color-mix(in oklab, var(--accent) 30%, transparent);
+            }
+            .ascii-wrap .markers {
+                position: absolute;
+                inset: 0;
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.4s ease;
+            }
+            [data-theme="dark"] .ascii-wrap .markers {
+                opacity: 1;
+            }
+            .ascii-wrap .marker {
+                position: absolute;
+                font-family: monospace;
+                font-size: 18px;
+                color: var(--accent);
+                text-shadow: 0 0 8px
+                    color-mix(in oklab, var(--accent) 40%, transparent);
+                animation: blink-ascii 3s infinite ease-in-out;
+            }
+            .ascii-wrap .marker:nth-child(2) {
+                animation-delay: -0.6s;
+            }
+            .ascii-wrap .marker:nth-child(3) {
+                animation-delay: -1.2s;
+            }
+            .ascii-wrap .marker:nth-child(4) {
+                animation-delay: -1.8s;
+            }
+            .ascii-wrap .marker:nth-child(5) {
+                animation-delay: -2.4s;
+                font-size: 20px;
+            }
+            @keyframes blink-ascii {
+                0%,
+                100% {
+                    opacity: 0.25;
+                }
+                50% {
+                    opacity: 1;
+                }
+            }
 
-  .card{position:relative;display:flex;flex-direction:column;border-radius:16px;padding:clamp(18px,3vw,24px);gap:clamp(12px,2vw,16px);transition:transform .25s ease, box-shadow .25s ease, background .25s ease, border-color .25s ease;
-      border:1px solid var(--glass-border);background:var(--glass-bg);backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));
-      box-shadow:0 8px 26px rgba(0,0,0,.12)}
-    [data-theme="dark"] .card{background:linear-gradient(180deg, rgba(20,24,34,.78), rgba(12,16,26,.62));
-      border-color:rgba(160,185,255,.18);box-shadow:0 10px 28px rgba(0,0,0,.38), inset 0 1px 0 rgba(190,210,255,.06);overflow:hidden}
-    .card:hover,.card:focus-within{transform:translateY(-3px) scale(1.01);box-shadow:0 16px 42px rgba(0,0,0,.2)}
-    [data-theme="dark"] .card:hover,[data-theme="dark"] .card:focus-within{box-shadow:0 22px 52px rgba(0,0,0,.45), inset 0 1px 0 rgba(190,210,255,.1);border-color:rgba(170,195,255,.32)}
-    /* Best Projects (dark): translation + éclaircissement au hover */
-    [data-theme="dark"] #projects .card{transition:transform .25s ease, box-shadow .25s ease, background .25s ease, border-color .25s ease}
-    [data-theme="dark"] #projects .card:hover,[data-theme="dark"] #projects .card:focus-within{
-      transform:translateY(-1px) scale(1.005);
-      background:linear-gradient(180deg, rgba(30,36,50,.82), rgba(18,24,36,.7));
-      border-color:rgba(170,195,255,.32);
-      box-shadow:0 22px 52px rgba(0,0,0,.45), inset 0 1px 0 rgba(190,210,255,.12)
-    }
-    
-    /* Remove animations for Education and Contact sections */
-    #education .card, #contact .card, #reading .card{transition:none}
-    #education .card:hover, #education .card:focus-within, #contact .card:hover, #contact .card:focus-within, #reading .card:hover, #reading .card:focus-within{border-color:var(--line);background:var(--surface);transform:none}
-    
-    @media (prefers-reduced-motion: reduce){.card{transition:border-color 160ms ease, background 160ms ease}.card:hover{transform:none}}
-    .card .thumb{aspect-ratio:16/9;width:100%;border-radius:12px;overflow:hidden;background:var(--bg);display:grid;place-items:center;font-size:.85rem;color:var(--muted)}
-    .card .thumb img{width:100%;height:100%;object-fit:cover;display:block}
-    .card h3{font-size:18px;line-height:1.3;font-weight:600;margin:0;color:var(--ink)}
-    .card .blurb{font-size:14px;line-height:1.4;color:var(--muted);max-height:4em;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;line-clamp:3;-webkit-box-orient:vertical}
-    .card .tags{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:auto}
-    .tag{background:var(--surface-alt);color:var(--muted);padding:.2rem .6rem;border-radius:999px;font-size:.7rem;font-weight:500;border:1px solid var(--glass-border)}
-    .card .actions{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:12px}
-    .card .actions a{color:var(--ink);border:1px solid var(--glass-border);border-radius:8px;padding:.3rem .6rem;font-size:.78rem;font-weight:500;transition:all .2s ease}
-    .card .actions a:hover{background:var(--surface-alt);transform:translateY(-1px)}
+            section {
+                margin-top: clamp(72px, 10vw, 100px);
+            }
+            h2 {
+                font-family:
+                    "Sora", "Space Grotesk", Inter, ui-sans-serif, system-ui;
+                font-size: clamp(26px, 3.2vw, 38px);
+                margin: 0 0 24px;
+                font-weight: 700;
+                letter-spacing: -0.01em;
+            }
+            h1,
+            h3 {
+                font-family: "Space Grotesk", Inter, ui-sans-serif, system-ui;
+            }
 
-    /* Contact section buttons - different style */
-    #contact .actions a{color:var(--ink);border:1px solid var(--glass-border);background:rgba(248,247,252,.06);border-radius:10px;padding:.4rem .8rem;font-size:.85rem;font-weight:500;transition:all .2s ease}
-    #contact .actions a:hover{background:rgba(248,247,252,.12);transform:translateY(-1px)}
-    
-    /* Education section buttons - no purple effect */
-    #education .card .actions a{color:var(--ink);border:1px solid var(--glass-border);background:rgba(248,247,252,.05)}
-    #education .card .actions a:hover{background:rgba(248,247,252,.12);transform:translateY(-1px)}
-    
-    /* Reading section - special styling for book comments */
-    #reading .card .comment{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);font-style:italic}
-    #reading .card .comment p{margin:0;line-height:1.4}    /* Background Section - Complete redesign */
-    /* Background section: keep original 2-col layout, use card visuals */
-    .background-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
-    @media(max-width:768px){.background-grid{grid-template-columns:1fr}}
-    .background-item{position:relative}
-    .background-item::before{display:none}
-    
-    .background-icon{font-size:20px;margin-bottom:16px;color:var(--muted)}
-    .background-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-    .background-type{font-size:12px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px}
-    .background-year{font-size:12px;color:var(--muted);font-weight:400}
-    
-    .background-item h3{margin:0 0 12px;font-size:18px;font-weight:500;color:var(--ink)}
-    .background-item p{margin:0 0 20px;font-size:14px;color:var(--muted);line-height:1.5}
-    .background-skills{display:flex;flex-wrap:wrap;gap:8px}
-    .background-skills span{font-size:12px;color:var(--muted);background:var(--surface-alt);padding:4px 8px;border-radius:4px;border:1px solid var(--line)}
+            /* ===== Project cards ===== */
+            .grid {
+                display: grid;
+                grid-template-columns: repeat(12, minmax(0, 1fr));
+                gap: clamp(16px, 3vw, 24px);
+            }
+            .grid > [class*="col-"] {
+                grid-column: span 12;
+            }
+            .grid > .col-12 {
+                grid-column: span 12;
+            }
+            @media (min-width: 680px) {
+                .grid > .col-6 {
+                    grid-column: span 6;
+                }
+            }
+            @media (min-width: 900px) {
+                #reading .grid > .col-4 {
+                    grid-column: span 6;
+                }
+            }
+            @media (min-width: 1080px) {
+                #projects .grid > .col-6 {
+                    grid-column: span 4;
+                }
+            }
+            @media (min-width: 1200px) {
+                #reading .grid > .col-4 {
+                    grid-column: span 4;
+                }
+            }
 
-    
-    @media(max-width:900px){
-      .hero{grid-template-columns:1fr;gap:32px}
-    }
+            .card {
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                border-radius: 16px;
+                padding: clamp(18px, 3vw, 24px);
+                gap: clamp(12px, 2vw, 16px);
+                transition:
+                    transform 0.25s ease,
+                    box-shadow 0.25s ease,
+                    background 0.25s ease,
+                    border-color 0.25s ease;
+                border: 1px solid var(--glass-border);
+                background: var(--glass-bg);
+                backdrop-filter: blur(var(--blur));
+                -webkit-backdrop-filter: blur(var(--blur));
+                box-shadow: 0 8px 26px rgba(0, 0, 0, 0.12);
+            }
+            [data-theme="dark"] .card {
+                background: linear-gradient(
+                    180deg,
+                    rgba(20, 24, 34, 0.78),
+                    rgba(12, 16, 26, 0.62)
+                );
+                border-color: rgba(160, 185, 255, 0.18);
+                box-shadow:
+                    0 10px 28px rgba(0, 0, 0, 0.38),
+                    inset 0 1px 0 rgba(190, 210, 255, 0.06);
+                overflow: hidden;
+            }
+            .card:hover,
+            .card:focus-within {
+                transform: translateY(-3px) scale(1.01);
+                box-shadow: 0 16px 42px rgba(0, 0, 0, 0.2);
+            }
+            [data-theme="dark"] .card:hover,
+            [data-theme="dark"] .card:focus-within {
+                box-shadow:
+                    0 22px 52px rgba(0, 0, 0, 0.45),
+                    inset 0 1px 0 rgba(190, 210, 255, 0.1);
+                border-color: rgba(170, 195, 255, 0.32);
+            }
+            /* Best Projects (dark): translation + éclaircissement au hover */
+            [data-theme="dark"] #projects .card {
+                transition:
+                    transform 0.25s ease,
+                    box-shadow 0.25s ease,
+                    background 0.25s ease,
+                    border-color 0.25s ease;
+            }
+            [data-theme="dark"] #projects .card:hover,
+            [data-theme="dark"] #projects .card:focus-within {
+                transform: translateY(-1px) scale(1.005);
+                background: linear-gradient(
+                    180deg,
+                    rgba(30, 36, 50, 0.82),
+                    rgba(18, 24, 36, 0.7)
+                );
+                border-color: rgba(170, 195, 255, 0.32);
+                box-shadow:
+                    0 22px 52px rgba(0, 0, 0, 0.45),
+                    inset 0 1px 0 rgba(190, 210, 255, 0.12);
+            }
 
-    @media(max-width:720px){
-      .nav{padding:12px 14px}
-      .links{width:100%;justify-content:flex-start}
-    }
+            /* Remove animations for Education and Contact sections */
+            #education .card,
+            #contact .card,
+            #reading .card {
+                transition: none;
+            }
+            #education .card:hover,
+            #education .card:focus-within,
+            #contact .card:hover,
+            #contact .card:focus-within,
+            #reading .card:hover,
+            #reading .card:focus-within {
+                border-color: var(--line);
+                background: var(--surface);
+                transform: none;
+            }
 
-    @media(max-width:600px){
-      .hero h1{font-size:clamp(28px,8vw,44px)}
-      .focus-label{font-size:.68rem}
-      .btn{width:100%}
-      .btn + .btn{margin-left:0;margin-top:12px}
-      section{margin-top:72px}
-      .card .actions{gap:.5rem}
-      .connect-inline{justify-content:flex-start}
-      .contact-link{white-space:normal;padding:10px 14px;border:1px solid var(--glass-border);border-radius:12px}
-      .links a{padding:6px 0}
-      .contact-link::after{display:none}
-    }
+            @media (prefers-reduced-motion: reduce) {
+                .card {
+                    transition:
+                        border-color 160ms ease,
+                        background 160ms ease;
+                }
+                .card:hover {
+                    transform: none;
+                }
+            }
+            .card .thumb {
+                aspect-ratio: 16/9;
+                width: 100%;
+                border-radius: 12px;
+                overflow: hidden;
+                background: var(--bg);
+                display: grid;
+                place-items: center;
+                font-size: 0.85rem;
+                color: var(--muted);
+            }
+            .card .thumb img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+            }
+            .card h3 {
+                font-size: 18px;
+                line-height: 1.3;
+                font-weight: 600;
+                margin: 0;
+                color: var(--ink);
+            }
+            .card .blurb {
+                font-size: 14px;
+                line-height: 1.4;
+                color: var(--muted);
+                max-height: 4em;
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+                line-clamp: 3;
+                -webkit-box-orient: vertical;
+            }
+            .card .tags {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.3rem;
+                margin-top: auto;
+            }
+            .tag {
+                background: var(--surface-alt);
+                color: var(--muted);
+                padding: 0.2rem 0.6rem;
+                border-radius: 999px;
+                font-size: 0.7rem;
+                font-weight: 500;
+                border: 1px solid var(--glass-border);
+            }
+            .card .actions {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.4rem;
+                margin-top: 12px;
+            }
+            .card .actions a {
+                color: var(--ink);
+                border: 1px solid var(--glass-border);
+                border-radius: 8px;
+                padding: 0.3rem 0.6rem;
+                font-size: 0.78rem;
+                font-weight: 500;
+                transition: all 0.2s ease;
+            }
+            .card .actions a:hover {
+                background: var(--surface-alt);
+                transform: translateY(-1px);
+            }
 
-    @media(max-width:480px){
-      .nav{gap:10px 16px}
-      .brand{font-size:.95rem}
-      .footer{margin:60px 0 32px;font-size:13px}
-    }
-    
-    /* Connect Section - Modern design */
-    .connect-wrapper{max-width:100%;margin:0 auto}
-    .connect-intro{text-align:center;margin-bottom:8px}
-    .connect-intro p{margin:0 0 6px;font-size:15px;color:var(--muted);line-height:1.6}
-    #contact h2{text-align:center}
-  .connect-inline{display:flex;flex-wrap:wrap;gap:16px 22px;align-items:center;justify-content:center;padding:10px 0;overflow:visible}
-  .contact-link{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);position:relative;white-space:nowrap;padding:8px 0}
-    .contact-link::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;opacity:.25;transition:transform .25s ease,opacity .25s ease}
-    .contact-link:hover::after{transform:scaleX(1);opacity:.45}
-    .contact-label{font-size:11px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
-    .contact-value{font-size:15px;font-weight:700}
+            /* Contact section buttons - different style */
+            #contact .actions a {
+                color: var(--ink);
+                border: 1px solid var(--glass-border);
+                background: rgba(248, 247, 252, 0.06);
+                border-radius: 10px;
+                padding: 0.4rem 0.8rem;
+                font-size: 0.85rem;
+                font-weight: 500;
+                transition: all 0.2s ease;
+            }
+            #contact .actions a:hover {
+                background: rgba(248, 247, 252, 0.12);
+                transform: translateY(-1px);
+            }
 
-    /* Footer */
-    .footer{margin:100px 0 40px;color:var(--muted);font-size:14px;opacity:.8;border-top:1px solid var(--line);padding-top:24px;text-align:center}
+            /* Education section buttons - no purple effect */
+            #education .card .actions a {
+                color: var(--ink);
+                border: 1px solid var(--glass-border);
+                background: rgba(248, 247, 252, 0.05);
+            }
+            #education .card .actions a:hover {
+                background: rgba(248, 247, 252, 0.12);
+                transform: translateY(-1px);
+            }
 
-    /* Reveal on scroll – refined */
-    .reveal-ready [data-reveal]{opacity:0;transition:opacity .7s ease, transform .7s ease;will-change:transform,opacity}
-    .reveal-ready [data-reveal].is-visible{opacity:1;transform:none}
-    .reveal-ready [data-reveal="up"]{transform:translateY(16px)}
-    .reveal-ready [data-reveal="down"]{transform:translateY(-16px)}
-    .reveal-ready [data-reveal="right"]{transform:translateX(18px)}
-    .reveal-ready [data-reveal="left"]{transform:translateX(-18px)}
-    .reveal-ready [data-reveal="zoom"]{transform:scale(.96)}
-    /* Softer reveal variant for Best Projects */
-    .reveal-ready [data-reveal="up-sm"]{transform:translateY(6px);transition-duration:.45s}
-    .reveal-ready [data-reveal="fade"]{transform:none;opacity:.85;transition:opacity .4s ease}
-    .reveal-ready [data-reveal="fade"].is-visible{opacity:1}
-    @media (prefers-reduced-motion: reduce){
-      .crystal,.noise{display:none}
-      .reveal-ready [data-reveal]{opacity:1;transform:none}
-    }
-  </style>
-</head>
-<body>
-  <div class="bg" aria-hidden="true">
-    <!-- Light theme: Floating translucent crystals with facets (top only) -->
-    <div class="bg-crystals">
-    <svg class="crystal c1" viewBox="0 0 100 120" preserveAspectRatio="xMidYMid meet">
-      <defs>
-        <linearGradient id="crystalGrad1" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" style="stop-color:var(--crystal-a); stop-opacity:.95"/>
-          <stop offset="100%" style="stop-color:var(--crystal-b); stop-opacity:.8"/>
-        </linearGradient>
-        <filter id="shine1" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="1.2" result="blur"/>
-          <feMerge>
-            <feMergeNode in="blur"/>
-            <feMergeNode in="SourceGraphic"/>
-          </feMerge>
-        </filter>
-      </defs>
-      <g filter="url(#shine1)">
-        <polygon fill="url(#crystalGrad1)" points="50,4 80,34 70,104 30,104 20,34"/>
-        <polygon fill="rgba(255,255,255,.12)" points="50,4 80,34 60,46"/>
-        <polygon fill="rgba(255,255,255,.08)" points="50,4 40,46 20,34"/>
-        <polygon fill="rgba(255,255,255,.06)" points="30,104 40,46 20,34"/>
-        <polygon fill="rgba(255,255,255,.06)" points="70,104 60,46 80,34"/>
-        <polygon fill="rgba(255,255,255,.10)" points="50,4 60,46 40,46"/>
-      </g>
-    </svg>
-    <svg class="crystal c2" viewBox="0 0 120 140" preserveAspectRatio="xMidYMid meet">
-      <defs>
-        <linearGradient id="crystalGrad2" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" style="stop-color:var(--crystal-a); stop-opacity:.9"/>
-          <stop offset="100%" style="stop-color:var(--crystal-b); stop-opacity:.75"/>
-        </linearGradient>
-        <filter id="shine2" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="1.4" result="blur"/>
-          <feMerge>
-            <feMergeNode in="blur"/>
-            <feMergeNode in="SourceGraphic"/>
-          </feMerge>
-        </filter>
-      </defs>
-      <g filter="url(#shine2)">
-        <polygon fill="url(#crystalGrad2)" points="60,6 102,44 90,128 30,128 18,44"/>
-        <polygon fill="rgba(255,255,255,.1)" points="60,6 78,48 102,44"/>
-        <polygon fill="rgba(255,255,255,.08)" points="60,6 42,48 18,44"/>
-        <polygon fill="rgba(255,255,255,.06)" points="30,128 42,48 18,44"/>
-        <polygon fill="rgba(255,255,255,.06)" points="90,128 78,48 102,44"/>
-        <polygon fill="rgba(255,255,255,.12)" points="60,6 78,48 42,48"/>
-      </g>
-    </svg>
-    <svg class="crystal c3" viewBox="0 0 110 130" preserveAspectRatio="xMidYMid meet">
-      <defs>
-        <linearGradient id="crystalGrad3" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" style="stop-color:var(--crystal-a); stop-opacity:.92"/>
-          <stop offset="100%" style="stop-color:var(--crystal-b); stop-opacity:.78"/>
-        </linearGradient>
-        <filter id="shine3" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="1.2" result="blur"/>
-          <feMerge>
-            <feMergeNode in="blur"/>
-            <feMergeNode in="SourceGraphic"/>
-          </feMerge>
-        </filter>
-      </defs>
-      <g filter="url(#shine3)">
-        <polygon fill="url(#crystalGrad3)" points="55,5 96,40 82,122 28,122 14,40"/>
-        <polygon fill="rgba(255,255,255,.1)" points="55,5 74,48 96,40"/>
-        <polygon fill="rgba(255,255,255,.08)" points="55,5 36,48 14,40"/>
-        <polygon fill="rgba(255,255,255,.06)" points="28,122 36,48 14,40"/>
-        <polygon fill="rgba(255,255,255,.06)" points="82,122 74,48 96,40"/>
-        <polygon fill="rgba(255,255,255,.12)" points="55,5 74,48 36,48"/>
-      </g>
-    </svg>
-    <svg class="crystal c4" viewBox="0 0 160 180" preserveAspectRatio="xMidYMid meet">
-      <defs>
-        <linearGradient id="crystalGrad4" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" style="stop-color:var(--crystal-a); stop-opacity:.9"/>
-          <stop offset="100%" style="stop-color:var(--crystal-b); stop-opacity:.78"/>
-        </linearGradient>
-        <filter id="shine4" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="1.6" result="blur"/>
-          <feMerge>
-            <feMergeNode in="blur"/>
-            <feMergeNode in="SourceGraphic"/>
-          </feMerge>
-        </filter>
-      </defs>
-      <g filter="url(#shine4)">
-        <polygon fill="url(#crystalGrad4)" points="80,6 138,58 120,170 40,170 22,58"/>
-        <polygon fill="rgba(255,255,255,.11)" points="80,6 103,54 138,58"/>
-        <polygon fill="rgba(255,255,255,.08)" points="80,6 57,54 22,58"/>
-        <polygon fill="rgba(255,255,255,.06)" points="40,170 57,54 22,58"/>
-        <polygon fill="rgba(255,255,255,.06)" points="120,170 103,54 138,58"/>
-        <polygon fill="rgba(255,255,255,.12)" points="80,6 103,54 57,54"/>
-      </g>
-    </svg>
-    </div>
-    
-    <!-- Dark theme: floating 3D-like gears (replace crystals) -->
-    <div class="bg-gears">
-      <svg class="gear g1" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet">
-        <defs>
-          <radialGradient id="gearGrad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="rgba(140,170,255,.35)"/>
-            <stop offset="100%" stop-color="rgba(120,140,220,.15)"/>
-          </radialGradient>
-          <radialGradient id="gearShine" cx="35%" cy="30%" r="25%">
-            <stop offset="0%" stop-color="white" stop-opacity=".25"/>
-            <stop offset="100%" stop-color="white" stop-opacity="0"/>
-          </radialGradient>
-        </defs>
-        <g>
-          <circle class="ring" cx="100" cy="100" r="70"/>
-          <circle class="hub" cx="100" cy="100" r="28"/>
-          <g>
-            <rect class="tooth" x="98" y="18" width="4" height="16" rx="1"/>
-            <rect class="tooth" x="98" y="166" width="4" height="16" rx="1"/>
-            <rect class="tooth" x="18" y="98" width="16" height="4" rx="1"/>
-            <rect class="tooth" x="166" y="98" width="16" height="4" rx="1"/>
-            <rect class="tooth" x="40" y="40" width="12" height="4" transform="rotate(-45 46 42)" rx="1"/>
-            <rect class="tooth" x="148" y="156" width="12" height="4" transform="rotate(-45 154 158)" rx="1"/>
-            <rect class="tooth" x="156" y="40" width="12" height="4" transform="rotate(45 162 42)" rx="1"/>
-            <rect class="tooth" x="40" y="156" width="12" height="4" transform="rotate(45 46 158)" rx="1"/>
-          </g>
-          <ellipse class="shine" cx="78" cy="74" rx="32" ry="20"/>
-        </g>
-      </svg>
-      <svg class="gear g2" viewBox="0 0 240 240" preserveAspectRatio="xMidYMid meet">
-        <use href="#"/>
-        <g>
-          <circle class="ring" cx="120" cy="120" r="88"/>
-          <circle class="hub" cx="120" cy="120" r="34"/>
-          <g>
-            <rect class="tooth" x="118" y="18" width="4" height="18" rx="1"/>
-            <rect class="tooth" x="118" y="204" width="4" height="18" rx="1"/>
-            <rect class="tooth" x="18" y="118" width="18" height="4" rx="1"/>
-            <rect class="tooth" x="204" y="118" width="18" height="4" rx="1"/>
-            <rect class="tooth" x="52" y="52" width="14" height="4" transform="rotate(-45 59 54)" rx="1"/>
-            <rect class="tooth" x="174" y="186" width="14" height="4" transform="rotate(-45 181 188)" rx="1"/>
-            <rect class="tooth" x="186" y="52" width="14" height="4" transform="rotate(45 193 54)" rx="1"/>
-            <rect class="tooth" x="52" y="186" width="14" height="4" transform="rotate(45 59 188)" rx="1"/>
-          </g>
-          <ellipse class="shine" cx="96" cy="86" rx="36" ry="22"/>
-        </g>
-      </svg>
-      <svg class="gear g3" viewBox="0 0 180 180" preserveAspectRatio="xMidYMid meet">
-        <g>
-          <circle class="ring" cx="90" cy="90" r="66"/>
-          <circle class="hub" cx="90" cy="90" r="26"/>
-          <g>
-            <rect class="tooth" x="88" y="6" width="4" height="16" rx="1"/>
-            <rect class="tooth" x="88" y="158" width="4" height="16" rx="1"/>
-            <rect class="tooth" x="6" y="88" width="16" height="4" rx="1"/>
-            <rect class="tooth" x="158" y="88" width="16" height="4" rx="1"/>
-            <rect class="tooth" x="34" y="34" width="12" height="4" transform="rotate(-45 40 36)" rx="1"/>
-            <rect class="tooth" x="134" y="146" width="12" height="4" transform="rotate(-45 140 148)" rx="1"/>
-            <rect class="tooth" x="146" y="34" width="12" height="4" transform="rotate(45 152 36)" rx="1"/>
-            <rect class="tooth" x="34" y="146" width="12" height="4" transform="rotate(45 40 148)" rx="1"/>
-          </g>
-          <ellipse class="shine" cx="72" cy="66" rx="28" ry="18"/>
-        </g>
-      </svg>
-    </div>
-    <!-- Procedural grain -->
-    <svg class="noise" xmlns="http://www.w3.org/2000/svg">
-      <filter id="noiseFilter">
-        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/>
-        <feColorMatrix type="saturate" values="0"/>
-      </filter>
-      <rect width="100%" height="100%" filter="url(#noiseFilter)" opacity="1"/>
-    </svg>
-  </div>
-  <div class="container">
-    <nav class="nav">
-      <div class="brand">Marc Duboc <span class="badge">promaa</span></div>
-      <div class="links">
-        <a href="#projects">Projects</a>
-        <a href="#education">Education</a>
-        <a href="#reading">Reading</a>
-        <a href="essays.html">Essays</a>
-        <a href="#contact">Contact</a>
-        <button class="theme-toggle" id="theme-toggle">
-          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-            <!-- Pixel moon crescent -->
-            <rect x="6" y="3" width="6" height="1"/>
-            <rect x="5" y="4" width="7" height="1"/>
-            <rect x="5" y="5" width="7" height="1"/>
-            <rect x="5" y="6" width="7" height="1"/>
-            <rect x="5" y="7" width="7" height="1"/>
-            <rect x="6" y="8" width="6" height="1"/>
-            <rect x="7" y="9" width="5" height="1"/>
-            <rect x="8" y="10" width="4" height="1"/>
-            <!-- Cutout for crescent -->
-            <rect x="4" y="5" width="4" height="1" fill="var(--bg)"/>
-            <rect x="4" y="6" width="4" height="1" fill="var(--bg)"/>
-            <rect x="4" y="7" width="4" height="1" fill="var(--bg)"/>
-          </svg>
-        </button>
-      </div>
-    </nav>
+            /* Reading section - special styling for book comments */
+            #reading .card .comment {
+                margin-top: 12px;
+                padding-top: 12px;
+                border-top: 1px solid var(--line);
+                font-size: 13px;
+                color: var(--muted);
+                font-style: italic;
+            }
+            #reading .card .comment p {
+                margin: 0;
+                line-height: 1.4;
+            } /* Background Section - Complete redesign */
+            /* Background section: keep original 2-col layout, use card visuals */
+            .background-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 24px;
+            }
+            @media (max-width: 768px) {
+                .background-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+            .background-item {
+                position: relative;
+            }
+            .background-item::before {
+                display: none;
+            }
 
-    <header class="hero">
-      <div>
-         <h1><span class="spark">engineer <span class="amp">&</span> builder</span>. I ship small, sharp systems.</h1>
-        <p>Clarity, freedom, creativity.</p>
-        <div class="focus" aria-label="Focus areas">
-          <span class="focus-label">Focus</span>
-          <div class="focus-items"><span class="chip">Robotics</span><span class="dot">•</span><span class="chip">Electronics & Hardware</span><span class="dot">•</span><span class="chip">Web3</span></div>
-        </div>
-        <a class="btn" href="#projects">See projects ↓</a>
-        <a class="btn" href="https://github.com/promaaa" target="_blank" rel="noopener">GitHub ↗</a>
-        <a class="btn" href="https://www.youtube.com/watch?v=wIBkvQ6MfKQ" target="_blank" rel="noopener">YouTube ↗</a>
-      </div>
-      <div class="ascii-wrap">
-        <pre id="ascii-art"></pre>
-        <div class="markers">
-          <span class="marker" style="top: 45%; left: 35%;">o</span>
-          <span class="marker" style="top: 55%; left: 70%;">o</span>
-        </div>
-      </div>
-    </header>
+            .background-icon {
+                font-size: 20px;
+                margin-bottom: 16px;
+                color: var(--muted);
+            }
+            .background-meta {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 12px;
+            }
+            .background-type {
+                font-size: 12px;
+                font-weight: 500;
+                color: var(--muted);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            .background-year {
+                font-size: 12px;
+                color: var(--muted);
+                font-weight: 400;
+            }
 
-    <section id="projects">
-      <h2>Best Projects</h2>
-      <div class="grid">
-        <!-- Ball-Collecting Robots -->
-  <article class="card col-12 col-6" id="ball-collecting-robots" role="link" aria-label="Open ball-collecting robots write-up" tabindex="0" data-href="ball-collecting-writeup.html">
-          <div class="thumb">
-            <img src="pictures/ball-collecting.jpg" alt="Ball-Collecting Robots" onerror="this.parentNode.textContent='(poster missing)';this.remove();">
-          </div>
-          <h3>ball-collecting-robots — autonomous guidance & PI control</h3>
-          <p class="blurb">Optical bearing guidance + first‑order motor ID + cascaded PI speed & heading loop across two hardware iterations.</p>
-          <div class="tags"><span class="tag">Mechatronics</span><span class="tag">Embedded</span><span class="tag">PID</span><span class="tag">C/C++</span></div>
-          <div class="actions"><a href="ball-collecting-writeup.html">Write‑up ↗</a><a href="https://github.com/promaaa/ball-collecting-robots" target="_blank" rel="noopener">Code ↗</a></div>
-        </article>
+            .background-item h3 {
+                margin: 0 0 12px;
+                font-size: 18px;
+                font-weight: 500;
+                color: var(--ink);
+            }
+            .background-item p {
+                margin: 0 0 20px;
+                font-size: 14px;
+                color: var(--muted);
+                line-height: 1.5;
+            }
+            .background-skills {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .background-skills span {
+                font-size: 12px;
+                color: var(--muted);
+                background: var(--surface-alt);
+                padding: 4px 8px;
+                border-radius: 4px;
+                border: 1px solid var(--line);
+            }
 
-  <!-- nand2cpu ALU -->
-        <article class="card col-12 col-6" id="nand2cpu-alu-verilog" role="link" tabindex="0" aria-label="Open nand2cpu ALU write-up" data-href="nand2cpu-writeup.html">
-          <div class="thumb"><img src="pictures/nand2cpu.jpg" alt="nand2cpu — ALU" onerror="this.parentNode.textContent='(poster missing)';this.remove();"></div>
-          <h3>nand2cpu — logic to 16‑bit ALU</h3>
-          <p class="blurb">Built an ALU from first principles, with clean tests + tiny assembler scaffold.</p>
-          <div class="tags"><span class="tag">Verilog</span><span class="tag">Digital Logic</span><span class="tag">ALU</span><span class="tag">Tests</span></div>
-          <div class="actions"><a href="https://www.youtube.com/watch?v=wIBkvQ6MfKQ" target="_blank" rel="noopener">Demo ↗</a><a href="nand2cpu-writeup.html">Write‑up ↗</a><a href="https://github.com/promaaa/nand2cpu" target="_blank" rel="noopener">Code ↗</a></div>
-        </article>
+            @media (max-width: 900px) {
+                .hero {
+                    grid-template-columns: 1fr;
+                    gap: 32px;
+                }
+            }
 
-        <!-- Evento -->
-        <article class="card col-12 col-6" id="evento-solana" role="link" tabindex="0" aria-label="Open evento write-up" data-href="evento-writeup.html">
-          <div class="thumb"><img src="pictures/evento.jpeg" alt="Evento — Solana" onerror="this.parentNode.textContent='(poster missing)';this.remove();"></div>
-          <h3>evento — solana hackathon project</h3>
-          <p class="blurb">Teamwork + blockchain. Payments, tickets, simple on‑chain flows under pressure.</p>
-          <div class="tags"><span class="tag">Solana</span><span class="tag">Django</span><span class="tag">Solana Pay</span></div>
-          <div class="actions"><a href="https://promaaa.github.io/Evento/#" target="_blank" rel="noopener">Site ↗</a><a href="evento-writeup.html">Write‑up ↗</a><a href="https://github.com/promaaa/evento" target="_blank" rel="noopener">Code ↗</a></div>
-        </article>
+            @media (max-width: 720px) {
+                .nav {
+                    padding: 12px 14px;
+                }
+                .links {
+                    width: 100%;
+                    justify-content: flex-start;
+                }
+            }
 
-        <!-- Chef Gen -->
-        <article class="card col-12 col-6" id="chef-gen" role="link" tabindex="0" aria-label="Open Chef Gen write-up" data-href="chefgen-writeup.html">
-          <div class="thumb"><img src="pictures/chefgen.jpg" alt="Chef Gen" onerror="this.parentNode.textContent='(poster missing)';this.remove();"></div>
-          <h3>chef gen — ai recipe finder</h3>
-          <p class="blurb">Strict‑JSON LLM output, multi‑provider support, and a fast, clean UX.</p>
-          <div class="tags"><span class="tag">LLM</span><span class="tag">APIs</span><span class="tag">Next/React</span></div>
-          <div class="actions"><a href="chefgen-writeup.html">Write‑up ↗</a><a href="https://github.com/promaaa/chef-gen" target="_blank" rel="noopener">Code ↗</a></div>
-        </article>
+            @media (max-width: 600px) {
+                .hero h1 {
+                    font-size: clamp(28px, 8vw, 44px);
+                }
+                .focus-label {
+                    font-size: 0.68rem;
+                }
+                .btn {
+                    width: 100%;
+                }
+                .btn + .btn {
+                    margin-left: 0;
+                    margin-top: 12px;
+                }
+                section {
+                    margin-top: 72px;
+                }
+                .card .actions {
+                    gap: 0.5rem;
+                }
+                .connect-inline {
+                    justify-content: flex-start;
+                }
+                .contact-link {
+                    white-space: normal;
+                    padding: 10px 14px;
+                    border: 1px solid var(--glass-border);
+                    border-radius: 12px;
+                }
+                .links a {
+                    padding: 6px 0;
+                }
+                .contact-link::after {
+                    display: none;
+                }
+            }
 
-        <!-- Smart Grid realtime (moved below Evento) -->
-        <article class="card col-12 col-6" id="smart-grid-realtime" role="link" tabindex="0" aria-label="Open smart grid write-up" data-href="smart-grid-writeup.html">
-          <div class="thumb"><img src="pictures/smart_grid.png" alt="Smart Grid — realtime" onerror="this.parentNode.textContent='(poster missing)';this.remove();"></div>
-          <h3>smart grid — real‑time data ingestion & apis</h3>
-          <p class="blurb">UDP ingestion, stream processing, metrics & REST APIs. Enterprise/IoT credibility.</p>
-          <div class="tags"><span class="tag">Python</span><span class="tag">FastAPI</span><span class="tag">Postgres</span><span class="tag">Streaming</span></div>
-          <div class="actions"><a href="smart-grid-writeup.html">Write‑up ↗</a><a href="https://github.com/promaaa/smart_grid_JPA" target="_blank" rel="noopener">Code ↗</a></div>
-        </article>
+            @media (max-width: 480px) {
+                .nav {
+                    gap: 10px 16px;
+                }
+                .brand {
+                    font-size: 0.95rem;
+                }
+                .footer {
+                    margin: 60px 0 32px;
+                    font-size: 13px;
+                }
+            }
 
-  <!-- Physical Chess-Playing Robot -->
-  <article class="card col-12 col-6" id="physical-chess-playing-robot" role="link" tabindex="0" aria-label="Open physical chess-playing robot write-up" data-href="physical-chess-playing-robot-writeup.html">
-          <div class="thumb"><img src="pictures/chess-board.png" alt="Physical Chess-Playing Robot" onerror="this.parentNode.textContent='(poster missing)';this.remove();"></div>
-          <h3>physical chess-playing robot</h3>
-          <p class="blurb">Vision detects human moves; our custom engine plans; a robot arm plays on a real board. In progress — demo‑ready reliability.</p>
-          <div class="tags"><span class="tag">Robotics</span><span class="tag">Computer Vision</span><span class="tag">AI</span></div>
-          <div class="actions"><a href="physical-chess-playing-robot-writeup.html">Write‑up ↗</a><a href="https://github.com/promaaa/physical-chess-playing-robot" target="_blank" rel="noopener">Code ↗</a></div>
-        </article>
-      </div>
-    </section>
+            /* Connect Section - Modern design */
+            .connect-wrapper {
+                max-width: 100%;
+                margin: 0 auto;
+            }
+            .connect-intro {
+                text-align: center;
+                margin-bottom: 8px;
+            }
+            .connect-intro p {
+                margin: 0 0 6px;
+                font-size: 15px;
+                color: var(--muted);
+                line-height: 1.6;
+            }
+            #contact h2 {
+                text-align: center;
+            }
+            .connect-inline {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 16px 22px;
+                align-items: center;
+                justify-content: center;
+                padding: 10px 0;
+                overflow: visible;
+            }
+            .contact-link {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                text-decoration: none;
+                color: var(--ink);
+                position: relative;
+                white-space: nowrap;
+                padding: 8px 0;
+            }
+            .contact-link::after {
+                content: "";
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: -4px;
+                height: 1px;
+                background: currentColor;
+                transform: scaleX(0);
+                transform-origin: left;
+                opacity: 0.25;
+                transition:
+                    transform 0.25s ease,
+                    opacity 0.25s ease;
+            }
+            .contact-link:hover::after {
+                transform: scaleX(1);
+                opacity: 0.45;
+            }
+            .contact-label {
+                font-size: 11px;
+                color: var(--muted);
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+            }
+            .contact-value {
+                font-size: 15px;
+                font-weight: 700;
+            }
 
-    <section id="education">
-      <h2>Background</h2>
-      <div class="background-grid">
-        <div class="background-item card engineering">
-          <div class="background-icon">🎓</div>
-          <div class="background-content">
-            <div class="background-meta">
-              <span class="background-type">Engineering School</span>
-              <span class="background-year">2024–now</span>
+            /* Footer */
+            .footer {
+                margin: 100px 0 40px;
+                color: var(--muted);
+                font-size: 14px;
+                opacity: 0.8;
+                border-top: 1px solid var(--line);
+                padding-top: 24px;
+                text-align: center;
+            }
+
+            /* Reveal on scroll – refined */
+            .reveal-ready [data-reveal] {
+                opacity: 0;
+                transition:
+                    opacity 0.7s ease,
+                    transform 0.7s ease;
+                will-change: transform, opacity;
+            }
+            .reveal-ready [data-reveal].is-visible {
+                opacity: 1;
+                transform: none;
+            }
+            .reveal-ready [data-reveal="up"] {
+                transform: translateY(16px);
+            }
+            .reveal-ready [data-reveal="down"] {
+                transform: translateY(-16px);
+            }
+            .reveal-ready [data-reveal="right"] {
+                transform: translateX(18px);
+            }
+            .reveal-ready [data-reveal="left"] {
+                transform: translateX(-18px);
+            }
+            .reveal-ready [data-reveal="zoom"] {
+                transform: scale(0.96);
+            }
+            /* Softer reveal variant for Best Projects */
+            .reveal-ready [data-reveal="up-sm"] {
+                transform: translateY(6px);
+                transition-duration: 0.45s;
+            }
+            .reveal-ready [data-reveal="fade"] {
+                transform: none;
+                opacity: 0.85;
+                transition: opacity 0.4s ease;
+            }
+            .reveal-ready [data-reveal="fade"].is-visible {
+                opacity: 1;
+            }
+            @media (prefers-reduced-motion: reduce) {
+                .crystal,
+                .noise {
+                    display: none;
+                }
+                .reveal-ready [data-reveal] {
+                    opacity: 1;
+                    transform: none;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="bg" aria-hidden="true">
+            <!-- Light theme: Floating translucent crystals with facets (top only) -->
+            <div class="bg-crystals">
+                <svg
+                    class="crystal c1"
+                    viewBox="0 0 100 120"
+                    preserveAspectRatio="xMidYMid meet"
+                >
+                    <defs>
+                        <linearGradient
+                            id="crystalGrad1"
+                            x1="0"
+                            y1="0"
+                            x2="1"
+                            y2="1"
+                        >
+                            <stop
+                                offset="0%"
+                                style="
+                                    stop-color: var(--crystal-a);
+                                    stop-opacity: 0.95;
+                                "
+                            />
+                            <stop
+                                offset="100%"
+                                style="
+                                    stop-color: var(--crystal-b);
+                                    stop-opacity: 0.8;
+                                "
+                            />
+                        </linearGradient>
+                        <filter
+                            id="shine1"
+                            x="-20%"
+                            y="-20%"
+                            width="140%"
+                            height="140%"
+                        >
+                            <feGaussianBlur stdDeviation="1.2" result="blur" />
+                            <feMerge>
+                                <feMergeNode in="blur" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                    </defs>
+                    <g filter="url(#shine1)">
+                        <polygon
+                            fill="url(#crystalGrad1)"
+                            points="50,4 80,34 70,104 30,104 20,34"
+                        />
+                        <polygon
+                            fill="rgba(255,255,255,.12)"
+                            points="50,4 80,34 60,46"
+                        />
+                        <polygon
+                            fill="rgba(255,255,255,.08)"
+                            points="50,4 40,46 20,34"
+                        />
+                        <polygon
+                            fill="rgba(255,255,255,.06)"
+                            points="30,104 40,46 20,34"
+                        />
+                        <polygon
+                            fill="rgba(255,255,255,.06)"
+                            points="70,104 60,46 80,34"
+                        />
+                        <polygon
+                            fill="rgba(255,255,255,.10)"
+                            points="50,4 60,46 40,46"
+                        />
+                    </g>
+                </svg>
+                <svg
+                    class="crystal c2"
+                    viewBox="0 0 120 140"
+                    preserveAspectRatio="xMidYMid meet"
+                >
+                    <defs>
+                        <linearGradient
+                            id="crystalGrad2"
+                            x1="0"
+                            y1="0"
+                            x2="1"
+                            y2="1"
+                        >
+                            <stop
+                                offset="0%"
+                                style="
+                                    stop-color: var(--crystal-a);
+                                    stop-opacity: 0.9;
+                                "
+                            />
+                            <stop
+                                offset="100%"
+                                style="
+                                    stop-color: var(--crystal-b);
+                                    stop-opacity: 0.75;
+                                "
+                            />
+                        </linearGradient>
+                        <filter
+                            id="shine2"
+                            x="-20%"
+                            y="-20%"
+                            width="140%"
+                            height="140%"
+                        >
+                            <feGaussianBlur stdDeviation="1.4" result="blur" />
+                            <feMerge>
+                                <feMergeNode in="blur" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                    </defs>
+                    <g filter="url(#shine2)">
+                        <polygon
+                            fill="url(#crystalGrad2)"
+                            points="60,6 102,44 90,128 30,128 18,44"
+                        />
+                        <polygon
+                            fill="rgba(255,255,255,.1)"
+                            points="60,6 78,48 102,44"
+                        />
+                        <polygon
+                            fill="rgba(255,255,255,.08)"
+                            points="60,6 42,48 18,44"
+                        />
+                        <polygon
+                            fill="rgba(255,255,255,.06)"
+                            points="30,128 42,48 18,44"
+                        />
+                        <polygon
+                            fill="rgba(255,255,255,.06)"
+                            points="90,128 78,48 102,44"
+                        />
+                        <polygon
+                            fill="rgba(255,255,255,.12)"
+                            points="60,6 78,48 42,48"
+                        />
+                    </g>
+                </svg>
+                <svg
+                    class="crystal c3"
+                    viewBox="0 0 110 130"
+                    preserveAspectRatio="xMidYMid meet"
+                >
+                    <defs>
+                        <linearGradient
+                            id="crystalGrad3"
+                            x1="0"
+                            y1="0"
+                            x2="1"
+                            y2="1"
+                        >
+                            <stop
+                                offset="0%"
+                                style="
+                                    stop-color: var(--crystal-a);
+                                    stop-opacity: 0.92;
+                                "
+                            />
+                            <stop
+                                offset="100%"
+                                style="
+                                    stop-color: var(--crystal-b);
+                                    stop-opacity: 0.78;
+                                "
+                            />
+                        </linearGradient>
+                        <filter
+                            id="shine3"
+                            x="-20%"
+                            y="-20%"
+                            width="140%"
+                            height="140%"
+                        >
+                            <feGaussianBlur stdDeviation="1.2" result="blur" />
+                            <feMerge>
+                                <feMergeNode in="blur" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                    </defs>
+                    <g filter="url(#shine3)">
+                        <polygon
+                            fill="url(#crystalGrad3)"
+                            points="55,5 96,40 82,122 28,122 14,40"
+                        />
+                        <polygon
+                            fill="rgba(255,255,255,.1)"
+                            points="55,5 74,48 96,40"
+                        />
+                        <polygon
+                            fill="rgba(255,255,255,.08)"
+                            points="55,5 36,48 14,40"
+                        />
+                        <polygon
+                            fill="rgba(255,255,255,.06)"
+                            points="28,122 36,48 14,40"
+                        />
+                        <polygon
+                            fill="rgba(255,255,255,.06)"
+                            points="82,122 74,48 96,40"
+                        />
+                        <polygon
+                            fill="rgba(255,255,255,.12)"
+                            points="55,5 74,48 36,48"
+                        />
+                    </g>
+                </svg>
+                <svg
+                    class="crystal c4"
+                    viewBox="0 0 160 180"
+                    preserveAspectRatio="xMidYMid meet"
+                >
+                    <defs>
+                        <linearGradient
+                            id="crystalGrad4"
+                            x1="0"
+                            y1="0"
+                            x2="1"
+                            y2="1"
+                        >
+                            <stop
+                                offset="0%"
+                                style="
+                                    stop-color: var(--crystal-a);
+                                    stop-opacity: 0.9;
+                                "
+                            />
+                            <stop
+                                offset="100%"
+                                style="
+                                    stop-color: var(--crystal-b);
+                                    stop-opacity: 0.78;
+                                "
+                            />
+                        </linearGradient>
+                        <filter
+                            id="shine4"
+                            x="-20%"
+                            y="-20%"
+                            width="140%"
+                            height="140%"
+                        >
+                            <feGaussianBlur stdDeviation="1.6" result="blur" />
+                            <feMerge>
+                                <feMergeNode in="blur" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                    </defs>
+                    <g filter="url(#shine4)">
+                        <polygon
+                            fill="url(#crystalGrad4)"
+                            points="80,6 138,58 120,170 40,170 22,58"
+                        />
+                        <polygon
+                            fill="rgba(255,255,255,.11)"
+                            points="80,6 103,54 138,58"
+                        />
+                        <polygon
+                            fill="rgba(255,255,255,.08)"
+                            points="80,6 57,54 22,58"
+                        />
+                        <polygon
+                            fill="rgba(255,255,255,.06)"
+                            points="40,170 57,54 22,58"
+                        />
+                        <polygon
+                            fill="rgba(255,255,255,.06)"
+                            points="120,170 103,54 138,58"
+                        />
+                        <polygon
+                            fill="rgba(255,255,255,.12)"
+                            points="80,6 103,54 57,54"
+                        />
+                    </g>
+                </svg>
             </div>
-            <h3>IMT Atlantique</h3>
-            <p>Specializing in software engineering, AI systems, and distributed computing. Focus on practical implementation and system design.</p>
-            <div class="background-skills">
-              <span>Systems Programming</span>
-              <span>AI/ML</span>
-              <span>Software Architecture</span>
+
+            <!-- Dark theme: floating 3D-like gears (replace crystals) -->
+            <div class="bg-gears">
+                <svg
+                    class="gear g1"
+                    viewBox="0 0 200 200"
+                    preserveAspectRatio="xMidYMid meet"
+                >
+                    <defs>
+                        <radialGradient id="gearGrad" cx="50%" cy="50%" r="50%">
+                            <stop
+                                offset="0%"
+                                stop-color="rgba(140,170,255,.35)"
+                            />
+                            <stop
+                                offset="100%"
+                                stop-color="rgba(120,140,220,.15)"
+                            />
+                        </radialGradient>
+                        <radialGradient
+                            id="gearShine"
+                            cx="35%"
+                            cy="30%"
+                            r="25%"
+                        >
+                            <stop
+                                offset="0%"
+                                stop-color="white"
+                                stop-opacity=".25"
+                            />
+                            <stop
+                                offset="100%"
+                                stop-color="white"
+                                stop-opacity="0"
+                            />
+                        </radialGradient>
+                    </defs>
+                    <g>
+                        <circle class="ring" cx="100" cy="100" r="70" />
+                        <circle class="hub" cx="100" cy="100" r="28" />
+                        <g>
+                            <rect
+                                class="tooth"
+                                x="98"
+                                y="18"
+                                width="4"
+                                height="16"
+                                rx="1"
+                            />
+                            <rect
+                                class="tooth"
+                                x="98"
+                                y="166"
+                                width="4"
+                                height="16"
+                                rx="1"
+                            />
+                            <rect
+                                class="tooth"
+                                x="18"
+                                y="98"
+                                width="16"
+                                height="4"
+                                rx="1"
+                            />
+                            <rect
+                                class="tooth"
+                                x="166"
+                                y="98"
+                                width="16"
+                                height="4"
+                                rx="1"
+                            />
+                            <rect
+                                class="tooth"
+                                x="40"
+                                y="40"
+                                width="12"
+                                height="4"
+                                transform="rotate(-45 46 42)"
+                                rx="1"
+                            />
+                            <rect
+                                class="tooth"
+                                x="148"
+                                y="156"
+                                width="12"
+                                height="4"
+                                transform="rotate(-45 154 158)"
+                                rx="1"
+                            />
+                            <rect
+                                class="tooth"
+                                x="156"
+                                y="40"
+                                width="12"
+                                height="4"
+                                transform="rotate(45 162 42)"
+                                rx="1"
+                            />
+                            <rect
+                                class="tooth"
+                                x="40"
+                                y="156"
+                                width="12"
+                                height="4"
+                                transform="rotate(45 46 158)"
+                                rx="1"
+                            />
+                        </g>
+                        <ellipse
+                            class="shine"
+                            cx="78"
+                            cy="74"
+                            rx="32"
+                            ry="20"
+                        />
+                    </g>
+                </svg>
+                <svg
+                    class="gear g2"
+                    viewBox="0 0 240 240"
+                    preserveAspectRatio="xMidYMid meet"
+                >
+                    <use href="#" />
+                    <g>
+                        <circle class="ring" cx="120" cy="120" r="88" />
+                        <circle class="hub" cx="120" cy="120" r="34" />
+                        <g>
+                            <rect
+                                class="tooth"
+                                x="118"
+                                y="18"
+                                width="4"
+                                height="18"
+                                rx="1"
+                            />
+                            <rect
+                                class="tooth"
+                                x="118"
+                                y="204"
+                                width="4"
+                                height="18"
+                                rx="1"
+                            />
+                            <rect
+                                class="tooth"
+                                x="18"
+                                y="118"
+                                width="18"
+                                height="4"
+                                rx="1"
+                            />
+                            <rect
+                                class="tooth"
+                                x="204"
+                                y="118"
+                                width="18"
+                                height="4"
+                                rx="1"
+                            />
+                            <rect
+                                class="tooth"
+                                x="52"
+                                y="52"
+                                width="14"
+                                height="4"
+                                transform="rotate(-45 59 54)"
+                                rx="1"
+                            />
+                            <rect
+                                class="tooth"
+                                x="174"
+                                y="186"
+                                width="14"
+                                height="4"
+                                transform="rotate(-45 181 188)"
+                                rx="1"
+                            />
+                            <rect
+                                class="tooth"
+                                x="186"
+                                y="52"
+                                width="14"
+                                height="4"
+                                transform="rotate(45 193 54)"
+                                rx="1"
+                            />
+                            <rect
+                                class="tooth"
+                                x="52"
+                                y="186"
+                                width="14"
+                                height="4"
+                                transform="rotate(45 59 188)"
+                                rx="1"
+                            />
+                        </g>
+                        <ellipse
+                            class="shine"
+                            cx="96"
+                            cy="86"
+                            rx="36"
+                            ry="22"
+                        />
+                    </g>
+                </svg>
+                <svg
+                    class="gear g3"
+                    viewBox="0 0 180 180"
+                    preserveAspectRatio="xMidYMid meet"
+                >
+                    <g>
+                        <circle class="ring" cx="90" cy="90" r="66" />
+                        <circle class="hub" cx="90" cy="90" r="26" />
+                        <g>
+                            <rect
+                                class="tooth"
+                                x="88"
+                                y="6"
+                                width="4"
+                                height="16"
+                                rx="1"
+                            />
+                            <rect
+                                class="tooth"
+                                x="88"
+                                y="158"
+                                width="4"
+                                height="16"
+                                rx="1"
+                            />
+                            <rect
+                                class="tooth"
+                                x="6"
+                                y="88"
+                                width="16"
+                                height="4"
+                                rx="1"
+                            />
+                            <rect
+                                class="tooth"
+                                x="158"
+                                y="88"
+                                width="16"
+                                height="4"
+                                rx="1"
+                            />
+                            <rect
+                                class="tooth"
+                                x="34"
+                                y="34"
+                                width="12"
+                                height="4"
+                                transform="rotate(-45 40 36)"
+                                rx="1"
+                            />
+                            <rect
+                                class="tooth"
+                                x="134"
+                                y="146"
+                                width="12"
+                                height="4"
+                                transform="rotate(-45 140 148)"
+                                rx="1"
+                            />
+                            <rect
+                                class="tooth"
+                                x="146"
+                                y="34"
+                                width="12"
+                                height="4"
+                                transform="rotate(45 152 36)"
+                                rx="1"
+                            />
+                            <rect
+                                class="tooth"
+                                x="34"
+                                y="146"
+                                width="12"
+                                height="4"
+                                transform="rotate(45 40 148)"
+                                rx="1"
+                            />
+                        </g>
+                        <ellipse
+                            class="shine"
+                            cx="72"
+                            cy="66"
+                            rx="28"
+                            ry="18"
+                        />
+                    </g>
+                </svg>
             </div>
-          </div>
+            <!-- Procedural grain -->
+            <svg class="noise" xmlns="http://www.w3.org/2000/svg">
+                <filter id="noiseFilter">
+                    <feTurbulence
+                        type="fractalNoise"
+                        baseFrequency="0.9"
+                        numOctaves="2"
+                        stitchTiles="stitch"
+                    />
+                    <feColorMatrix type="saturate" values="0" />
+                </filter>
+                <rect
+                    width="100%"
+                    height="100%"
+                    filter="url(#noiseFilter)"
+                    opacity="1"
+                />
+            </svg>
         </div>
-        
-        <div class="background-item card prep">
-          <div class="background-icon">⚡</div>
-          <div class="background-content">
-            <div class="background-meta">
-              <span class="background-type">Intensive Prep</span>
-              <span class="background-year">2022–2024</span>
-            </div>
-            <h3>CPGE Mathematics & Physics</h3>
-            <p>Two-year intensive program at Lycée Pierre Corneille. Rigorous training in analytical thinking, problem-solving under pressure.</p>
-            <div class="background-skills">
-              <span>Mathematical Modeling</span>
-              <span>Algorithm Design</span>
-              <span>Problem Solving</span>
-            </div>
-          </div>
+        <div class="container">
+            <nav class="nav">
+                <div class="brand">
+                    Marc Duboc <span class="badge">promaa</span>
+                </div>
+                <div class="links">
+                    <a href="#projects">Projects</a>
+                    <a href="#education">Education</a>
+                    <a href="#reading">Reading</a>
+                    <a href="essays.html">Essays</a>
+                    <a href="#contact">Contact</a>
+                    <button class="theme-toggle" id="theme-toggle">
+                        <svg
+                            viewBox="0 0 16 16"
+                            aria-hidden="true"
+                            focusable="false"
+                        >
+                            <!-- Pixel moon crescent -->
+                            <rect x="6" y="3" width="6" height="1" />
+                            <rect x="5" y="4" width="7" height="1" />
+                            <rect x="5" y="5" width="7" height="1" />
+                            <rect x="5" y="6" width="7" height="1" />
+                            <rect x="5" y="7" width="7" height="1" />
+                            <rect x="6" y="8" width="6" height="1" />
+                            <rect x="7" y="9" width="5" height="1" />
+                            <rect x="8" y="10" width="4" height="1" />
+                            <!-- Cutout for crescent -->
+                            <rect
+                                x="4"
+                                y="5"
+                                width="4"
+                                height="1"
+                                fill="var(--bg)"
+                            />
+                            <rect
+                                x="4"
+                                y="6"
+                                width="4"
+                                height="1"
+                                fill="var(--bg)"
+                            />
+                            <rect
+                                x="4"
+                                y="7"
+                                width="4"
+                                height="1"
+                                fill="var(--bg)"
+                            />
+                        </svg>
+                    </button>
+                </div>
+            </nav>
+
+            <header class="hero">
+                <div>
+                    <h1>
+                        <span class="spark"
+                            >engineer <span class="amp">&</span> builder</span
+                        >. I ship small, sharp systems.
+                    </h1>
+                    <p>Clarity, freedom, creativity.</p>
+                    <div class="focus" aria-label="Focus areas">
+                        <span class="focus-label">Focus</span>
+                        <div class="focus-items">
+                            <span class="chip">Robotics</span
+                            ><span class="dot">•</span
+                            ><span class="chip">Electronics & Hardware</span
+                            ><span class="dot">•</span
+                            ><span class="chip">Web3</span>
+                        </div>
+                    </div>
+                    <a class="btn" href="#projects">See projects ↓</a>
+                    <a
+                        class="btn"
+                        href="https://github.com/promaaa"
+                        target="_blank"
+                        rel="noopener"
+                        >GitHub ↗</a
+                    >
+                    <a
+                        class="btn"
+                        href="https://www.youtube.com/watch?v=wIBkvQ6MfKQ"
+                        target="_blank"
+                        rel="noopener"
+                        >YouTube ↗</a
+                    >
+                </div>
+                <div class="ascii-wrap">
+                    <pre id="ascii-art"></pre>
+                    <div class="markers">
+                        <span class="marker" style="top: 45%; left: 35%"
+                            >o</span
+                        >
+                        <span class="marker" style="top: 55%; left: 70%"
+                            >o</span
+                        >
+                    </div>
+                </div>
+            </header>
+
+            <section id="projects">
+                <h2>Best Projects</h2>
+                <div class="grid">
+                    <!-- Ball-Collecting Robots -->
+                    <article
+                        class="card col-12 col-6"
+                        id="ball-collecting-robots"
+                        role="link"
+                        aria-label="Open ball-collecting robots write-up"
+                        tabindex="0"
+                        data-href="ball-collecting-writeup.html"
+                    >
+                        <div class="thumb">
+                            <img
+                                src="pictures/ball-collecting.jpg"
+                                alt="Ball-Collecting Robots"
+                                onerror="this.parentNode.textContent='(poster missing)';this.remove();"
+                            />
+                        </div>
+                        <h3>
+                            ball-collecting-robots — autonomous guidance & PI
+                            control
+                        </h3>
+                        <p class="blurb">
+                            Optical bearing guidance + first‑order motor ID +
+                            cascaded PI speed & heading loop across two hardware
+                            iterations.
+                        </p>
+                        <div class="tags">
+                            <span class="tag">Mechatronics</span
+                            ><span class="tag">Embedded</span
+                            ><span class="tag">PID</span
+                            ><span class="tag">C/C++</span>
+                        </div>
+                        <div class="actions">
+                            <a href="ball-collecting-writeup.html"
+                                >Write‑up ↗</a
+                            ><a
+                                href="https://github.com/promaaa/ball-collecting-robots"
+                                target="_blank"
+                                rel="noopener"
+                                >Code ↗</a
+                            >
+                        </div>
+                    </article>
+
+                    <!-- nand2cpu ALU -->
+                    <article
+                        class="card col-12 col-6"
+                        id="nand2cpu-alu-verilog"
+                        role="link"
+                        tabindex="0"
+                        aria-label="Open nand2cpu ALU write-up"
+                        data-href="nand2cpu-writeup.html"
+                    >
+                        <div class="thumb">
+                            <img
+                                src="pictures/nand2cpu.jpg"
+                                alt="nand2cpu — ALU"
+                                onerror="this.parentNode.textContent='(poster missing)';this.remove();"
+                            />
+                        </div>
+                        <h3>nand2cpu — logic to 16‑bit ALU</h3>
+                        <p class="blurb">
+                            Built an ALU from first principles, with clean tests
+                            + tiny assembler scaffold.
+                        </p>
+                        <div class="tags">
+                            <span class="tag">Verilog</span
+                            ><span class="tag">Digital Logic</span
+                            ><span class="tag">ALU</span
+                            ><span class="tag">Tests</span>
+                        </div>
+                        <div class="actions">
+                            <a
+                                href="https://www.youtube.com/watch?v=wIBkvQ6MfKQ"
+                                target="_blank"
+                                rel="noopener"
+                                >Demo ↗</a
+                            ><a href="nand2cpu-writeup.html">Write‑up ↗</a
+                            ><a
+                                href="https://github.com/promaaa/nand2cpu"
+                                target="_blank"
+                                rel="noopener"
+                                >Code ↗</a
+                            >
+                        </div>
+                    </article>
+
+                    <!-- Evento -->
+                    <article
+                        class="card col-12 col-6"
+                        id="evento-solana"
+                        role="link"
+                        tabindex="0"
+                        aria-label="Open evento write-up"
+                        data-href="evento-writeup.html"
+                    >
+                        <div class="thumb">
+                            <img
+                                src="pictures/evento.jpeg"
+                                alt="Evento — Solana"
+                                onerror="this.parentNode.textContent='(poster missing)';this.remove();"
+                            />
+                        </div>
+                        <h3>evento — solana hackathon project</h3>
+                        <p class="blurb">
+                            Teamwork + blockchain. Payments, tickets, simple
+                            on‑chain flows under pressure.
+                        </p>
+                        <div class="tags">
+                            <span class="tag">Solana</span
+                            ><span class="tag">Django</span
+                            ><span class="tag">Solana Pay</span>
+                        </div>
+                        <div class="actions">
+                            <a
+                                href="https://promaaa.github.io/Evento/#"
+                                target="_blank"
+                                rel="noopener"
+                                >Site ↗</a
+                            ><a href="evento-writeup.html">Write‑up ↗</a
+                            ><a
+                                href="https://github.com/promaaa/evento"
+                                target="_blank"
+                                rel="noopener"
+                                >Code ↗</a
+                            >
+                        </div>
+                    </article>
+
+                    <!-- Chef Gen -->
+                    <article
+                        class="card col-12 col-6"
+                        id="chef-gen"
+                        role="link"
+                        tabindex="0"
+                        aria-label="Open Chef Gen write-up"
+                        data-href="chefgen-writeup.html"
+                    >
+                        <div class="thumb">
+                            <img
+                                src="pictures/chefgen.jpg"
+                                alt="Chef Gen"
+                                onerror="this.parentNode.textContent='(poster missing)';this.remove();"
+                            />
+                        </div>
+                        <h3>chef gen — ai recipe finder</h3>
+                        <p class="blurb">
+                            Strict‑JSON LLM output, multi‑provider support, and
+                            a fast, clean UX.
+                        </p>
+                        <div class="tags">
+                            <span class="tag">LLM</span
+                            ><span class="tag">APIs</span
+                            ><span class="tag">Next/React</span>
+                        </div>
+                        <div class="actions">
+                            <a href="chefgen-writeup.html">Write‑up ↗</a
+                            ><a
+                                href="https://github.com/promaaa/chef-gen"
+                                target="_blank"
+                                rel="noopener"
+                                >Code ↗</a
+                            >
+                        </div>
+                    </article>
+
+                    <!-- Smart Grid realtime (moved below Evento) -->
+                    <article
+                        class="card col-12 col-6"
+                        id="smart-grid-realtime"
+                        role="link"
+                        tabindex="0"
+                        aria-label="Open smart grid write-up"
+                        data-href="smart-grid-writeup.html"
+                    >
+                        <div class="thumb">
+                            <img
+                                src="pictures/smart_grid.png"
+                                alt="Smart Grid — realtime"
+                                onerror="this.parentNode.textContent='(poster missing)';this.remove();"
+                            />
+                        </div>
+                        <h3>smart grid — real‑time data ingestion & apis</h3>
+                        <p class="blurb">
+                            UDP ingestion, stream processing, metrics & REST
+                            APIs. Enterprise/IoT credibility.
+                        </p>
+                        <div class="tags">
+                            <span class="tag">Python</span
+                            ><span class="tag">FastAPI</span
+                            ><span class="tag">Postgres</span
+                            ><span class="tag">Streaming</span>
+                        </div>
+                        <div class="actions">
+                            <a href="smart-grid-writeup.html">Write‑up ↗</a
+                            ><a
+                                href="https://github.com/promaaa/smart_grid_JPA"
+                                target="_blank"
+                                rel="noopener"
+                                >Code ↗</a
+                            >
+                        </div>
+                    </article>
+
+                    <!-- Physical Chess-Playing Robot -->
+                    <article
+                        class="card col-12 col-6"
+                        id="physical-chess-playing-robot"
+                        role="link"
+                        tabindex="0"
+                        aria-label="Open physical chess-playing robot write-up"
+                        data-href="physical-chess-playing-robot-writeup.html"
+                    >
+                        <div class="thumb">
+                            <img
+                                src="pictures/chess-board.png"
+                                alt="Physical Chess-Playing Robot"
+                                onerror="this.parentNode.textContent='(poster missing)';this.remove();"
+                            />
+                        </div>
+                        <h3>physical chess-playing robot</h3>
+                        <p class="blurb">
+                            Vision detects human moves; our custom engine plans;
+                            a robot arm plays on a real board. In progress —
+                            demo‑ready reliability.
+                        </p>
+                        <div class="tags">
+                            <span class="tag">Robotics</span
+                            ><span class="tag">Computer Vision</span
+                            ><span class="tag">AI</span>
+                        </div>
+                        <div class="actions">
+                            <a href="physical-chess-playing-robot-writeup.html"
+                                >Write‑up ↗</a
+                            ><a
+                                href="https://github.com/promaaa/physical-chess-playing-robot"
+                                target="_blank"
+                                rel="noopener"
+                                >Code ↗</a
+                            >
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section id="education">
+                <h2>Background</h2>
+                <div class="background-grid">
+                    <div class="background-item card engineering">
+                        <div class="background-icon">🎓</div>
+                        <div class="background-content">
+                            <div class="background-meta">
+                                <span class="background-type"
+                                    >Engineering School</span
+                                >
+                                <span class="background-year">2024–now</span>
+                            </div>
+                            <h3>IMT Atlantique</h3>
+                            <p>
+                                Specializing in software engineering, AI
+                                systems, and distributed computing. Focus on
+                                practical implementation and system design.
+                            </p>
+                            <div class="background-skills">
+                                <span>Systems Programming</span>
+                                <span>AI/ML</span>
+                                <span>Software Architecture</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="background-item card prep">
+                        <div class="background-icon">⚡</div>
+                        <div class="background-content">
+                            <div class="background-meta">
+                                <span class="background-type"
+                                    >Intensive Prep</span
+                                >
+                                <span class="background-year">2022–2024</span>
+                            </div>
+                            <h3>CPGE Mathematics & Physics</h3>
+                            <p>
+                                Two-year intensive program at Lycée Pierre
+                                Corneille. Rigorous training in analytical
+                                thinking, problem-solving under pressure.
+                            </p>
+                            <div class="background-skills">
+                                <span>Mathematical Modeling</span>
+                                <span>Algorithm Design</span>
+                                <span>Problem Solving</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="reading">
+                <h2>Current Reading</h2>
+                <div class="grid">
+                    <!-- Superintelligence -->
+                    <article
+                        class="card col-12 col-4"
+                        id="superintelligence-bostrom"
+                    >
+                        <div class="thumb">
+                            <img
+                                src="pictures/superintelligence.jpg"
+                                alt="Superintelligence by Nick Bostrom"
+                                onerror="this.parentNode.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;font-size:12px;color:var(--muted);text-align:center;padding:20px;\'>Superintelligence<br>Nick Bostrom</div>';this.remove();"
+                            />
+                        </div>
+                        <h3>Superintelligence — Nick Bostrom</h3>
+                        <p class="blurb">
+                            Essential reading on AI alignment and existential
+                            risk. Rigorous analysis of what happens when
+                            machines surpass human intelligence.
+                        </p>
+                        <div class="tags">
+                            <span class="tag">Philosophy essay</span
+                            ><span class="tag">UK</span>
+                        </div>
+                        <div class="comment">
+                            <p>
+                                I used to treat “progress” as an automatic good;
+                                this made me pace my optimism. Now when a system
+                                promises scale, I ask three calm questions: who
+                                stays in control if it works, how failure
+                                spreads when it doesn’t, and what off‑switch
+                                actually exists. It’s a book I read in quiet
+                                evenings — two pages can seed a week of thinking
+                                — and it left me more reflective than alarmed.
+                                I’m kinder to uncertainty now: it’s fine not to
+                                know, as long as I can name the bet I’m making.
+                            </p>
+                        </div>
+                    </article>
+
+                    <!-- Le Comte de Monte-Cristo -->
+                    <article class="card col-12 col-4" id="monte-cristo">
+                        <div class="thumb">
+                            <img
+                                src="pictures/monteCristo.jpg"
+                                alt="Le Comte de Monte-Cristo par Alexandre Dumas"
+                                onerror="this.parentNode.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;font-size:12px;color:var(--muted);text-align:center;padding:20px;\'>Le Comte de<br>Monte-Cristo<br>A. Dumas</div>';this.remove();"
+                            />
+                        </div>
+                        <h3>Le Comte de Monte-Cristo — Alexandre Dumas</h3>
+                        <p class="blurb">
+                            Masterpiece of French literature. Revenge, justice,
+                            and redemption woven into an epic tale of
+                            transformation and strategy.
+                        </p>
+                        <div class="tags">
+                            <span class="tag">Novel</span
+                            ><span class="tag">France</span>
+                        </div>
+                        <div class="comment">
+                            <p>
+                                Pure fuel for the 12‑year‑old tactician in me:
+                                secret tunnels, borrowed names, long games
+                                played with a smile. I eat chapters like
+                                chocolate — slow, a little dramatic, entirely
+                                fun. It nudges me to keep some theater in the
+                                plans, repay kindness with interest, and save a
+                                flourish for the last page. Also: bring snacks.
+                                It’s huge and delightful.
+                            </p>
+                        </div>
+                    </article>
+
+                    <!-- Manufacturing Consent -->
+                    <article
+                        class="card col-12 col-4"
+                        id="manufacturing-consent"
+                    >
+                        <div class="thumb">
+                            <img
+                                src="pictures/manufacturing-consent.jpg"
+                                alt="Manufacturing Consent by Chomsky & Herman"
+                                onerror="this.parentNode.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;font-size:12px;color:var(--muted);text-align:center;padding:20px;\'>Manufacturing<br>Consent<br>Chomsky & Herman</div>';this.remove();"
+                            />
+                        </div>
+                        <h3>Manufacturing Consent — Chomsky & Herman</h3>
+                        <p class="blurb">
+                            Critical analysis of mass media's role in shaping
+                            public opinion. Essential for understanding
+                            information systems and bias.
+                        </p>
+                        <div class="tags">
+                            <span class="tag">Political essay</span
+                            ><span class="tag">USA</span>
+                        </div>
+                        <div class="comment">
+                            <p>
+                                After this I stopped treating the news like
+                                weather and more like architecture. I notice the
+                                frame first, then the facts. It hasn’t made me
+                                bitter; just slower. I rotate sources, ask
+                                “whose incentives?” and keep a little log of
+                                when I change my mind. It reads like media
+                                theory, but it’s really a practice book about
+                                attention and humility.
+                            </p>
+                        </div>
+                    </article>
+                </div>
+                <div
+                    class="reading-lists"
+                    style="margin-top: 24px; text-align: center"
+                >
+                    <a
+                        href="https://pdflink.to/bd2550a1/"
+                        target="_blank"
+                        rel="noopener"
+                        class="btn"
+                        style="margin-right: 8px"
+                        >Reading List (English) ↗</a
+                    >
+                    <a
+                        href="https://pdflink.to/b332db13/"
+                        target="_blank"
+                        rel="noopener"
+                        class="btn"
+                        >Reading List (Français) ↗</a
+                    >
+                </div>
+            </section>
+
+            <!-- Essays teaser section, placed below Current Reading -->
+            <section id="essays-teaser">
+                <h2>Latest Essays</h2>
+                <div class="grid">
+                    <article class="card col-12 col-4">
+                        <h3>The Unspoken Dialogue</h3>
+                        <p class="blurb">
+                            On the grounding honesty of physical effort and its
+                            dialogue with the intellectual mind.
+                        </p>
+                        <div class="tags">
+                            <span class="tag">Oct 17, 2025</span>
+                        </div>
+                        <div class="actions">
+                            <a href="essay-unspoken-dialogue.html">Read →</a>
+                        </div>
+                    </article>
+                    <article class="card col-12 col-4">
+                        <h3>Lucid Hope</h3>
+                        <p class="blurb">
+                            Disciplined optimism, attention, and craft over
+                            cynicism.
+                        </p>
+                        <div class="tags">
+                            <span class="tag">Jul 3, 2025</span>
+                        </div>
+                        <div class="actions">
+                            <a href="essay-lucid-hope.html">Read →</a>
+                        </div>
+                    </article>
+                    <article class="card col-12 col-4">
+                        <h3>Domestic Sovereignty</h3>
+                        <p class="blurb">
+                            On running your own services and choosing
+                            dependencies.
+                        </p>
+                        <div class="tags">
+                            <span class="tag">Jan 20, 2025</span>
+                        </div>
+                        <div class="actions">
+                            <a href="essay-domestic-sovereignty.html">Read →</a>
+                        </div>
+                    </article>
+                </div>
+                <p style="margin-top: 14px">
+                    <a href="essays.html">All essays →</a>
+                </p>
+            </section>
+
+            <section id="contact">
+                <h2>Let's Connect</h2>
+                <div class="connect-wrapper">
+                    <div class="connect-intro">
+                        <p>
+                            Always interested in challenging projects,
+                            innovative collaborations, and meaningful
+                            conversations about technology.
+                        </p>
+                    </div>
+
+                    <div class="connect-inline">
+                        <a
+                            href="mailto:marc.duboc.pro@proton.me"
+                            class="contact-link"
+                            ><span class="contact-label">Email</span
+                            ><span class="contact-value"
+                                >marc.duboc.pro@proton.me</span
+                            ></a
+                        >
+                        <a
+                            href="https://linkedin.com/in/marc-duboc-072932316"
+                            target="_blank"
+                            rel="noopener"
+                            class="contact-link"
+                            ><span class="contact-label">LinkedIn</span
+                            ><span class="contact-value"
+                                >Professional profile</span
+                            ></a
+                        >
+                        <a
+                            href="https://x.com/proma__"
+                            target="_blank"
+                            rel="noopener"
+                            class="contact-link"
+                            ><span class="contact-label">X</span
+                            ><span class="contact-value"
+                                >Tech thoughts & updates</span
+                            ></a
+                        >
+                        <a
+                            href="https://github.com/promaaa"
+                            target="_blank"
+                            rel="noopener"
+                            class="contact-link"
+                            ><span class="contact-label">GitHub</span
+                            ><span class="contact-value"
+                                >Code & projects</span
+                            ></a
+                        >
+                    </div>
+                </div>
+            </section>
+
+            <footer class="footer">
+                © 2025 — built by promaa (Marc Duboc)
+            </footer>
         </div>
-      </div>
-    </section>
 
-    <section id="reading">
-      <h2>Current Reading</h2>
-      <div class="grid">
-        <!-- Superintelligence -->
-        <article class="card col-12 col-4" id="superintelligence-bostrom">
-          <div class="thumb">
-            <img src="pictures/superintelligence.jpg" alt="Superintelligence by Nick Bostrom" onerror="this.parentNode.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;font-size:12px;color:var(--muted);text-align:center;padding:20px;\'>Superintelligence<br>Nick Bostrom</div>';this.remove();">
-          </div>
-          <h3>Superintelligence — Nick Bostrom</h3>
-          <p class="blurb">Essential reading on AI alignment and existential risk. Rigorous analysis of what happens when machines surpass human intelligence.</p>
-          <div class="tags"><span class="tag">Philosophy essay</span><span class="tag">UK</span></div>
-          <div class="comment">
-            <p>I used to treat “progress” as an automatic good; this made me pace my optimism. Now when a system promises scale, I ask three calm questions: who stays in control if it works, how failure spreads when it doesn’t, and what off‑switch actually exists. It’s a book I read in quiet evenings — two pages can seed a week of thinking — and it left me more reflective than alarmed. I’m kinder to uncertainty now: it’s fine not to know, as long as I can name the bet I’m making.</p>
-          </div>
-        </article>
+        <script>
+            // === ASCII animation (crystal ↔ gears) ===
+            (function () {
+                const asciiArtElement = document.getElementById("ascii-art");
+                if (!asciiArtElement) return;
 
-        <!-- Le Comte de Monte-Cristo -->
-        <article class="card col-12 col-4" id="monte-cristo">
-          <div class="thumb">
-            <img src="pictures/monteCristo.jpg" alt="Le Comte de Monte-Cristo par Alexandre Dumas" onerror="this.parentNode.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;font-size:12px;color:var(--muted);text-align:center;padding:20px;\'>Le Comte de<br>Monte-Cristo<br>A. Dumas</div>';this.remove();">
-          </div>
-          <h3>Le Comte de Monte-Cristo — Alexandre Dumas</h3>
-          <p class="blurb">Masterpiece of French literature. Revenge, justice, and redemption woven into an epic tale of transformation and strategy.</p>
-          <div class="tags"><span class="tag">Novel</span><span class="tag">France</span></div>
-          <div class="comment">
-            <p>Pure fuel for the 12‑year‑old tactician in me: secret tunnels, borrowed names, long games played with a smile. I eat chapters like chocolate — slow, a little dramatic, entirely fun. It nudges me to keep some theater in the plans, repay kindness with interest, and save a flourish for the last page. Also: bring snacks. It’s huge and delightful.</p>
-          </div>
-        </article>
+                const width = 48,
+                    height = 24;
+                const grid = Array.from({ length: height }, () =>
+                    Array(width).fill(" "),
+                );
+                const fadeGrid = Array.from({ length: height }, () =>
+                    Array(width).fill(" "),
+                );
+                let currentAnimationId = null;
+                let lastTime = 0;
+                let activeTheme = null;
 
-        <!-- Manufacturing Consent -->
-        <article class="card col-12 col-4" id="manufacturing-consent">
-          <div class="thumb">
-            <img src="pictures/manufacturing-consent.jpg" alt="Manufacturing Consent by Chomsky & Herman" onerror="this.parentNode.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;font-size:12px;color:var(--muted);text-align:center;padding:20px;\'>Manufacturing<br>Consent<br>Chomsky & Herman</div>';this.remove();">
-          </div>
-          <h3>Manufacturing Consent — Chomsky & Herman</h3>
-          <p class="blurb">Critical analysis of mass media's role in shaping public opinion. Essential for understanding information systems and bias.</p>
-          <div class="tags"><span class="tag">Political essay</span><span class="tag">USA</span></div>
-          <div class="comment">
-            <p>After this I stopped treating the news like weather and more like architecture. I notice the frame first, then the facts. It hasn’t made me bitter; just slower. I rotate sources, ask “whose incentives?” and keep a little log of when I change my mind. It reads like media theory, but it’s really a practice book about attention and humility.</p>
-          </div>
-        </article>
-      </div>
-      <div class="reading-lists" style="margin-top: 24px; text-align: center;">
-        <a href="https://pdflink.to/bd2550a1/" target="_blank" rel="noopener" class="btn" style="margin-right: 8px;">Reading List (English) ↗</a>
-        <a href="https://pdflink.to/b332db13/" target="_blank" rel="noopener" class="btn">Reading List (Français) ↗</a>
-      </div>
-    </section>
-    
-    <!-- Essays teaser section, placed below Current Reading -->
-    <section id="essays-teaser">
-      <h2>Latest Essays</h2>
-      <div class="grid">
-        <article class="card col-12 col-4">
-          <h3>Lucid Hope</h3>
-          <p class="blurb">Disciplined optimism, attention, and craft over cynicism.</p>
-          <div class="actions"><a href="essay-lucid-hope.html">Read →</a></div>
-        </article>
-        <article class="card col-12 col-4">
-          <h3>Domestic Sovereignty</h3>
-          <p class="blurb">On running your own services and choosing dependencies.</p>
-          <div class="actions"><a href="essay-domestic-sovereignty.html">Read →</a></div>
-        </article>
-        <article class="card col-12 col-4">
-          <h3>The Collapse of Money</h3>
-          <p class="blurb">History of exchange, fiat, and programmable money.</p>
-          <div class="actions"><a href="essay-collapse-of-money.html">Read →</a></div>
-        </article>
-      </div>
-      <p style="margin-top:14px"><a href="essays.html">All essays →</a></p>
-    </section>
+                // --- Animation 1: Generative 3D Crystal (Light Theme) ---
+                const crystalPoints = [
+                    { x: 0, y: -1.2, z: 0 },
+                    { x: 1, y: 0, z: 0 },
+                    { x: 0, y: 0, z: 1 },
+                    { x: -1, y: 0, z: 0 },
+                    { x: 0, y: 0, z: -1 },
+                    { x: 0, y: 1.2, z: 0 },
+                ];
+                const crystalEdges = [
+                    [0, 1],
+                    [0, 2],
+                    [0, 3],
+                    [0, 4],
+                    [1, 2],
+                    [2, 3],
+                    [3, 4],
+                    [4, 1],
+                    [5, 1],
+                    [5, 2],
+                    [5, 3],
+                    [5, 4],
+                ];
+                let crystalAngleX = 0.2,
+                    crystalAngleY = 0;
+                let sparkles = [];
+                const MAX_SPARKLES = 7;
 
-    <section id="contact">
-      <h2>Let's Connect</h2>
-      <div class="connect-wrapper">
-        <div class="connect-intro">
-          <p>Always interested in challenging projects, innovative collaborations, and meaningful conversations about technology.</p>
-        </div>
-        
-        <div class="connect-inline">
-          <a href="mailto:marc.duboc.pro@proton.me" class="contact-link"><span class="contact-label">Email</span><span class="contact-value">marc.duboc.pro@proton.me</span></a>
-          <a href="https://linkedin.com/in/marc-duboc-072932316" target="_blank" rel="noopener" class="contact-link"><span class="contact-label">LinkedIn</span><span class="contact-value">Professional profile</span></a>
-          <a href="https://x.com/proma__" target="_blank" rel="noopener" class="contact-link"><span class="contact-label">X</span><span class="contact-value">Tech thoughts & updates</span></a>
-          <a href="https://github.com/promaaa" target="_blank" rel="noopener" class="contact-link"><span class="contact-label">GitHub</span><span class="contact-value">Code & projects</span></a>
-        </div>
-      </div>
-    </section>
+                function animateCrystal(time) {
+                    if (lastTime > 0) {
+                        const delta = time - lastTime;
+                        crystalAngleX += 0.0003 * delta;
+                        crystalAngleY += 0.0005 * delta;
+                    }
+                    lastTime = time;
+                    renderCrystal();
+                    currentAnimationId = requestAnimationFrame(animateCrystal);
+                }
 
-    <footer class="footer">© 2025 — built by promaa (Marc Duboc)</footer>
-  </div>
+                function renderCrystal() {
+                    for (let y = 0; y < height; y++) {
+                        for (let x = 0; x < width; x++) {
+                            const char = fadeGrid[y][x];
+                            let nextChar = " ";
+                            if (char === "*") nextChar = "-";
+                            else if (char === "-") nextChar = "·";
+                            grid[y][x] = nextChar;
+                            fadeGrid[y][x] = nextChar;
+                        }
+                    }
 
-  <script>
-  // === ASCII animation (crystal ↔ gears) ===
-  (function(){
-    const asciiArtElement = document.getElementById('ascii-art');
-    if(!asciiArtElement) return;
+                    const rotated = crystalPoints.map((p) =>
+                        rotate(p, crystalAngleX, crystalAngleY),
+                    );
+                    const projected = rotated.map(project);
 
-    const width = 48, height = 24;
-    const grid = Array.from({length:height}, () => Array(width).fill(' '));
-    const fadeGrid = Array.from({length:height}, () => Array(width).fill(' '));
-    let currentAnimationId = null;
-    let lastTime = 0;
-    let activeTheme = null;
+                    crystalEdges.forEach((edge) => {
+                        const p3d1 = rotated[edge[0]];
+                        const p3d2 = rotated[edge[1]];
+                        drawCrystalLine(
+                            projected[edge[0]],
+                            projected[edge[1]],
+                            p3d1,
+                            p3d2,
+                        );
+                    });
 
-    // --- Animation 1: Generative 3D Crystal (Light Theme) ---
-    const crystalPoints = [
-      {x:0, y:-1.2, z:0}, {x:1, y:0, z:0}, {x:0, y:0, z:1},
-      {x:-1, y:0, z:0}, {x:0, y:0, z:-1}, {x:0, y:1.2, z:0}
-    ];
-    const crystalEdges = [
-      [0,1],[0,2],[0,3],[0,4],[1,2],[2,3],
-      [3,4],[4,1],[5,1],[5,2],[5,3],[5,4]
-    ];
-    let crystalAngleX = 0.2, crystalAngleY = 0;
-    let sparkles = [];
-    const MAX_SPARKLES = 7;
+                    updateSparkles();
+                    drawGrid();
+                }
 
-    function animateCrystal(time){
-      if(lastTime>0){
-        const delta = time - lastTime;
-        crystalAngleX += 0.0003 * delta;
-        crystalAngleY += 0.0005 * delta;
-      }
-      lastTime = time;
-      renderCrystal();
-      currentAnimationId = requestAnimationFrame(animateCrystal);
-    }
+                function updateSparkles() {
+                    sparkles = sparkles.filter((s) => s.life > 0);
+                    sparkles.forEach((s) => s.life--);
 
-    function renderCrystal(){
-      for(let y=0; y<height; y++){
-        for(let x=0; x<width; x++){
-          const char = fadeGrid[y][x];
-          let nextChar = ' ';
-          if(char === '*') nextChar = '-';
-          else if(char === '-') nextChar = '·';
-          grid[y][x] = nextChar;
-          fadeGrid[y][x] = nextChar;
-        }
-      }
+                    if (Math.random() > 0.6 && sparkles.length < MAX_SPARKLES) {
+                        const x = Math.floor(Math.random() * width);
+                        const y = Math.floor(Math.random() * height);
+                        if (grid[y][x] === " ") {
+                            sparkles.push({
+                                x,
+                                y,
+                                life: Math.random() * 30 + 15,
+                            });
+                        }
+                    }
 
-      const rotated = crystalPoints.map(p => rotate(p, crystalAngleX, crystalAngleY));
-      const projected = rotated.map(project);
+                    sparkles.forEach((s) => {
+                        const char = s.life > 15 ? "+" : "·";
+                        grid[s.y][s.x] = char;
+                    });
+                }
 
-      crystalEdges.forEach(edge => {
-        const p3d1 = rotated[edge[0]];
-        const p3d2 = rotated[edge[1]];
-        drawCrystalLine(projected[edge[0]], projected[edge[1]], p3d1, p3d2);
-      });
+                function getCharForCrystal(p3d1, p3d2) {
+                    const z = (p3d1.z + p3d2.z) / 2;
+                    const charsByZ = ["·", "-", "*", "#"];
+                    const zIndex = Math.floor(
+                        ((z + 2) / 4) * (charsByZ.length - 1),
+                    );
+                    return charsByZ[
+                        Math.max(0, Math.min(zIndex, charsByZ.length - 1))
+                    ];
+                }
 
-      updateSparkles();
-      drawGrid();
-    }
+                function drawCrystalLine(p2d1, p2d2, p3d1, p3d2) {
+                    let x0 = p2d1.x,
+                        y0 = p2d1.y,
+                        x1 = p2d2.x,
+                        y1 = p2d2.y;
+                    const dx = Math.abs(x1 - x0),
+                        sx = x0 < x1 ? 1 : -1;
+                    const dy = -Math.abs(y1 - y0),
+                        sy = y0 < y1 ? 1 : -1;
+                    let err = dx + dy;
+                    const char = getCharForCrystal(p3d1, p3d2);
+                    while (true) {
+                        if (x0 >= 0 && x0 < width && y0 >= 0 && y0 < height) {
+                            grid[y0][x0] = char;
+                            fadeGrid[y0][x0] = char;
+                        }
+                        if (x0 === x1 && y0 === y1) break;
+                        const e2 = 2 * err;
+                        if (e2 >= dy) {
+                            err += dy;
+                            x0 += sx;
+                        }
+                        if (e2 <= dx) {
+                            err += dx;
+                            y0 += sy;
+                        }
+                    }
+                }
 
-    function updateSparkles(){
-      sparkles = sparkles.filter(s => s.life > 0);
-      sparkles.forEach(s => s.life--);
+                // --- Animation 2: Generative Gears (Dark Theme) ---
+                let gearAngle1 = 0,
+                    gearAngle2 = 0;
 
-      if(Math.random() > 0.6 && sparkles.length < MAX_SPARKLES){
-        const x = Math.floor(Math.random() * width);
-        const y = Math.floor(Math.random() * height);
-        if(grid[y][x] === ' '){
-          sparkles.push({x, y, life: Math.random() * 30 + 15});
-        }
-      }
+                function animateGears(time) {
+                    if (lastTime > 0) {
+                        const delta = time - lastTime;
+                        gearAngle1 += 0.0005 * delta;
+                        gearAngle2 -= 0.0007 * delta;
+                    }
+                    lastTime = time;
+                    renderGears();
+                    currentAnimationId = requestAnimationFrame(animateGears);
+                }
 
-      sparkles.forEach(s => {
-        const char = s.life > 15 ? '+' : '·';
-        grid[s.y][s.x] = char;
-      });
-    }
+                function renderGears() {
+                    clearGrid();
+                    drawGear(
+                        width * 0.35,
+                        height * 0.45,
+                        7,
+                        gearAngle1,
+                        "*",
+                        "-",
+                    );
+                    drawGear(
+                        width * 0.7,
+                        height * 0.55,
+                        5,
+                        gearAngle2,
+                        "o",
+                        "|",
+                    );
+                    drawGrid();
+                }
 
-    function getCharForCrystal(p3d1, p3d2){
-      const z = (p3d1.z + p3d2.z) / 2;
-      const charsByZ = ['·','-','*','#'];
-      const zIndex = Math.floor((z + 2) / 4 * (charsByZ.length - 1));
-      return charsByZ[Math.max(0, Math.min(zIndex, charsByZ.length - 1))];
-    }
+                function drawGear(cx, cy, r, angle, charRing, charTooth) {
+                    for (let i = 0; i < 360; i += 15) {
+                        const rad = (i * Math.PI) / 180 + angle;
+                        const x = Math.round(cx + Math.cos(rad) * r * 1.8);
+                        const y = Math.round(cy + Math.sin(rad) * r);
+                        if (x >= 0 && x < width && y >= 0 && y < height)
+                            grid[y][x] = charRing;
+                    }
+                    for (let i = 0; i < 360; i += 45) {
+                        const rad = (i * Math.PI) / 180 + angle;
+                        const x = Math.round(
+                            cx + Math.cos(rad) * (r + 1.5) * 1.8,
+                        );
+                        const y = Math.round(cy + Math.sin(rad) * (r + 1.5));
+                        if (x >= 0 && x < width && y >= 0 && y < height)
+                            grid[y][x] = charTooth;
+                    }
+                }
 
-    function drawCrystalLine(p2d1, p2d2, p3d1, p3d2){
-      let x0 = p2d1.x, y0 = p2d1.y, x1 = p2d2.x, y1 = p2d2.y;
-      const dx = Math.abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
-      const dy = -Math.abs(y1 - y0), sy = y0 < y1 ? 1 : -1;
-      let err = dx + dy;
-      const char = getCharForCrystal(p3d1, p3d2);
-      while(true){
-        if(x0>=0 && x0<width && y0>=0 && y0<height){
-          grid[y0][x0] = char;
-          fadeGrid[y0][x0] = char;
-        }
-        if(x0 === x1 && y0 === y1) break;
-        const e2 = 2 * err;
-        if(e2 >= dy){ err += dy; x0 += sx; }
-        if(e2 <= dx){ err += dx; y0 += sy; }
-      }
-    }
+                // --- Common helpers ---
+                function clearGrid() {
+                    for (let i = 0; i < height; i++) grid[i].fill(" ");
+                }
 
-    // --- Animation 2: Generative Gears (Dark Theme) ---
-    let gearAngle1 = 0, gearAngle2 = 0;
+                function drawGrid() {
+                    asciiArtElement.textContent = grid
+                        .map((row) => row.join(""))
+                        .join("\n");
+                }
 
-    function animateGears(time){
-      if(lastTime>0){
-        const delta = time - lastTime;
-        gearAngle1 += 0.0005 * delta;
-        gearAngle2 -= 0.0007 * delta;
-      }
-      lastTime = time;
-      renderGears();
-      currentAnimationId = requestAnimationFrame(animateGears);
-    }
+                function rotate(p, ax, ay) {
+                    const sx = Math.sin(ax),
+                        cx = Math.cos(ax);
+                    const sy = Math.sin(ay),
+                        cy = Math.cos(ay);
+                    let { x, y, z } = p;
+                    let newX = x * cy - z * sy,
+                        newZ = x * sy + z * cy;
+                    x = newX;
+                    z = newZ;
+                    let newY = y * cx - z * sx;
+                    newZ = y * sx + z * cx;
+                    y = newY;
+                    z = newZ;
+                    return { x, y, z };
+                }
 
-    function renderGears(){
-      clearGrid();
-      drawGear(width * 0.35, height * 0.45, 7, gearAngle1, '*', '-');
-      drawGear(width * 0.7, height * 0.55, 5, gearAngle2, 'o', '|');
-      drawGrid();
-    }
+                function project(p) {
+                    const fov = 10;
+                    const zFactor = fov / (fov + p.z + 3);
+                    return {
+                        x: Math.round((p.x * zFactor * width) / 3 + width / 2),
+                        y: Math.round(
+                            (p.y * zFactor * height) / 2.5 + height / 2,
+                        ),
+                    };
+                }
 
-    function drawGear(cx, cy, r, angle, charRing, charTooth){
-      for(let i=0; i<360; i+=15){
-        const rad = (i * Math.PI) / 180 + angle;
-        const x = Math.round(cx + Math.cos(rad) * r * 1.8);
-        const y = Math.round(cy + Math.sin(rad) * r);
-        if(x>=0 && x<width && y>=0 && y<height) grid[y][x] = charRing;
-      }
-      for(let i=0; i<360; i+=45){
-        const rad = (i * Math.PI) / 180 + angle;
-        const x = Math.round(cx + Math.cos(rad) * (r + 1.5) * 1.8);
-        const y = Math.round(cy + Math.sin(rad) * (r + 1.5));
-        if(x>=0 && x<width && y>=0 && y<height) grid[y][x] = charTooth;
-      }
-    }
+                function applyTheme(theme) {
+                    const nextTheme = theme === "dark" ? "dark" : "light";
+                    if (nextTheme === activeTheme) return;
+                    activeTheme = nextTheme;
+                    if (currentAnimationId)
+                        cancelAnimationFrame(currentAnimationId);
+                    lastTime = 0;
+                    clearGrid();
+                    fadeGrid.forEach((row) => row.fill(" "));
+                    sparkles = [];
+                    crystalAngleX = 0.2;
+                    crystalAngleY = 0;
+                    gearAngle1 = 0;
+                    gearAngle2 = 0;
+                    if (activeTheme === "dark") {
+                        animateGears(0);
+                    } else {
+                        animateCrystal(0);
+                    }
+                }
 
-    // --- Common helpers ---
-    function clearGrid(){
-      for(let i=0; i<height; i++) grid[i].fill(' ');
-    }
+                function currentThemeFromDom() {
+                    return document.documentElement.getAttribute(
+                        "data-theme",
+                    ) === "dark"
+                        ? "dark"
+                        : "light";
+                }
 
-    function drawGrid(){
-      asciiArtElement.textContent = grid.map(row => row.join('')).join('\n');
-    }
+                const observer = new MutationObserver(() =>
+                    applyTheme(currentThemeFromDom()),
+                );
+                observer.observe(document.documentElement, {
+                    attributes: true,
+                    attributeFilter: ["data-theme"],
+                });
 
-    function rotate(p, ax, ay){
-      const sx = Math.sin(ax), cx = Math.cos(ax);
-      const sy = Math.sin(ay), cy = Math.cos(ay);
-      let {x, y, z} = p;
-      let newX = x * cy - z * sy, newZ = x * sy + z * cy; x = newX; z = newZ;
-      let newY = y * cx - z * sx; newZ = y * sx + z * cx; y = newY; z = newZ;
-      return {x, y, z};
-    }
+                applyTheme(currentThemeFromDom());
+            })();
 
-    function project(p){
-      const fov = 10;
-      const zFactor = fov / (fov + p.z + 3);
-      return {
-        x: Math.round(p.x * zFactor * width / 3 + width / 2),
-        y: Math.round(p.y * zFactor * height / 2.5 + height / 2)
-      };
-    }
+            // Theme Toggle
+            (function () {
+                const toggle = document.getElementById("theme-toggle");
+                const html = document.documentElement;
 
-    function applyTheme(theme){
-      const nextTheme = theme === 'dark' ? 'dark' : 'light';
-      if(nextTheme === activeTheme) return;
-      activeTheme = nextTheme;
-      if(currentAnimationId) cancelAnimationFrame(currentAnimationId);
-      lastTime = 0;
-      clearGrid();
-      fadeGrid.forEach(row => row.fill(' '));
-      sparkles = [];
-      crystalAngleX = 0.2;
-      crystalAngleY = 0;
-      gearAngle1 = 0;
-      gearAngle2 = 0;
-      if(activeTheme === 'dark'){
-        animateGears(0);
-      }else{
-        animateCrystal(0);
-      }
-    }
+                // Respect system preference on first load, then saved choice
+                const systemPrefersDark =
+                    window.matchMedia &&
+                    window.matchMedia("(prefers-color-scheme: dark)").matches;
+                const saved = localStorage.getItem("theme");
+                // Default explicit: light
+                const initialTheme = saved ? saved : "light";
+                html.setAttribute("data-theme", initialTheme);
+                updateToggleIcon(initialTheme);
 
-    function currentThemeFromDom(){
-      return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-    }
+                toggle.addEventListener("click", function () {
+                    const currentTheme = html.getAttribute("data-theme");
+                    const newTheme = currentTheme === "dark" ? "light" : "dark";
 
-    const observer = new MutationObserver(() => applyTheme(currentThemeFromDom()));
-    observer.observe(document.documentElement, {attributes:true, attributeFilter:['data-theme']});
+                    html.setAttribute("data-theme", newTheme);
+                    localStorage.setItem("theme", newTheme);
+                    updateToggleIcon(newTheme);
+                });
 
-    applyTheme(currentThemeFromDom());
-  })();
-  
-  // Theme Toggle
-  (function(){
-    const toggle = document.getElementById('theme-toggle');
-    const html = document.documentElement;
-    
-    // Respect system preference on first load, then saved choice
-    const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const saved = localStorage.getItem('theme');
-    // Default explicit: light
-    const initialTheme = saved ? saved : 'light';
-    html.setAttribute('data-theme', initialTheme);
-    updateToggleIcon(initialTheme);
-    
-    toggle.addEventListener('click', function(){
-      const currentTheme = html.getAttribute('data-theme');
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      
-      html.setAttribute('data-theme', newTheme);
-      localStorage.setItem('theme', newTheme);
-      updateToggleIcon(newTheme);
-    });
-    
-    function updateToggleIcon(theme){
-      const sunSvg = `<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                function updateToggleIcon(theme) {
+                    const sunSvg = `<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
         <!-- Pixelated sun -->
         <rect x="7" y="0" width="2" height="2"/>
         <rect x="13" y="2" width="2" height="2"/>
@@ -900,8 +2635,8 @@
         <rect x="11" y="6" width="1" height="4"/>
         <rect x="6" y="11" width="4" height="1"/>
       </svg>`;
-      
-      const moonSvg = `<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+
+                    const moonSvg = `<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
         <!-- Pixel moon: clear crescent -->
         <!-- Body -->
         <rect x="8" y="2" width="8" height="2"/>
@@ -918,157 +2653,226 @@
         <rect x="13" y="10" width="7" height="2" fill="var(--bg)"/>
         <rect x="12" y="12" width="7" height="2" fill="var(--bg)"/>
       </svg>`;
-      
-      toggle.innerHTML = theme === 'dark' ? sunSvg : moonSvg;
-      toggle.title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
-      toggle.setAttribute('aria-label', toggle.title);
-    }
-    // Sync with system preference changes if user hasn't chosen explicitly
-    try{
-      const mql = window.matchMedia('(prefers-color-scheme: dark)');
-      mql.addEventListener('change', (e)=>{
-        const userSet = localStorage.getItem('theme');
-        if(userSet) return; // respect explicit choice
-        const newTheme = e.matches ? 'dark' : 'light';
-        html.setAttribute('data-theme', newTheme);
-        updateToggleIcon(newTheme);
-      });
-    }catch(_){/* older browsers */}
-  })();
-  
-  // Propagate theme to internal links via ?theme= param
-  (function(){
-    const html = document.documentElement;
-    function applyThemeParam(){
-      const theme = html.getAttribute('data-theme') || 'light';
-      document.querySelectorAll('a[href$=".html"]:not([href^="http"])').forEach(a=>{
-        try{
-          const url = new URL(a.getAttribute('href'), location.href);
-          url.searchParams.set('theme', theme);
-          a.setAttribute('href', url.pathname + url.search + url.hash);
-        }catch(_){/* ignore */}
-      });
-    }
-    applyThemeParam();
-    const obs = new MutationObserver(applyThemeParam);
-    obs.observe(html, {attributes:true, attributeFilter:['data-theme']});
-  })();
-  
-  // Reveal on scroll (fade/slide)
-  (function(){
-    const root = document.documentElement;
-    root.classList.add('reveal-ready');
-    const targets = document.querySelectorAll('.hero > div, .hero .ascii-wrap, section h2, #projects .card, #education .background-item, #reading .card, #contact .connect-item');
-    const observer = new IntersectionObserver((entries)=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){ entry.target.classList.add('is-visible'); observer.unobserve(entry.target); }
-      });
-    },{rootMargin:'-5% 0px -5% 0px', threshold:0.1});
-    targets.forEach((el, idx)=>{ 
-      const attr = el.matches('section h2') ? 'up' : (el.matches('#projects .card') ? 'up-sm' : (el.matches('#contact .connect-item') ? 'fade' : (el.matches('.hero .ascii-wrap') ? 'zoom' : 'up')));
-      el.setAttribute('data-reveal', attr);
-      observer.observe(el);
-    });
-    // keep background objects only near the top of the page
-    const bg = document.querySelector('.bg');
-    if(bg){
-      const cleanup = ()=>{
-        const y = window.scrollY || document.documentElement.scrollTop;
-        const opacity = Math.max(0, 1 - (y/500));
-        bg.style.opacity = 0.85*opacity + 0.15;
-      };
-      window.addEventListener('scroll', cleanup, {passive:true});
-      cleanup();
-    }
-  })();
-  // Make cards with data-href or a single action link clickable
-  (function(){
-    const cards = document.querySelectorAll('.card');
-    if(!cards.length) return;
-    
-    const style = document.createElement('style');
-    style.textContent = `.card.is-clickable { cursor: pointer; }`;
-    document.head.appendChild(style);
 
-    cards.forEach(card => {
-      let href = card.getAttribute('data-href');
-      let isCardClickable = false;
-      let targetBlank = false;
+                    toggle.innerHTML = theme === "dark" ? sunSvg : moonSvg;
+                    toggle.title =
+                        theme === "dark"
+                            ? "Switch to light mode"
+                            : "Switch to dark mode";
+                    toggle.setAttribute("aria-label", toggle.title);
+                }
+                // Sync with system preference changes if user hasn't chosen explicitly
+                try {
+                    const mql = window.matchMedia(
+                        "(prefers-color-scheme: dark)",
+                    );
+                    mql.addEventListener("change", (e) => {
+                        const userSet = localStorage.getItem("theme");
+                        if (userSet) return; // respect explicit choice
+                        const newTheme = e.matches ? "dark" : "light";
+                        html.setAttribute("data-theme", newTheme);
+                        updateToggleIcon(newTheme);
+                    });
+                } catch (_) {
+                    /* older browsers */
+                }
+            })();
 
-      // Case 1: Card has data-href (for projects)
-      if (href) {
-        isCardClickable = true;
-      } 
-      // Case 2: Card has exactly one link in its actions (for reading list, essays)
-      else {
-        const actions = card.querySelectorAll('.actions a');
-        if (actions.length === 1) {
-          const link = actions[0];
-          href = link.getAttribute('href');
-          if (href) {
-            isCardClickable = true;
-            if (link.getAttribute('target') === '_blank') {
-              targetBlank = true;
-            }
-          }
-        }
-      }
+            // Propagate theme to internal links via ?theme= param
+            (function () {
+                const html = document.documentElement;
+                function applyThemeParam() {
+                    const theme = html.getAttribute("data-theme") || "light";
+                    document
+                        .querySelectorAll(
+                            'a[href$=".html"]:not([href^="http"])',
+                        )
+                        .forEach((a) => {
+                            try {
+                                const url = new URL(
+                                    a.getAttribute("href"),
+                                    location.href,
+                                );
+                                url.searchParams.set("theme", theme);
+                                a.setAttribute(
+                                    "href",
+                                    url.pathname + url.search + url.hash,
+                                );
+                            } catch (_) {
+                                /* ignore */
+                            }
+                        });
+                }
+                applyThemeParam();
+                const obs = new MutationObserver(applyThemeParam);
+                obs.observe(html, {
+                    attributes: true,
+                    attributeFilter: ["data-theme"],
+                });
+            })();
 
-      if (!isCardClickable || !href) return;
+            // Reveal on scroll (fade/slide)
+            (function () {
+                const root = document.documentElement;
+                root.classList.add("reveal-ready");
+                const targets = document.querySelectorAll(
+                    ".hero > div, .hero .ascii-wrap, section h2, #projects .card, #education .background-item, #reading .card, #contact .connect-item",
+                );
+                const observer = new IntersectionObserver(
+                    (entries) => {
+                        entries.forEach((entry) => {
+                            if (entry.isIntersecting) {
+                                entry.target.classList.add("is-visible");
+                                observer.unobserve(entry.target);
+                            }
+                        });
+                    },
+                    { rootMargin: "-5% 0px -5% 0px", threshold: 0.1 },
+                );
+                targets.forEach((el, idx) => {
+                    const attr = el.matches("section h2")
+                        ? "up"
+                        : el.matches("#projects .card")
+                          ? "up-sm"
+                          : el.matches("#contact .connect-item")
+                            ? "fade"
+                            : el.matches(".hero .ascii-wrap")
+                              ? "zoom"
+                              : "up";
+                    el.setAttribute("data-reveal", attr);
+                    observer.observe(el);
+                });
+                // keep background objects only near the top of the page
+                const bg = document.querySelector(".bg");
+                if (bg) {
+                    const cleanup = () => {
+                        const y =
+                            window.scrollY ||
+                            document.documentElement.scrollTop;
+                        const opacity = Math.max(0, 1 - y / 500);
+                        bg.style.opacity = 0.85 * opacity + 0.15;
+                    };
+                    window.addEventListener("scroll", cleanup, {
+                        passive: true,
+                    });
+                    cleanup();
+                }
+            })();
+            // Make cards with data-href or a single action link clickable
+            (function () {
+                const cards = document.querySelectorAll(".card");
+                if (!cards.length) return;
 
-      card.classList.add('is-clickable');
+                const style = document.createElement("style");
+                style.textContent = `.card.is-clickable { cursor: pointer; }`;
+                document.head.appendChild(style);
 
-      function navigate() {
-        // Open external links and PDFs in a new tab
-        if (targetBlank || href.startsWith('http') || href.endsWith('.pdf')) {
-          window.open(href, '_blank', 'noopener');
-        } 
-        // Navigate internal .html links, propagating the theme
-        else if (href.endsWith('.html')) {
-          try {
-            const url = new URL(href, location.href);
-            const theme = document.documentElement.getAttribute('data-theme') || 'light';
-            url.searchParams.set('theme', theme);
-            window.location.href = url.pathname + url.search + url.hash;
-          } catch(_) {
-            window.location.href = href; // Fallback
-          }
-        } else {
-            window.location.href = href; // Fallback for other cases
-        }
-      }
+                cards.forEach((card) => {
+                    let href = card.getAttribute("data-href");
+                    let isCardClickable = false;
+                    let targetBlank = false;
 
-      card.addEventListener('click', (e) => {
-        // If the click is on any link inside the card, let the browser handle it.
-        if (e.target.closest('a')) {
-          return;
-        }
-        navigate();
-      });
+                    // Case 1: Card has data-href (for projects)
+                    if (href) {
+                        isCardClickable = true;
+                    }
+                    // Case 2: Card has exactly one link in its actions (for reading list, essays)
+                    else {
+                        const actions = card.querySelectorAll(".actions a");
+                        if (actions.length === 1) {
+                            const link = actions[0];
+                            href = link.getAttribute("href");
+                            if (href) {
+                                isCardClickable = true;
+                                if (link.getAttribute("target") === "_blank") {
+                                    targetBlank = true;
+                                }
+                            }
+                        }
+                    }
 
-      card.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          // Ignore if focus is on a link itself
-          if (document.activeElement.closest('a')) return;
-          e.preventDefault();
-          navigate();
-        }
-      });
-    });
-  })();
-  // Ensure we start at the top when loading (no anchor)
-  (function(){
-    function toTop(){ if(!location.hash){ window.scrollTo(0,0); } }
-    // Prevent browser from restoring a previous scroll on fresh navigation
-    try{ if('scrollRestoration' in history) { history.scrollRestoration = 'manual'; } }catch(_){}
-    if(document.readyState === 'complete' || document.readyState === 'interactive'){
-      toTop();
-    }else{
-      window.addEventListener('DOMContentLoaded', toTop, { once:true });
-    }
-    // Also handle BFCache restores and late paints
-    window.addEventListener('pageshow', function(){ toTop(); }, { once:true });
-  })();
-  </script>
-</body>
+                    if (!isCardClickable || !href) return;
+
+                    card.classList.add("is-clickable");
+
+                    function navigate() {
+                        // Open external links and PDFs in a new tab
+                        if (
+                            targetBlank ||
+                            href.startsWith("http") ||
+                            href.endsWith(".pdf")
+                        ) {
+                            window.open(href, "_blank", "noopener");
+                        }
+                        // Navigate internal .html links, propagating the theme
+                        else if (href.endsWith(".html")) {
+                            try {
+                                const url = new URL(href, location.href);
+                                const theme =
+                                    document.documentElement.getAttribute(
+                                        "data-theme",
+                                    ) || "light";
+                                url.searchParams.set("theme", theme);
+                                window.location.href =
+                                    url.pathname + url.search + url.hash;
+                            } catch (_) {
+                                window.location.href = href; // Fallback
+                            }
+                        } else {
+                            window.location.href = href; // Fallback for other cases
+                        }
+                    }
+
+                    card.addEventListener("click", (e) => {
+                        // If the click is on any link inside the card, let the browser handle it.
+                        if (e.target.closest("a")) {
+                            return;
+                        }
+                        navigate();
+                    });
+
+                    card.addEventListener("keydown", (e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                            // Ignore if focus is on a link itself
+                            if (document.activeElement.closest("a")) return;
+                            e.preventDefault();
+                            navigate();
+                        }
+                    });
+                });
+            })();
+            // Ensure we start at the top when loading (no anchor)
+            (function () {
+                function toTop() {
+                    if (!location.hash) {
+                        window.scrollTo(0, 0);
+                    }
+                }
+                // Prevent browser from restoring a previous scroll on fresh navigation
+                try {
+                    if ("scrollRestoration" in history) {
+                        history.scrollRestoration = "manual";
+                    }
+                } catch (_) {}
+                if (
+                    document.readyState === "complete" ||
+                    document.readyState === "interactive"
+                ) {
+                    toTop();
+                } else {
+                    window.addEventListener("DOMContentLoaded", toTop, {
+                        once: true,
+                    });
+                }
+                // Also handle BFCache restores and late paints
+                window.addEventListener(
+                    "pageshow",
+                    function () {
+                        toTop();
+                    },
+                    { once: true },
+                );
+            })();
+        </script>
+    </body>
 </html>
