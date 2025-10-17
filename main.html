@@ -1826,13 +1826,12 @@
                             />
                         </div>
                         <h3>
-                            ball-collecting-robots — autonomous guidance & PI
-                            control
+                            autonomous ball-collecting robots — vision & control
                         </h3>
                         <p class="blurb">
-                            Optical bearing guidance + first‑order motor ID +
-                            cascaded PI speed & heading loop across two hardware
-                            iterations.
+                            Built an end‑to‑end mechatronic system:
+                            optical‑bearing guidance, first‑order motor ID, and
+                            cascaded PI speed/heading loops.
                         </p>
                         <div class="tags">
                             <span class="tag">Mechatronics</span
@@ -1845,6 +1844,47 @@
                                 >Write‑up ↗</a
                             ><a
                                 href="https://github.com/promaaa/ball-collecting-robots"
+                                target="_blank"
+                                rel="noopener"
+                                >Code ↗</a
+                            >
+                        </div>
+                    </article>
+
+                    <!-- Physical Chess-Playing Robot (moved up) -->
+                    <article
+                        class="card col-12 col-6"
+                        id="physical-chess-playing-robot"
+                        role="link"
+                        tabindex="0"
+                        aria-label="Open physical chess-playing robot write-up"
+                        data-href="projects/smart-chess/index.html"
+                    >
+                        <div class="thumb">
+                            <img
+                                src="projects/smart-chess/images/chess-board.png"
+                                alt="Physical Chess-Playing Robot"
+                                onerror="this.parentNode.textContent='(poster missing)';this.remove();"
+                            />
+                        </div>
+                        <h3>
+                            physical chess-playing robot — vision, engine, arm
+                        </h3>
+                        <p class="blurb">
+                            Full pipeline from board vision to a custom chess
+                            engine to robot arm actuation; focused on
+                            reliability to reach demo‑ready behavior.
+                        </p>
+                        <div class="tags">
+                            <span class="tag">Robotics</span
+                            ><span class="tag">Computer Vision</span
+                            ><span class="tag">AI</span>
+                        </div>
+                        <div class="actions">
+                            <a href="projects/smart-chess/index.html"
+                                >Write‑up ↗</a
+                            ><a
+                                href="https://github.com/promaaa/physical-chess-playing-robot"
                                 target="_blank"
                                 rel="noopener"
                                 >Code ↗</a
@@ -1868,7 +1908,7 @@
                                 onerror="this.parentNode.textContent='(poster missing)';this.remove();"
                             />
                         </div>
-                        <h3>nand2cpu — logic to 16‑bit ALU</h3>
+                        <h3>nand2cpu — 16‑bit ALU from first principles</h3>
                         <p class="blurb">
                             Built an ALU from first principles, with clean tests
                             + tiny assembler scaffold.
@@ -1912,10 +1952,11 @@
                                 onerror="this.parentNode.textContent='(poster missing)';this.remove();"
                             />
                         </div>
-                        <h3>evento — solana hackathon project</h3>
+                        <h3>evento — web3 ticketing on solana</h3>
                         <p class="blurb">
-                            Teamwork + blockchain. Payments, tickets, simple
-                            on‑chain flows under pressure.
+                            Delivered wallet‑based payments and ticketing with
+                            Solana Pay under hackathon constraints; clear
+                            on‑chain/off‑chain boundary using Django + Solana.
                         </p>
                         <div class="tags">
                             <span class="tag">Solana</span
@@ -1954,10 +1995,11 @@
                                 onerror="this.parentNode.textContent='(poster missing)';this.remove();"
                             />
                         </div>
-                        <h3>chef gen — ai recipe finder</h3>
+                        <h3>chef gen — production‑minded ai recipe finder</h3>
                         <p class="blurb">
-                            Strict‑JSON LLM output, multi‑provider support, and
-                            a fast, clean UX.
+                            Robust strict‑JSON LLM output validation,
+                            multi‑provider abstraction/fallback, and a fast,
+                            clean UX in Next/React.
                         </p>
                         <div class="tags">
                             <span class="tag">LLM</span
@@ -1975,7 +2017,7 @@
                         </div>
                     </article>
 
-                    <!-- Smart Grid realtime (moved below Evento) -->
+                    <!-- Smart Grid realtime (moved to the end) -->
                     <article
                         class="card col-12 col-6"
                         id="smart-grid-realtime"
@@ -1991,10 +2033,13 @@
                                 onerror="this.parentNode.textContent='(poster missing)';this.remove();"
                             />
                         </div>
-                        <h3>smart grid — real‑time data ingestion & apis</h3>
+                        <h3>
+                            smart grid — real‑time telemetry ingestion & apis
+                        </h3>
                         <p class="blurb">
-                            UDP ingestion, stream processing, metrics & REST
-                            APIs. Enterprise/IoT credibility.
+                            Built UDP ingestion, stream processing, metrics, and
+                            REST APIs with FastAPI/Postgres; designed for
+                            reliability, observability, and integration.
                         </p>
                         <div class="tags">
                             <span class="tag">Python</span
@@ -2014,44 +2059,7 @@
                         </div>
                     </article>
 
-                    <!-- Physical Chess-Playing Robot -->
-                    <article
-                        class="card col-12 col-6"
-                        id="physical-chess-playing-robot"
-                        role="link"
-                        tabindex="0"
-                        aria-label="Open physical chess-playing robot write-up"
-                        data-href="projects/smart-chess/index.html"
-                    >
-                        <div class="thumb">
-                            <img
-                                src="projects/smart-chess/images/chess-board.png"
-                                alt="Physical Chess-Playing Robot"
-                                onerror="this.parentNode.textContent='(poster missing)';this.remove();"
-                            />
-                        </div>
-                        <h3>physical chess-playing robot</h3>
-                        <p class="blurb">
-                            Vision detects human moves; our custom engine plans;
-                            a robot arm plays on a real board. In progress —
-                            demo‑ready reliability.
-                        </p>
-                        <div class="tags">
-                            <span class="tag">Robotics</span
-                            ><span class="tag">Computer Vision</span
-                            ><span class="tag">AI</span>
-                        </div>
-                        <div class="actions">
-                            <a href="projects/smart-chess/index.html"
-                                >Write‑up ↗</a
-                            ><a
-                                href="https://github.com/promaaa/physical-chess-playing-robot"
-                                target="_blank"
-                                rel="noopener"
-                                >Code ↗</a
-                            >
-                        </div>
-                    </article>
+                    <!-
                 </div>
             </section>
 
