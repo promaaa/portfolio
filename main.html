@@ -1074,6 +1074,41 @@
                     transform: none;
                 }
             }
+            /* ===== Essays Teaser Section ===== */
+            #essays-teaser .card {
+                display: flex;
+                flex-direction: row-reverse;
+                align-items: center;
+                gap: 20px;
+            }
+
+            #essays-teaser .card > div:first-child {
+                flex: 1;
+            }
+
+            #essays-teaser .card .thumb {
+                flex-shrink: 0;
+                width: 180px;
+                aspect-ratio: 16/9;
+                border-radius: 8px;
+                overflow: hidden;
+            }
+
+            #essays-teaser .card .thumb img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            #essays-teaser .card .blurb,
+            #essays-teaser .card .tags,
+            #essays-teaser .card .actions {
+                font-size: 13px;
+            }
+
+            #essays-teaser .card h3 {
+                margin-bottom: 4px;
+            }
         </style>
     </head>
     <body>
@@ -1850,7 +1885,8 @@
                                 target="_blank"
                                 rel="noopener"
                                 >Demo ↗</a
-                            ><a href="projects/nand2cpu/index.html">Write‑up ↗</a
+                            ><a href="projects/nand2cpu/index.html"
+                                >Write‑up ↗</a
                             ><a
                                 href="https://github.com/promaaa/nand2cpu"
                                 target="_blank"
@@ -1967,7 +2003,8 @@
                             ><span class="tag">Streaming</span>
                         </div>
                         <div class="actions">
-                            <a href="projects/smart-grid/index.html">Write‑up ↗</a
+                            <a href="projects/smart-grid/index.html"
+                                >Write‑up ↗</a
                             ><a
                                 href="https://github.com/promaaa/smart_grid_JPA"
                                 target="_blank"
@@ -2201,47 +2238,76 @@
                 </div>
             </section>
 
-            <!-- Essays teaser section, placed below Current Reading -->
             <section id="essays-teaser">
                 <h2>Latest Essays</h2>
                 <div class="grid">
-                    <article class="card col-12 col-4">
-                        <h3>The Unspoken Dialogue</h3>
-                        <p class="blurb">
-                            On the grounding honesty of physical effort and its
-                            dialogue with the intellectual mind.
-                        </p>
-                        <div class="tags">
-                            <span class="tag">Oct 17, 2025</span>
+                    <article class="card col-12">
+                        <div>
+                            <h3>The Unspoken Dialogue</h3>
+                            <p class="blurb">
+                                On the grounding honesty of physical effort and
+                                its dialogue with the intellectual mind.
+                            </p>
+                            <div class="tags">
+                                <span class="tag">Oct 17, 2025</span>
+                            </div>
+                            <div class="actions">
+                                <a href="essays/unspoken-dialogue/index.html"
+                                    >Read →</a
+                                >
+                            </div>
                         </div>
-                        <div class="actions">
-                            <a href="essays/unspoken-dialogue/index.html">Read →</a>
-                        </div>
-                    </article>
-                    <article class="card col-12 col-4">
-                        <h3>Lucid Hope</h3>
-                        <p class="blurb">
-                            Disciplined optimism, attention, and craft over
-                            cynicism.
-                        </p>
-                        <div class="tags">
-                            <span class="tag">Jul 3, 2025</span>
-                        </div>
-                        <div class="actions">
-                            <a href="essays/lucid-hope/index.html">Read →</a>
+                        <div class="thumb">
+                            <img
+                                src="essays/unspoken-dialogue/picture.png"
+                                alt="The Unspoken Dialogue"
+                            />
                         </div>
                     </article>
-                    <article class="card col-12 col-4">
-                        <h3>Domestic Sovereignty</h3>
-                        <p class="blurb">
-                            On running your own services and choosing
-                            dependencies.
-                        </p>
-                        <div class="tags">
-                            <span class="tag">Jan 20, 2025</span>
+                    <article class="card col-12">
+                        <div>
+                            <h3>Lucid Hope</h3>
+                            <p class="blurb">
+                                Disciplined optimism, attention, and craft over
+                                cynicism.
+                            </p>
+                            <div class="tags">
+                                <span class="tag">Jul 3, 2025</span>
+                            </div>
+                            <div class="actions">
+                                <a href="essays/lucid-hope/index.html"
+                                    >Read →</a
+                                >
+                            </div>
                         </div>
-                        <div class="actions">
-                            <a href="essays/domestic-sovereignty/index.html">Read →</a>
+                        <div class="thumb">
+                            <img
+                                src="essays/lucid-hope/picture.png"
+                                alt="Lucid Hope"
+                            />
+                        </div>
+                    </article>
+                    <article class="card col-12">
+                        <div>
+                            <h3>Domestic Sovereignty</h3>
+                            <p class="blurb">
+                                On running your own services and choosing
+                                dependencies.
+                            </p>
+                            <div class="tags">
+                                <span class="tag">Jan 20, 2025</span>
+                            </div>
+                            <div class="actions">
+                                <a href="essays/domestic-sovereignty/index.html"
+                                    >Read →</a
+                                >
+                            </div>
+                        </div>
+                        <div class="thumb">
+                            <img
+                                src="essays/domestic-sovereignty/picture.png"
+                                alt="Domestic Sovereignty"
+                            />
                         </div>
                     </article>
                 </div>

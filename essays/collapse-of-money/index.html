@@ -1,77 +1,185 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>The Collapse of Money — Marc Duboc</title>
-  <meta name="color-scheme" content="light dark" />
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="container">
-    <div class="top">
-      <a class="back" href="../../essays.html">← Back to essays</a>
-      <span class="byline">Marc Duboc • Aug 14, 2024</span>
-      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme"></button>
-    </div>
-    <h1>The Collapse of Money – A Journey Through the History of Exchange</h1>
-    <article class="prose">
-      <p>If you’re reading this, you’re probably a fellow nerd — but today, forget the black holes and mind-bending equations. We’re talking about the holes in your wallet.</p>
-      <p>Let’s take a step back and break down something you use every single day without really thinking about it: money. And here’s the spoiler — it’s not in great shape.</p>
-      <h3>Chapter 1: The Chaos of Barter</h3>
-      <p>Picture this: a Frenchman, an Egyptian, and a Moroccan meet in 1st-century Rome. The Frenchman has wine, the Egyptian has papyrus, the Moroccan has a carpet. The Frenchman wants papyrus, the Egyptian wants a carpet, the Moroccan wants wine. On paper, everyone should leave happy… except no one can trade directly. The wine spoils, the papyrus yellows, and the carpet gathers dust in the corner of an insula.</p>
-      <p>This problem is known as the double coincidence of wants — both parties must want exactly what the other has, at the same time. The more goods there are, the more unmanageable it becomes:</p>
-      <ul>
-        <li>5 goods → 10 possible exchange pairs</li>
-        <li>20 goods → 190 exchange pairs</li>
-        <li>100 goods → 4,950 exchange pairs</li>
-      </ul>
-      <p>It’s easy to see why barter collapses under its own complexity.</p>
-      <h3>Chapter 2: Finding a Common Denominator</h3>
-      <p>To solve this, some societies began using universally accepted items as a medium of exchange: shell necklaces, rare stones, or metals. Their value came not from practical use but from the trust everyone placed in them. They were durable, portable, and recognized across regions.</p>
-      <p>The Romans — masters of empire-building — understood this perfectly: if you wanted a functioning economy, you needed a stable, transportable, and widely accepted standard.</p>
-      <h3>Chapter 3: From Metal to Paper</h3>
-      <p>Fast forward to the 7th century BC in Lydia (modern-day Turkey), where the first minted coins appeared. A silver denarius was worth its weight in silver — its value was intrinsic.</p>
-      <p>Then came a radical idea from China: replace the metal with… paper. A simple piece of plant fiber could be worth a horse or even a house, solely because the State guaranteed it. This was the birth of fiat money — currency that has value only because everyone agrees it does.</p>
-      <p>But for centuries, and until the Bretton Woods agreement in 1944, these paper contracts — now called banknotes — were backed by a reserve of gold.</p>
-      <h3>Chapter 4: And Today…</h3>
-      <p>Now? Money can be “created” by nothing more than hitting the Enter key at a central bank. Add a zero to a spreadsheet, and voilà — billions appear out of thin air. This is ex nihilo money, also called bank money.</p>
-      <p>Here’s the problem: in the last five years alone, over half of all U.S. dollars ever created came into existence. Imagine America’s monetary history as a glass of water filled over 250 years… and then someone pours the same amount in all at once. Guess what overflows? Your purchasing power, in the form of inflation.</p>
-      <h3>The Digital Euro Arrives</h3>
-      <p>In October 2025, the digital euro will launch — giving its issuer total, instantaneous control over money. Every transaction traceable in real time, every cent programmable, and the money supply adjustable with a single click. Officially, it’s about “modernization” and “fighting fraud.” Unofficially, it’s the perfect tool to fine-tune your purchasing power at will.</p>
-      <p>The digital euro means the end of financial anonymity: everything will be tracked, controlled, and potentially conditional. Whether you can spend or save could depend on an invisible approval process. They’ll call it progress — but it’s also the most powerful instrument ever devised to decide what your money is worth and how you can use it.</p>
-      <h3>History’s Warning</h3>
-      <p>If history teaches us anything, it’s that once a State gains a new monetary power, it always ends up using it — beyond reason. And in an era where money rests solely on trust, such power carries heavy risks: the moment that trust cracks, the whole structure can collapse.</p>
-      <h3>So, What Now?</h3>
-      <p>Simple: don’t put all your trust in this kind of money. Look into alternatives — real stores of value that have stood the test of time (gold) or the last decade (Bitcoin). In short: keep your shells, your bullion, and your Ledger key. Because the next “reset” won’t happen in Excel… it will happen in your wallet.</p>
-    </article>
-  </div>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>The Collapse of Money — Marc Duboc</title>
+        <meta name="color-scheme" content="light dark" />
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="top">
+                <a class="back" href="../../essays.html">← Back to essays</a>
+                <span class="byline">Marc Duboc • Aug 14, 2024</span>
+                <button
+                    class="theme-toggle"
+                    id="theme-toggle"
+                    aria-label="Toggle theme"
+                ></button>
+            </div>
+            <figure class="hero-image">
+                <img
+                    src="picture.png"
+                    alt="The Collapse of Money – A Journey Through the History of Exchange"
+                />
+            </figure>
+            <h1>
+                The Collapse of Money – A Journey Through the History of
+                Exchange
+            </h1>
+            <article class="prose">
+                <p>
+                    If you’re reading this, you’re probably a fellow nerd — but
+                    today, forget the black holes and mind-bending equations.
+                    We’re talking about the holes in your wallet.
+                </p>
+                <p>
+                    Let’s take a step back and break down something you use
+                    every single day without really thinking about it: money.
+                    And here’s the spoiler — it’s not in great shape.
+                </p>
+                <h3>Chapter 1: The Chaos of Barter</h3>
+                <p>
+                    Picture this: a Frenchman, an Egyptian, and a Moroccan meet
+                    in 1st-century Rome. The Frenchman has wine, the Egyptian
+                    has papyrus, the Moroccan has a carpet. The Frenchman wants
+                    papyrus, the Egyptian wants a carpet, the Moroccan wants
+                    wine. On paper, everyone should leave happy… except no one
+                    can trade directly. The wine spoils, the papyrus yellows,
+                    and the carpet gathers dust in the corner of an insula.
+                </p>
+                <p>
+                    This problem is known as the double coincidence of wants —
+                    both parties must want exactly what the other has, at the
+                    same time. The more goods there are, the more unmanageable
+                    it becomes:
+                </p>
+                <ul>
+                    <li>5 goods → 10 possible exchange pairs</li>
+                    <li>20 goods → 190 exchange pairs</li>
+                    <li>100 goods → 4,950 exchange pairs</li>
+                </ul>
+                <p>
+                    It’s easy to see why barter collapses under its own
+                    complexity.
+                </p>
+                <h3>Chapter 2: Finding a Common Denominator</h3>
+                <p>
+                    To solve this, some societies began using universally
+                    accepted items as a medium of exchange: shell necklaces,
+                    rare stones, or metals. Their value came not from practical
+                    use but from the trust everyone placed in them. They were
+                    durable, portable, and recognized across regions.
+                </p>
+                <p>
+                    The Romans — masters of empire-building — understood this
+                    perfectly: if you wanted a functioning economy, you needed a
+                    stable, transportable, and widely accepted standard.
+                </p>
+                <h3>Chapter 3: From Metal to Paper</h3>
+                <p>
+                    Fast forward to the 7th century BC in Lydia (modern-day
+                    Turkey), where the first minted coins appeared. A silver
+                    denarius was worth its weight in silver — its value was
+                    intrinsic.
+                </p>
+                <p>
+                    Then came a radical idea from China: replace the metal with…
+                    paper. A simple piece of plant fiber could be worth a horse
+                    or even a house, solely because the State guaranteed it.
+                    This was the birth of fiat money — currency that has value
+                    only because everyone agrees it does.
+                </p>
+                <p>
+                    But for centuries, and until the Bretton Woods agreement in
+                    1944, these paper contracts — now called banknotes — were
+                    backed by a reserve of gold.
+                </p>
+                <h3>Chapter 4: And Today…</h3>
+                <p>
+                    Now? Money can be “created” by nothing more than hitting the
+                    Enter key at a central bank. Add a zero to a spreadsheet,
+                    and voilà — billions appear out of thin air. This is ex
+                    nihilo money, also called bank money.
+                </p>
+                <p>
+                    Here’s the problem: in the last five years alone, over half
+                    of all U.S. dollars ever created came into existence.
+                    Imagine America’s monetary history as a glass of water
+                    filled over 250 years… and then someone pours the same
+                    amount in all at once. Guess what overflows? Your purchasing
+                    power, in the form of inflation.
+                </p>
+                <h3>The Digital Euro Arrives</h3>
+                <p>
+                    In October 2025, the digital euro will launch — giving its
+                    issuer total, instantaneous control over money. Every
+                    transaction traceable in real time, every cent programmable,
+                    and the money supply adjustable with a single click.
+                    Officially, it’s about “modernization” and “fighting fraud.”
+                    Unofficially, it’s the perfect tool to fine-tune your
+                    purchasing power at will.
+                </p>
+                <p>
+                    The digital euro means the end of financial anonymity:
+                    everything will be tracked, controlled, and potentially
+                    conditional. Whether you can spend or save could depend on
+                    an invisible approval process. They’ll call it progress —
+                    but it’s also the most powerful instrument ever devised to
+                    decide what your money is worth and how you can use it.
+                </p>
+                <h3>History’s Warning</h3>
+                <p>
+                    If history teaches us anything, it’s that once a State gains
+                    a new monetary power, it always ends up using it — beyond
+                    reason. And in an era where money rests solely on trust,
+                    such power carries heavy risks: the moment that trust
+                    cracks, the whole structure can collapse.
+                </p>
+                <h3>So, What Now?</h3>
+                <p>
+                    Simple: don’t put all your trust in this kind of money. Look
+                    into alternatives — real stores of value that have stood the
+                    test of time (gold) or the last decade (Bitcoin). In short:
+                    keep your shells, your bullion, and your Ledger key. Because
+                    the next “reset” won’t happen in Excel… it will happen in
+                    your wallet.
+                </p>
+            </article>
+        </div>
 
-  <script>
-    // Theme toggle with unified pixel icons (same as main)
-    (function(){
-      const html = document.documentElement;
-      const toggle = document.getElementById('theme-toggle');
-      const urlTheme = new URLSearchParams(location.search).get('theme');
-      const saved = urlTheme || localStorage.getItem('theme') || 'light';
-      html.setAttribute('data-theme', saved);
-      if(urlTheme) localStorage.setItem('theme', urlTheme);
-      updateToggleIcon(saved);
-      toggle.addEventListener('click', function(){
-        const current = html.getAttribute('data-theme');
-        const next = current === 'dark' ? 'light' : 'dark';
-        html.setAttribute('data-theme', next);
-        localStorage.setItem('theme', next);
-        updateToggleIcon(next);
-      });
-      function updateToggleIcon(theme){
-        const sunSvg = `<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="7" y="0" width="2" height="2"/><rect x="13" y="2" width="2" height="2"/><rect x="14" y="7" width="2" height="2"/><rect x="13" y="12" width="2" height="2"/><rect x="7" y="14" width="2" height="2"/><rect x="2" y="12" width="2" height="2"/><rect x="0" y="7" width="2" height="2"/><rect x="2" y="2" width="2" height="2"/><rect x="5" y="5" width="6" height="6"/><rect x="6" y="4" width="4" height="1"/><rect x="4" y="6" width="1" height="4"/><rect x="11" y="6" width="1" height="4"/><rect x="6" y="11" width="4" height="1"/></svg>`;
-        const moonSvg = `<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="8" y="2" width="8" height="2"/><rect x="7" y="4" width="10" height="2"/><rect x="6" y="6" width="11" height="2"/><rect x="6" y="8" width="11" height="2"/><rect x="6" y="10" width="11" height="2"/><rect x="7" y="12" width="10" height="2"/><rect x="8" y="14" width="8" height="2"/><rect x="12" y="4" width="7" height="2" fill="var(--bg)"/><rect x="13" y="6" width="7" height="2" fill="var(--bg)"/><rect x="13" y="8" width="7" height="2" fill="var(--bg)"/><rect x="13" y="10" width="7" height="2" fill="var(--bg)"/><rect x="12" y="12" width="7" height="2" fill="var(--bg)"/></svg>`;
-        toggle.innerHTML = (theme === 'dark') ? sunSvg : moonSvg;
-        toggle.title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
-        toggle.setAttribute('aria-label', toggle.title);
-      }
-    })();
-  </script>
-</body>
+        <script>
+            // Theme toggle with unified pixel icons (same as main)
+            (function () {
+                const html = document.documentElement;
+                const toggle = document.getElementById("theme-toggle");
+                const urlTheme = new URLSearchParams(location.search).get(
+                    "theme",
+                );
+                const saved =
+                    urlTheme || localStorage.getItem("theme") || "light";
+                html.setAttribute("data-theme", saved);
+                if (urlTheme) localStorage.setItem("theme", urlTheme);
+                updateToggleIcon(saved);
+                toggle.addEventListener("click", function () {
+                    const current = html.getAttribute("data-theme");
+                    const next = current === "dark" ? "light" : "dark";
+                    html.setAttribute("data-theme", next);
+                    localStorage.setItem("theme", next);
+                    updateToggleIcon(next);
+                });
+                function updateToggleIcon(theme) {
+                    const sunSvg = `<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="7" y="0" width="2" height="2"/><rect x="13" y="2" width="2" height="2"/><rect x="14" y="7" width="2" height="2"/><rect x="13" y="12" width="2" height="2"/><rect x="7" y="14" width="2" height="2"/><rect x="2" y="12" width="2" height="2"/><rect x="0" y="7" width="2" height="2"/><rect x="2" y="2" width="2" height="2"/><rect x="5" y="5" width="6" height="6"/><rect x="6" y="4" width="4" height="1"/><rect x="4" y="6" width="1" height="4"/><rect x="11" y="6" width="1" height="4"/><rect x="6" y="11" width="4" height="1"/></svg>`;
+                    const moonSvg = `<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="8" y="2" width="8" height="2"/><rect x="7" y="4" width="10" height="2"/><rect x="6" y="6" width="11" height="2"/><rect x="6" y="8" width="11" height="2"/><rect x="6" y="10" width="11" height="2"/><rect x="7" y="12" width="10" height="2"/><rect x="8" y="14" width="8" height="2"/><rect x="12" y="4" width="7" height="2" fill="var(--bg)"/><rect x="13" y="6" width="7" height="2" fill="var(--bg)"/><rect x="13" y="8" width="7" height="2" fill="var(--bg)"/><rect x="13" y="10" width="7" height="2" fill="var(--bg)"/><rect x="12" y="12" width="7" height="2" fill="var(--bg)"/></svg>`;
+                    toggle.innerHTML = theme === "dark" ? sunSvg : moonSvg;
+                    toggle.title =
+                        theme === "dark"
+                            ? "Switch to light mode"
+                            : "Switch to dark mode";
+                    toggle.setAttribute("aria-label", toggle.title);
+                }
+            })();
+        </script>
+    </body>
 </html>

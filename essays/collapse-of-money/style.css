@@ -188,3 +188,26 @@ h2 {
         padding: 40px 16px;
     }
 }
+
+.hero-image {
+    margin: 32px auto 48px;
+    text-align: center;
+}
+
+.hero-image img {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 800px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--line);
+}
+
+.hero-image figcaption {
+    margin-top: 12px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}

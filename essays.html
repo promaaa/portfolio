@@ -9,9 +9,9 @@
     </head>
     <body>
         <div class="container">
-            <div class="top">
+            <header class="essays-header">
                 <a class="back" href="main.html">← Back</a>
-                <div class="top-actions">
+                <div class="header-actions">
                     <span class="byline">Marc Duboc</span>
                     <button
                         id="theme-toggle"
@@ -20,77 +20,110 @@
                         title="Switch to dark mode"
                     ></button>
                 </div>
-            </div>
+            </header>
             <h1>Essays</h1>
             <p class="lead">
                 Selected notes and essays on engineering, systems, and craft.
             </p>
 
-            <div class="list">
+            <div class="essay-grid">
                 <a
-                    class="item"
+                    class="essay-card"
                     href="essays/unspoken-dialogue/index.html"
-                    target="_self"
                 >
-                    <h3>The Unspoken Dialogue</h3>
-                    <p class="summary">
-                        On the grounding honesty of physical effort and its
-                        dialogue with the intellectual mind.
-                    </p>
-                    <div class="meta">Essay • Oct 17, 2025</div>
+                    <div class="card-image">
+                        <img
+                            src="essays/unspoken-dialogue/picture.png"
+                            alt="The Unspoken Dialogue"
+                        />
+                    </div>
+                    <div class="card-content">
+                        <h3>The Unspoken Dialogue</h3>
+                        <p class="summary">
+                            On the grounding honesty of physical effort and its
+                            dialogue with the intellectual mind.
+                        </p>
+                        <div class="meta">Essay • Oct 17, 2025</div>
+                    </div>
+                </a>
+                <a class="essay-card" href="essays/lucid-hope/index.html">
+                    <div class="card-image">
+                        <img
+                            src="essays/lucid-hope/picture.png"
+                            alt="Lucid Hope"
+                        />
+                    </div>
+                    <div class="card-content">
+                        <h3>Lucid Hope</h3>
+                        <p class="summary">
+                            Disciplined optimism, attention, and craft over
+                            cynicism.
+                        </p>
+                        <div class="meta">Essay • Jul 3, 2025</div>
+                    </div>
                 </a>
                 <a
-                    class="item"
-                    href="essays/lucid-hope/index.html"
-                    target="_self"
-                >
-                    <h3>Lucid Hope</h3>
-                    <p class="summary">
-                        Disciplined optimism, attention, and craft over
-                        cynicism.
-                    </p>
-                    <div class="meta">Essay • Jul 3, 2025</div>
-                </a>
-                <a
-                    class="item"
+                    class="essay-card"
                     href="essays/domestic-sovereignty/index.html"
-                    target="_self"
                 >
-                    <h3>Domestic Sovereignty</h3>
-                    <p class="summary">
-                        On running your own services and choosing dependencies.
-                    </p>
-                    <div class="meta">Essay • Jan 20, 2025</div>
+                    <div class="card-image">
+                        <img
+                            src="essays/domestic-sovereignty/picture.png"
+                            alt="Domestic Sovereignty"
+                        />
+                    </div>
+                    <div class="card-content">
+                        <h3>Domestic Sovereignty</h3>
+                        <p class="summary">
+                            On running your own services and choosing
+                            dependencies.
+                        </p>
+                        <div class="meta">Essay • Jan 20, 2025</div>
+                    </div>
                 </a>
                 <a
-                    class="item"
+                    class="essay-card"
                     href="essays/collapse-of-money/index.html"
-                    target="_self"
                 >
-                    <h3>
-                        The Collapse of Money – A Journey Through the History of
-                        Exchange
-                    </h3>
-                    <p class="summary">
-                        History of exchange, fiat, and programmable money.
-                    </p>
-                    <div class="meta">Essay • Aug 14, 2024</div>
+                    <div class="card-image">
+                        <img
+                            src="essays/collapse-of-money/picture.png"
+                            alt="The Collapse of Money"
+                        />
+                    </div>
+                    <div class="card-content">
+                        <h3>
+                            The Collapse of Money – A Journey Through the
+                            History of Exchange
+                        </h3>
+                        <p class="summary">
+                            History of exchange, fiat, and programmable money.
+                        </p>
+                        <div class="meta">Essay • Aug 14, 2024</div>
+                    </div>
                 </a>
                 <a
-                    class="item"
+                    class="essay-card"
                     href="essays/the-work-of-writing/index.html"
-                    target="_self"
                 >
-                    <h3>The Work of Writing</h3>
-                    <p class="summary">
-                        Writing as the workshop where thought becomes
-                        load‑bearing.
-                    </p>
-                    <div class="meta">Essay • May 9, 2023</div>
+                    <div class="card-image">
+                        <img
+                            src="essays/the-work-of-writing/picture.png"
+                            alt="The Work of Writing"
+                        />
+                    </div>
+                    <div class="card-content">
+                        <h3>The Work of Writing</h3>
+                        <p class="summary">
+                            Writing as the workshop where thought becomes
+                            load‑bearing.
+                        </p>
+                        <div class="meta">Essay • May 9, 2023</div>
+                    </div>
                 </a>
             </div>
 
-            <h2>Current Reading</h2>
+            <h2 style="margin-top: 60px">Current Reading</h2>
             <div
                 class="reading-lists"
                 style="margin: 20px 0 40px; display: flex; gap: 12px"
