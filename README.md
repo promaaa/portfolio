@@ -1,57 +1,49 @@
-# Marc Duboc - Portfolio
+# Marc Duboc — Personal Portfolio
 
-Personal portfolio showcasing engineering projects and technical expertise.
+This repository is my personal portfolio site: a small, hand-crafted static site (HTML, CSS, JS) that documents projects, essays, and contact details. I maintain the content directly — no build step, no framework — because clarity and control matter to how I present my work.
 
-## 🚀 Live Portfolio
+What this repo contains
+- `main.html` — home page (projects, current reading, essay teasers)
+- `essays.html` — essays index
+- `essays/<slug>/index.html` — individual essays
+- `projects/` — project pages and project-specific assets
+- `css/`, `pictures/`, `projects/*/images/` — styles and images
 
-Visit the portfolio at: [Your GitHub Pages URL]
+Quick local run
+- You can open `main.html` directly in a browser for a quick look.
+- For accurate testing of relative links, serve the folder:
 
-## 📁 Project Structure
-
+```portfolio/README.md#L1-3
+python3 -m http.server 8000
 ```
-portfolio/
-├── portfolio_prom_aaa_restored_new_cards.html  # Main portfolio page
-├── pictures/                                   # Project images and screenshots
-├── *-writeup.html                             # Detailed project documentation
-└── README.md                                  # This file
+
+Then open: `http://localhost:8000/main.html`
+
+Common maintenance tasks
+- Verify essays exist under `essays/<slug>/index.html`.
+- If you move or rename files, update `href` values in `main.html` and `essays.html`.
+- Search for legacy or broken essay links:
+
+```portfolio/README.md#L4-6
+grep -R "essay-" -n . || true
+grep -R "essays/" -n . || true
 ```
 
-## 🛠️ Featured Projects
+Deployment guidance
+- This is static content. Deploy to GitHub Pages, Netlify, Vercel, S3 + CDN, or any static host.
+- If you prefer clean folder URLs (e.g. `/essays/<slug>/`), ensure the host serves `index.html` by folder or keep explicit `index.html` in links.
 
-### Hardware & Systems
-- **nand2cpu** - Building a CPU from NAND gates using Verilog HDL
-- **Ball-Collecting Robots** - Autonomous mechatronics system with PID control
-- **Smart Grid** - Real-time data ingestion and APIs with Java/Vert.x
+Contributing
+- Make focused changes (text, images, links) and open a PR.
+- Test locally before submitting.
+- If you rename a folder or slug, update all affected `href`s and mention the change in the PR.
 
-### Software & Web
-- **Chef Gen** - AI recipe finder using LLM APIs and React
-- **Evento** - Event management platform built for Solana hackathon
-- **Tenzies** - Interactive dice game showcasing React state management
+License & contact
+- Add a `LICENSE` file if you want explicit reuse terms (MIT, etc.).
+- My contact email is included in `main.html`.
 
-## 🎥 YouTube Channel
-
-Technical videos and project demonstrations: [@promaa_](https://youtube.com/@promaa_)
-
-## 🔗 Links
-
-- **GitHub**: [github.com/promaaa](https://github.com/promaaa)
-- **YouTube**: [youtube.com/@promaa_](https://youtube.com/@promaa_)
-
-## 💼 Technical Skills
-
-- **Languages**: Verilog, Java, Python, JavaScript, C/C++
-- **Frameworks**: React, Django, Vert.x, Next.js
-- **Technologies**: FPGA, PostgreSQL, REST APIs, LLM Integration
-- **Domains**: Computer Architecture, Embedded Systems, Web Development, AI/ML
-
-## 📄 Project Write-ups
-
-Each project includes a detailed technical write-up with:
-- Architecture documentation
-- Implementation details
-- Code examples from GitHub repositories
-- Challenges overcome and lessons learned
-
----
-
-*Engineering systems that work. Building with clarity, freedom, and creativity.*
+Notes
+This README is intentionally concise and personal. If you want, I can:
+- add a small link-check script (Python or Node),
+- create a short GitHub Pages deployment guide with exact commands,
+- or convert links to trailing‑slash style and update references.
