@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Essays — Marc Duboc</title>
+        <meta name="color-scheme" content="light dark" />
+        <link rel="icon" type="image/png" href="../pictures/logo.png" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&family=Sora:wght@500;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="../css/main.css" />
+    </head>
+    <body>
+        <div class="container">
+            <header class="essays-header">
+                <h2>Essays</h2>
+                <div class="header-actions">
+                    <a href="../">← Back to Portfolio</a>
+                    <button
+                        class="theme-toggle"
+                        id="theme-toggle"
+                        aria-label="Toggle theme"
+                    ></button>
+                </div>
+            </header>
+
+            <div class="essay-grid">
+                <!-- The Unspoken Dialogue -->
+                <a
+                    href="unspoken-dialogue/"
+                    class="essay-card"
+                    aria-label="Read The Unspoken Dialogue"
+                >
+                    <div class="card-image">
+                        <img
+                            src="unspoken-dialogue/picture.png"
+                            alt="The Unspoken Dialogue"
+                        />
+                    </div>
+                    <div class="card-content">
+                        <h3>The Unspoken Dialogue</h3>
+                        <p class="summary">
+                            On the grounding honesty of physical effort and its
+                            dialogue with the intellectual mind.
+                        </p>
+                        <div class="meta">Oct 17, 2025</div>
+                    </div>
+                </a>
+
+                <!-- Lucid Hope -->
+                <a
+                    href="lucid-hope/"
+                    class="essay-card"
+                    aria-label="Read Lucid Hope"
+                >
+                    <div class="card-image">
+                        <img src="lucid-hope/picture.png" alt="Lucid Hope" />
+                    </div>
+                    <div class="card-content">
+                        <h3>Lucid Hope</h3>
+                        <p class="summary">
+                            A case for disciplined optimism, attention, and
+                            craft over cynicism.
+                        </p>
+                        <div class="meta">Jul 3, 2025</div>
+                    </div>
+                </a>
+
+                <!-- Domestic Sovereignty -->
+                <a
+                    href="domestic-sovereignty/"
+                    class="essay-card"
+                    aria-label="Read Domestic Sovereignty"
+                >
+                    <div class="card-image">
+                        <img
+                            src="domestic-sovereignty/picture.png"
+                            alt="Domestic Sovereignty"
+                        />
+                    </div>
+                    <div class="card-content">
+                        <h3>Domestic Sovereignty</h3>
+                        <p class="summary">
+                            On the quiet freedom of running your own services
+                            and choosing dependencies that deserve you.
+                        </p>
+                        <div class="meta">Jan 20, 2025</div>
+                    </div>
+                </a>
+
+                <!-- The Work of Writing -->
+                <a
+                    href="the-work-of-writing/"
+                    class="essay-card"
+                    aria-label="Read The Work of Writing"
+                >
+                    <div class="card-image">
+                        <img
+                            src="the-work-of-writing/picture.png"
+                            alt="The Work of Writing"
+                        />
+                    </div>
+                    <div class="card-content">
+                        <h3>The Work of Writing</h3>
+                        <p class="summary">
+                            Writing as the workshop where thought becomes
+                            load‑bearing; habits, tools, and craft.
+                        </p>
+                        <div class="meta">May 9, 2023</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <script>
+            (function () {
+                const html = document.documentElement;
+                const toggle = document.getElementById("theme-toggle");
+                const urlTheme = new URLSearchParams(location.search).get(
+                    "theme",
+                );
+                const saved =
+                    urlTheme || localStorage.getItem("theme") || "light";
+                html.setAttribute("data-theme", saved);
+                if (urlTheme) localStorage.setItem("theme", urlTheme);
+                updateToggleIcon(saved);
+                toggle.addEventListener("click", function () {
+                    const current = html.getAttribute("data-theme");
+                    const next = current === "dark" ? "light" : "dark";
+                    html.setAttribute("data-theme", next);
+                    localStorage.setItem("theme", next);
+                    updateToggleIcon(next);
+                });
+                function updateToggleIcon(theme) {
+                    const sunSvg = `<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="7" y="0" width="2" height="2"/><rect x="13" y="2" width="2" height="2"/><rect x="14" y="7" width="2" height="2"/><rect x="13" y="12" width="2" height="2"/><rect x="7" y="14" width="2" height="2"/><rect x="2" y="12" width="2" height="2"/><rect x="0" y="7" width="2" height="2"/><rect x="2" y="2" width="2" height="2"/><rect x="5" y="5" width="6" height="6"/><rect x="6" y="4" width="4" height="1"/><rect x="4" y="6" width="1" height="4"/><rect x="11" y="6" width="1" height="4"/><rect x="6" y="11" width="4" height="1"/></svg>`;
+                    const moonSvg = `<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="8" y="2" width="8" height="2"/><rect x="7" y="4" width="10" height="2"/><rect x="6" y="6" width="11" height="2"/><rect x="6" y="8" width="11" height="2"/><rect x="6" y="10" width="11" height="2"/><rect x="7" y="12" width="10" height="2"/><rect x="8" y="14" width="8" height="2"/><rect x="12" y="4" width="7" height="2" fill="var(--bg)"/><rect x="13" y="6" width="7" height="2" fill="var(--bg)"/><rect x="13" y="8" width="7" height="2" fill="var(--bg)"/><rect x="13" y="10" width="7" height="2" fill="var(--bg)"/><rect x="12" y="12" width="7" height="2" fill="var(--bg)"/></svg>`;
+                    toggle.innerHTML = theme === "dark" ? sunSvg : moonSvg;
+                    toggle.title =
+                        theme === "dark"
+                            ? "Switch to light mode"
+                            : "Switch to dark mode";
+                    toggle.setAttribute("aria-label", toggle.title);
+                }
+            })();
+        </script>
+    </body>
+</html>

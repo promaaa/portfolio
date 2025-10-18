@@ -2,15 +2,15 @@
 
 This repository contains my personal portfolio site: a small, hand-maintained static site (HTML, CSS, JS). I edit these files directly to publish projects, essays, and contact details. No build step or tooling required.
 
-What’s included
-- `main.html` — homepage (projects, current reading, essay teasers)
-- `essays.html` — essay index
-- `essays/<slug>/index.html` — individual essays
-- `projects/` — project pages and assets
-- `css/`, `pictures/`, `projects/*/images/` — styles and images
+## What’s included
+- `index.html` — homepage (projects, current reading, essay teasers)
+- `essays/index.html` — essay index
+- `essays/<slug>/` — individual essays
+- `projects/<slug>/` — project pages and assets
+- `css/`, `pictures/` — styles and images
 
-Run locally
-- Quick: open `main.html` in your browser.
+## Run locally
+- Quick: open `index.html` in your browser.
 - Recommended: from the repo root run:
   ```
   python3 -m http.server 8000

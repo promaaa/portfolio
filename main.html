@@ -1715,7 +1715,7 @@
                     <a href="#projects">Projects</a>
                     <a href="#education">Education</a>
                     <a href="#reading">Reading</a>
-                    <a href="essays.html">Essays</a>
+                    <a href="essays/">Essays</a>
                     <a href="#contact">Contact</a>
                     <button class="theme-toggle" id="theme-toggle">
                         <svg
@@ -1840,7 +1840,7 @@
                             ><span class="tag">C/C++</span>
                         </div>
                         <div class="actions">
-                            <a href="projects/ball-collecting/index.html"
+                            <a href="projects/ball-collecting/"
                                 >Write‑up ↗</a
                             ><a
                                 href="https://github.com/promaaa/ball-collecting-robots"
@@ -1858,7 +1858,7 @@
                         role="link"
                         tabindex="0"
                         aria-label="Open physical chess-playing robot write-up"
-                        data-href="projects/smart-chess/index.html"
+                        data-href="projects/smart-chess/"
                     >
                         <div class="thumb">
                             <img
@@ -1881,7 +1881,7 @@
                             ><span class="tag">AI</span>
                         </div>
                         <div class="actions">
-                            <a href="projects/smart-chess/index.html"
+                            <a href="projects/smart-chess/"
                                 >Write‑up ↗</a
                             ><a
                                 href="https://github.com/promaaa/physical-chess-playing-robot"
@@ -1899,7 +1899,7 @@
                         role="link"
                         tabindex="0"
                         aria-label="Open nand2cpu ALU write-up"
-                        data-href="projects/nand2cpu/index.html"
+                        data-href="projects/nand2cpu/"
                     >
                         <div class="thumb">
                             <img
@@ -1925,7 +1925,7 @@
                                 target="_blank"
                                 rel="noopener"
                                 >Demo ↗</a
-                            ><a href="projects/nand2cpu/index.html"
+                            ><a href="projects/nand2cpu/"
                                 >Write‑up ↗</a
                             ><a
                                 href="https://github.com/promaaa/nand2cpu"
@@ -1943,7 +1943,7 @@
                         role="link"
                         tabindex="0"
                         aria-label="Open evento write-up"
-                        data-href="projects/evento/index.html"
+                        data-href="projects/evento/"
                     >
                         <div class="thumb">
                             <img
@@ -1969,7 +1969,7 @@
                                 target="_blank"
                                 rel="noopener"
                                 >Site ↗</a
-                            ><a href="projects/evento/index.html">Write‑up ↗</a
+                            ><a href="projects/evento/">Write‑up ↗</a
                             ><a
                                 href="https://github.com/promaaa/evento"
                                 target="_blank"
@@ -1986,7 +1986,7 @@
                         role="link"
                         tabindex="0"
                         aria-label="Open Chef Gen write-up"
-                        data-href="projects/chefgen/index.html"
+                        data-href="projects/chefgen/"
                     >
                         <div class="thumb">
                             <img
@@ -2007,7 +2007,7 @@
                             ><span class="tag">Next/React</span>
                         </div>
                         <div class="actions">
-                            <a href="projects/chefgen/index.html">Write‑up ↗</a
+                            <a href="projects/chefgen/">Write‑up ↗</a
                             ><a
                                 href="https://github.com/promaaa/chef-gen"
                                 target="_blank"
@@ -2024,7 +2024,7 @@
                         role="link"
                         tabindex="0"
                         aria-label="Open smart grid write-up"
-                        data-href="projects/smart-grid/index.html"
+                        data-href="projects/smart-grid/"
                     >
                         <div class="thumb">
                             <img
@@ -2048,7 +2048,7 @@
                             ><span class="tag">Streaming</span>
                         </div>
                         <div class="actions">
-                            <a href="projects/smart-grid/index.html"
+                            <a href="projects/smart-grid/"
                                 >Write‑up ↗</a
                             ><a
                                 href="https://github.com/promaaa/smart_grid_JPA"
@@ -2260,7 +2260,7 @@
                                 <span class="tag">Oct 17, 2025</span>
                             </div>
                             <div class="actions">
-                                <a href="essays/unspoken-dialogue/index.html"
+                                <a href="essays/unspoken-dialogue/"
                                     >Read →</a
                                 >
                             </div>
@@ -2283,7 +2283,7 @@
                                 <span class="tag">Jul 3, 2025</span>
                             </div>
                             <div class="actions">
-                                <a href="essays/lucid-hope/index.html"
+                                <a href="essays/lucid-hope/"
                                     >Read →</a
                                 >
                             </div>
@@ -2306,7 +2306,7 @@
                                 <span class="tag">Jan 20, 2025</span>
                             </div>
                             <div class="actions">
-                                <a href="essays/domestic-sovereignty/index.html"
+                                <a href="essays/domestic-sovereignty/"
                                     >Read →</a
                                 >
                             </div>
@@ -2320,7 +2320,7 @@
                     </article>
                 </div>
                 <p style="margin-top: 14px">
-                    <a href="essays.html">All essays →</a>
+                    <a href="essays/">All essays →</a>
                 </p>
             </section>
 
@@ -2788,7 +2788,7 @@
             // Reveal on scroll (fade/slide)
             (function () {
                 const root = document.documentElement;
-                root.classList.add("reveal-ready");
+                if (!root.classList.contains('reveal-ready')) root.classList.add("reveal-ready");
                 const targets = document.querySelectorAll(
                     ".hero > div, .hero .ascii-wrap, section h2, #projects .card, #education .background-item, #reading .card, #contact .connect-item",
                 );
@@ -2879,14 +2879,14 @@
                             window.open(href, "_blank", "noopener");
                         }
                         // Navigate internal .html links, propagating the theme
-                        else if (href.endsWith(".html")) {
+                        else if (href.endsWith("/") || href.endsWith(".html")) {
                             try {
                                 const url = new URL(href, location.href);
                                 const theme =
                                     document.documentElement.getAttribute(
                                         "data-theme",
                                     ) || "light";
-                                url.searchParams.set("theme", theme);
+                                if (theme) url.searchParams.set("theme", theme);
                                 window.location.href =
                                     url.pathname + url.search + url.hash;
                             } catch (_) {
