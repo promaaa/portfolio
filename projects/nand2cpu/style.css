@@ -171,18 +171,18 @@ h3 {
     font-weight: 600;
 }
 h4 {
-    margin: 20px 0 8px;
-    font-size: 0.95rem;
+    margin: 18px 0 6px;
+    font-size: 0.98rem;
     font-weight: 600;
 }
 p {
     margin: 0 0 16px;
     color: var(--muted);
 }
-ul {
+ol {
     margin: 0 0 18px 20px;
 }
-ol {
+ul {
     margin: 0 0 18px 20px;
 }
 li {
@@ -245,6 +245,15 @@ li {
     border-radius: 8px;
     margin: 26px 0;
 }
+.callout p {
+    margin: 0 0 8px;
+}
+.callout p:last-child {
+    margin: 0;
+}
+.callout ul {
+    margin: 8px 0 0 20px;
+}
 .note {
     border-left: 4px solid var(--accent);
     padding: 12px 14px;
@@ -272,7 +281,6 @@ li {
     align-items: center;
     justify-content: center;
     transition: background 0.2s ease;
-    z-index: 1000;
 }
 .theme-toggle:hover {
     background: var(--surface-alt);
@@ -285,28 +293,24 @@ li {
 }
 code {
     font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: 0.9em;
     background: var(--surface-alt);
     padding: 2px 6px;
     border-radius: 4px;
-    font-size: 0.88em;
-    border: 1px solid var(--line);
 }
 pre {
     font-family: ui-monospace, Menlo, Consolas, monospace;
     background: var(--surface-alt);
     border: 1px solid var(--line);
-    border-left: 4px solid var(--accent);
-    padding: 16px 20px;
+    padding: 14px;
     border-radius: 8px;
     overflow: auto;
     font-size: 0.9rem;
-    line-height: 1.6;
-    margin: 24px 0;
-    box-shadow: var(--shadow);
+    line-height: 1.5;
+    margin: 16px 0;
 }
 pre code {
     background: none;
-    border: none;
     padding: 0;
     font-size: inherit;
 }
@@ -314,9 +318,10 @@ figure {
     margin: 28px 0 18px;
 }
 figcaption {
-    margin-top: 10px;
-    font-size: 0.85rem;
-    line-height: 1.5;
+    margin-top: 6px;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     color: var(--muted);
 }
 figure img,
@@ -327,12 +332,15 @@ figure video {
     border-radius: 12px;
     box-shadow: var(--shadow);
 }
-.hero-illustration {
+.hero-figure {
     margin: 36px 0 30px;
 }
-.hero-illustration img {
+.hero-figure img {
     max-height: 520px;
     object-fit: cover;
+}
+.hero-figure figcaption {
+    text-align: center;
 }
 .zoomable {
     cursor: zoom-in;
@@ -365,130 +373,52 @@ video {
     max-width: 100%;
     height: auto;
 }
-
-/* SVG Zoom Modal */
-.svg-modal {
+.container svg text {
+    font-family: inherit;
+}
+.zoom-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(12, 14, 18, 0.86);
     display: none;
-    position: fixed;
-    z-index: 2000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.95);
     align-items: center;
     justify-content: center;
-    padding: 40px;
+    padding: 32px;
+    z-index: 2400;
 }
-
-.svg-modal.active {
+.zoom-overlay.active {
     display: flex;
 }
-
-.svg-modal-content {
-    position: relative;
-    background: var(--bg);
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
-    max-height: 90vh;
-    overflow: auto;
+.zoom-overlay img {
+    max-width: min(1200px, 92vw);
+    max-height: 92vh;
+    border-radius: 14px;
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.45);
 }
-
-.svg-modal svg {
-    display: block;
-    width: auto !important;
-    height: auto !important;
-    max-width: none !important;
-    min-width: 1000px;
-    cursor: default;
-}
-
-.svg-modal svg:hover {
-    opacity: 1;
-}
-
-.svg-modal-close {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    color: #fff;
-    font-size: 40px;
-    font-weight: bold;
+.zoom-close {
+    position: absolute;
+    top: 18px;
+    right: 22px;
+    background: rgba(24, 24, 27, 0.8);
+    color: #f5f5f5;
+    border: none;
+    border-radius: 999px;
+    width: 38px;
+    height: 38px;
+    font-size: 1.2rem;
     cursor: pointer;
-    z-index: 2001;
-    background: rgba(0, 0, 0, 0.7);
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    line-height: 1;
-    transition: all 0.2s;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
-
-.svg-modal-close:hover,
-.svg-modal-close:focus {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.8);
-    transform: rotate(90deg);
+.zoom-close:hover {
+    background: rgba(39, 39, 42, 0.92);
 }
-
-/* SVG diagram styles */
-figure svg {
-    cursor: pointer;
-    transition: opacity 0.2s;
+.zoom-close:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
 }
-
-figure svg:hover {
-    opacity: 0.9;
-}
-
-.diagram {
-    margin: 36px 0;
-}
-
-.diagram svg {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 12px;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    padding: 20px;
-}
-
-/* Tables */
-table {
-    border-collapse: collapse;
-    width: 100%;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    overflow: hidden;
-    margin: 20px 0;
-}
-th,
-td {
-    padding: 10px 12px;
-    border-bottom: 1px solid var(--line);
-    font-size: 0.95rem;
-    vertical-align: top;
-    color: var(--muted);
-}
-th {
-    background: var(--surface-alt);
-    text-align: left;
-    color: var(--ink);
-    font-weight: 600;
-}
-tbody tr:hover {
-    background: var(--surface-alt);
-}
-
-/* Clean status pill for Coming soon */
 .status-pill {
     display: inline-block;
     border: 1px solid var(--line);
@@ -532,7 +462,31 @@ tbody tr:hover {
 .todo {
     background: #94a3b8;
 }
-
+table {
+    border-collapse: collapse;
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 16px 0;
+}
+th,
+td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.95rem;
+    vertical-align: top;
+    color: var(--muted);
+}
+th {
+    background: var(--surface-alt);
+    text-align: left;
+    color: var(--ink);
+}
+tbody tr:last-child td {
+    border-bottom: none;
+}
 .fig-note {
     margin: -4px auto 28px;
     max-width: 860px;
@@ -573,29 +527,10 @@ tbody tr:hover {
     td {
         padding: 8px 10px;
     }
-    .svg-modal {
-        padding: 20px;
-    }
-    .svg-modal svg {
-        min-width: 600px;
-    }
-}
-
-@media print {
-    .theme-toggle,
-    .back-link,
-    .svg-modal {
-        display: none;
-    }
-    .container {
-        max-width: 100%;
-        padding: 0;
+    h1 {
+        font-size: 1.8rem;
     }
     h2 {
-        page-break-after: avoid;
-    }
-    pre,
-    figure {
-        page-break-inside: avoid;
+        font-size: 1.4rem;
     }
 }
