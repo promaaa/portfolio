@@ -3,7 +3,22 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Marc Duboc — Portfolio (promaa)</title>
+        <title>Marc Duboc — Electrical & Embedded Systems Engineer</title>
+        <meta name="description" content="Electrical & Embedded Systems Engineer specializing in robotics, PCB design, microcontroller programming, and real-time control systems. Projects in autonomous robots, FPGA development, and IoT sensor networks.">
+        <meta name="keywords" content="electrical engineering, embedded systems, robotics engineer, PCB design, microcontroller, STM32, ESP32, Arduino, FPGA, Verilog, PID control, motor control, sensor interfacing, I2C, SPI, UART, CAN, KiCad, oscilloscope, signal processing, power electronics, IoT, real-time systems, FreeRTOS, C programming, embedded C, analog circuits, digital design, mechatronics, autonomous robots, control systems">
+        <meta name="author" content="Marc Duboc">
+
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://promaaa.github.io/portfolio/">
+        <meta property="og:title" content="Marc Duboc - Electrical & Embedded Systems Engineer">
+        <meta property="og:description" content="Robotics • PCB Design • Microcontrollers • FPGA • Real-time Control Systems">
+
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image">
+        <meta property="twitter:url" content="https://promaaa.github.io/portfolio/">
+        <meta property="twitter:title" content="Marc Duboc - Electrical & Embedded Systems Engineer">
+        <meta property="twitter:description" content="Robotics • PCB Design • Microcontrollers • FPGA • Real-time Control Systems">
         <meta name="color-scheme" content="light dark" />
         <link rel="icon" type="image/png" href="pictures/logo.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -12,6 +27,38 @@
             href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&family=Sora:wght@500;600;700&display=swap"
             rel="stylesheet"
         />
+
+        <!-- Schema.org Structured Data -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Person",
+          "name": "Marc Duboc",
+          "jobTitle": "Electrical & Embedded Systems Engineer",
+          "description": "Engineer specializing in robotics, embedded systems, and PCB design",
+          "url": "https://promaaa.github.io/portfolio/",
+          "sameAs": [
+            "https://github.com/promaaa",
+            "https://linkedin.com/in/marc-duboc-072932316",
+            "https://x.com/proma__"
+          ],
+          "knowsAbout": [
+            "Electrical Engineering",
+            "Embedded Systems",
+            "Robotics",
+            "PCB Design",
+            "Microcontrollers",
+            "FPGA Development",
+            "Control Systems",
+            "IoT",
+            "Real-Time Systems",
+            "Motor Control",
+            "Verilog",
+            "C/C++ Programming"
+          ]
+        }
+        </script>
+
         <style>
             :root {
                 /* defaults: light theme; dark overrides below */
@@ -750,6 +797,85 @@
                 font-size: 0.7rem;
                 font-weight: 500;
                 border: 1px solid var(--glass-border);
+            }
+
+            /* Technical Skills Section */
+            #skills {
+                margin: 80px 0;
+            }
+            #skills h2 {
+                margin-bottom: 40px;
+            }
+            .skills-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 24px;
+            }
+            .skill-category {
+                background: var(--glass-bg);
+                backdrop-filter: blur(var(--blur));
+                -webkit-backdrop-filter: blur(var(--blur));
+                border: 1px solid var(--glass-border);
+                border-radius: var(--radius);
+                padding: 24px;
+                transition: all 0.3s ease;
+            }
+            .skill-category:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+                border-color: rgba(91, 91, 214, 0.3);
+            }
+            [data-theme="dark"] .skill-category {
+                background: rgba(255, 255, 255, 0.04);
+            }
+            [data-theme="dark"] .skill-category:hover {
+                background: rgba(255, 255, 255, 0.06);
+                border-color: rgba(139, 188, 255, 0.3);
+            }
+            .skill-category h3 {
+                font-size: 16px;
+                font-weight: 600;
+                margin: 0 0 16px 0;
+                color: var(--ink);
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .skill-category h3::before {
+                content: '';
+                width: 3px;
+                height: 16px;
+                background: var(--accent);
+                border-radius: 2px;
+            }
+            .skill-tags {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .skill-tags .tag {
+                background: var(--surface-alt);
+                color: var(--ink);
+                padding: 6px 12px;
+                border-radius: 6px;
+                font-size: 13px;
+                font-weight: 500;
+                border: 1px solid var(--line);
+                transition: all 0.2s ease;
+            }
+            .skill-tags .tag:hover {
+                background: var(--accent);
+                color: white;
+                border-color: var(--accent);
+                transform: translateY(-1px);
+            }
+            [data-theme="dark"] .skill-tags .tag {
+                background: rgba(255, 255, 255, 0.06);
+                color: var(--ink);
+            }
+            [data-theme="dark"] .skill-tags .tag:hover {
+                background: var(--accent);
+                color: white;
             }
             .card .actions {
                 display: flex;
@@ -1763,21 +1889,24 @@
                 <div>
                     <h1>
                         <span class="spark"
-                            >engineer <span class="amp">&</span> builder</span
-                        >. I ship small, sharp systems.
+                            >Electrical <span class="amp">&</span> Embedded Systems Engineer</span
+                        >
                     </h1>
-                    <p>Clarity, freedom, creativity.</p>
+                    <p>Building intelligent systems from silicon to software</p>
                     <div class="focus" aria-label="Focus areas">
                         <span class="focus-label">Focus</span>
                         <div class="focus-items">
                             <span class="chip">Robotics</span
                             ><span class="dot">•</span
-                            ><span class="chip">Electronics & Hardware</span
+                            ><span class="chip">Electronics & Embedded</span
                             ><span class="dot">•</span
-                            ><span class="chip">Web3</span>
+                            ><span class="chip">Real-Time Control</span
+                            ><span class="dot">•</span
+                            ><span class="chip">FPGA</span>
                         </div>
                     </div>
                     <a class="btn" href="#projects">See projects ↓</a>
+                    <a class="btn" href="#skills">Technical skills ↓</a>
                     <a
                         class="btn"
                         href="https://github.com/promaaa"
@@ -1785,13 +1914,7 @@
                         rel="noopener"
                         >GitHub ↗</a
                     >
-                    <a
-                        class="btn"
-                        href="https://www.youtube.com/watch?v=wIBkvQ6MfKQ"
-                        target="_blank"
-                        rel="noopener"
-                        >YouTube ↗</a
-                    >
+
                 </div>
                 <div class="ascii-wrap">
                     <pre id="ascii-art"></pre>
@@ -1851,14 +1974,14 @@
                         </div>
                     </article>
 
-                    <!-- Physical Chess-Playing Robot (moved up) -->
+                    <!-- Physical Chess-Playing Robot -->
                     <article
                         class="card col-12 col-6"
                         id="physical-chess-playing-robot"
                         role="link"
                         tabindex="0"
                         aria-label="Open physical chess-playing robot write-up"
-                        data-href="projects/smart-chess/"
+                        data-href="projects/smart-chess/index.html"
                     >
                         <div class="thumb">
                             <img
@@ -1899,7 +2022,7 @@
                         role="link"
                         tabindex="0"
                         aria-label="Open nand2cpu ALU write-up"
-                        data-href="projects/nand2cpu/"
+                        data-href="projects/nand2cpu/index.html"
                     >
                         <div class="thumb">
                             <img
@@ -1936,6 +2059,48 @@
                         </div>
                     </article>
 
+                    <!-- Smart Grid (moved up) -->
+                    <article
+                        class="card col-12 col-6"
+                        id="smart-grid-realtime"
+                        role="link"
+                        tabindex="0"
+                        aria-label="Open smart grid write-up"
+                        data-href="projects/smart-grid/index.html"
+                    >
+                        <div class="thumb">
+                            <img
+                                src="projects/smart-grid/images/smart_grid.png"
+                                alt="Smart Grid — realtime"
+                                onerror="this.parentNode.textContent='(poster missing)';this.remove();"
+                            />
+                        </div>
+                        <h3>
+                            smart grid — real‑time telemetry ingestion & apis
+                        </h3>
+                        <p class="blurb">
+                            Built UDP ingestion, stream processing, metrics, and
+                            REST APIs with FastAPI/Postgres; designed for
+                            reliability, observability, and integration.
+                        </p>
+                        <div class="tags">
+                            <span class="tag">Python</span
+                            ><span class="tag">FastAPI</span
+                            ><span class="tag">Postgres</span
+                            ><span class="tag">Streaming</span>
+                        </div>
+                        <div class="actions">
+                            <a href="projects/smart-grid/"
+                                >Write‑up ↗</a
+                            ><a
+                                href="https://github.com/promaaa/smart_grid_JPA"
+                                target="_blank"
+                                rel="noopener"
+                                >Code ↗</a
+                            >
+                        </div>
+                    </article>
+
                     <!-- Evento -->
                     <article
                         class="card col-12 col-6"
@@ -1943,7 +2108,7 @@
                         role="link"
                         tabindex="0"
                         aria-label="Open evento write-up"
-                        data-href="projects/evento/"
+                        data-href="projects/evento/index.html"
                     >
                         <div class="thumb">
                             <img
@@ -1986,7 +2151,7 @@
                         role="link"
                         tabindex="0"
                         aria-label="Open Chef Gen write-up"
-                        data-href="projects/chefgen/"
+                        data-href="projects/chefgen/index.html"
                     >
                         <div class="thumb">
                             <img
@@ -2017,49 +2182,81 @@
                         </div>
                     </article>
 
-                    <!-- Smart Grid realtime (moved to the end) -->
-                    <article
-                        class="card col-12 col-6"
-                        id="smart-grid-realtime"
-                        role="link"
-                        tabindex="0"
-                        aria-label="Open smart grid write-up"
-                        data-href="projects/smart-grid/"
-                    >
-                        <div class="thumb">
-                            <img
-                                src="projects/smart-grid/images/smart_grid.png"
-                                alt="Smart Grid — realtime"
-                                onerror="this.parentNode.textContent='(poster missing)';this.remove();"
-                            />
-                        </div>
-                        <h3>
-                            smart grid — real‑time telemetry ingestion & apis
-                        </h3>
-                        <p class="blurb">
-                            Built UDP ingestion, stream processing, metrics, and
-                            REST APIs with FastAPI/Postgres; designed for
-                            reliability, observability, and integration.
-                        </p>
-                        <div class="tags">
-                            <span class="tag">Python</span
-                            ><span class="tag">FastAPI</span
-                            ><span class="tag">Postgres</span
-                            ><span class="tag">Streaming</span>
-                        </div>
-                        <div class="actions">
-                            <a href="projects/smart-grid/"
-                                >Write‑up ↗</a
-                            ><a
-                                href="https://github.com/promaaa/smart_grid_JPA"
-                                target="_blank"
-                                rel="noopener"
-                                >Code ↗</a
-                            >
-                        </div>
-                    </article>
-
                     <!-
+                </div>
+            </section>
+
+            <section id="skills">
+                <h2>Technical Skills</h2>
+                <div class="skills-grid">
+                    <div class="skill-category" data-reveal="up-sm">
+                        <h3>Electronics & PCB Design</h3>
+                        <div class="skill-tags">
+                            <span class="tag">KiCad</span>
+                            <span class="tag">Altium Designer</span>
+                            <span class="tag">LTSpice</span>
+                            <span class="tag">Oscilloscope</span>
+                            <span class="tag">Logic Analyzer</span>
+                            <span class="tag">Soldering (SMD/THT)</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category" data-reveal="up-sm">
+                        <h3>Embedded Systems</h3>
+                        <div class="skill-tags">
+                            <span class="tag">STM32 (ARM Cortex-M)</span>
+                            <span class="tag">ESP32</span>
+                            <span class="tag">Arduino (AVR/ARM)</span>
+                            <span class="tag">Raspberry Pi Pico</span>
+                            <span class="tag">FreeRTOS</span>
+                            <span class="tag">Embedded C/C++</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category" data-reveal="up-sm">
+                        <h3>Communication Protocols</h3>
+                        <div class="skill-tags">
+                            <span class="tag">I2C</span>
+                            <span class="tag">SPI</span>
+                            <span class="tag">UART</span>
+                            <span class="tag">CAN</span>
+                            <span class="tag">Modbus</span>
+                            <span class="tag">MQTT</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category" data-reveal="up-sm">
+                        <h3>Digital Design</h3>
+                        <div class="skill-tags">
+                            <span class="tag">Verilog</span>
+                            <span class="tag">VHDL</span>
+                            <span class="tag">FPGA (Xilinx, Lattice)</span>
+                            <span class="tag">Vivado</span>
+                            <span class="tag">Timing Analysis</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category" data-reveal="up-sm">
+                        <h3>Analog & Power Electronics</h3>
+                        <div class="skill-tags">
+                            <span class="tag">Signal Conditioning</span>
+                            <span class="tag">Power Supply Design</span>
+                            <span class="tag">Motor Drivers</span>
+                            <span class="tag">ADC/DAC Interfacing</span>
+                            <span class="tag">Op-Amp Circuits</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category" data-reveal="up-sm">
+                        <h3>Robotics & Control</h3>
+                        <div class="skill-tags">
+                            <span class="tag">PID Control</span>
+                            <span class="tag">Motor Control (DC, Stepper, BLDC)</span>
+                            <span class="tag">Encoders & Sensors</span>
+                            <span class="tag">Computer Vision (OpenCV)</span>
+                            <span class="tag">Kinematics</span>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -2077,14 +2274,16 @@
                             </div>
                             <h3>IMT Atlantique</h3>
                             <p>
-                                Specializing in software engineering, AI
-                                systems, and distributed computing. Focus on
-                                practical implementation and system design.
+                                Specializing in embedded systems, robotics, and digital electronics.
+                                Focus on microcontroller programming, PCB design, real-time systems,
+                                and autonomous robotics. Hands-on projects in sensor interfacing,
+                                motor control, and FPGA development.
                             </p>
                             <div class="background-skills">
-                                <span>Systems Programming</span>
-                                <span>AI/ML</span>
-                                <span>Software Architecture</span>
+                                <span>Embedded C/C++</span>
+                                <span>Digital Logic Design</span>
+                                <span>Control Systems</span>
+                                <span>PCB Design</span>
                             </div>
                         </div>
                     </div>
@@ -2100,14 +2299,15 @@
                             </div>
                             <h3>CPGE Mathematics & Physics</h3>
                             <p>
-                                Two-year intensive program at Lycée Pierre
-                                Corneille. Rigorous training in analytical
-                                thinking, problem-solving under pressure.
+                                Two-year intensive program at Lycée Pierre Corneille.
+                                Rigorous training in mathematics, physics, and electronics.
+                                Strong foundation in circuit analysis, electromagnetism,
+                                and analytical problem-solving applied to engineering challenges.
                             </p>
                             <div class="background-skills">
                                 <span>Mathematical Modeling</span>
+                                <span>Physics & Electronics</span>
                                 <span>Algorithm Design</span>
-                                <span>Problem Solving</span>
                             </div>
                         </div>
                     </div>
@@ -2814,6 +3014,10 @@
                               ? "zoom"
                               : "up";
                     el.setAttribute("data-reveal", attr);
+                    observer.observe(el);
+                });
+                // Also observe skill-category elements (already have data-reveal="up-sm")
+                document.querySelectorAll(".skill-category").forEach((el) => {
                     observer.observe(el);
                 });
                 // keep background objects only near the top of the page
