@@ -2132,42 +2132,34 @@
                 const isDark = document.documentElement.getAttribute("data-theme") === "dark";
                 // Static crystal (light) or gears (dark)
                 const staticCrystal = `
-        ⬡
-       ╱ ╲
-      ╱   ╲
-     ╱  ◇  ╲
-    ╱ ╱   ╲ ╲
-   ╱ ╱     ╲ ╲
-  ╱ ╱   ◆   ╲ ╲
- ╱ ╱    │    ╲ ╲
-╱ ╱     │     ╲ ╲
-╲ ╲     │     ╱ ╱
- ╲ ╲    │    ╱ ╱
-  ╲ ╲   ◆   ╱ ╱
-   ╲ ╲     ╱ ╱
-    ╲ ╲   ╱ ╱
-     ╲  ◇  ╱
-      ╲   ╱
-       ╲ ╱
-        ⬡`;
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⣠⡶⠀⣸⣇⠀⢶⣄⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⢀⣠⣾⣿⠃⢠⣿⣿⡄⠘⣿⣷⣄⡀⠀⠀⠀
+⠀⢀⣴⣿⣿⣿⡿⠀⣼⣿⣿⣧⠀⢿⣿⣿⣿⣦⡀⠀
+⠠⣈⠙⠻⢿⣿⠃⢰⣿⣿⣿⣿⡆⠘⣿⡿⠟⠋⣁⠄
+⠀⣿⣿⣶⣤⡀⠀⠉⠉⠉⠉⠉⠉⠀⢀⣤⣶⣿⣿⠀
+⠀⢹⣿⣿⣿⣧⠀⣿⣿⣿⣿⣿⣿⠀⣼⣿⣿⣿⡏⠀
+⠀⢸⣿⣿⣿⣿⠀⣿⣿⣿⣿⣿⣿⠀⣿⣿⣿⣿⡇⠀
+⠀⠈⣿⣿⣿⣿⠀⣿⣿⣿⣿⣿⣿⠀⣿⣿⣿⣿⠁⠀
+⠀⠀⢻⣿⣿⣿⠀⣿⣿⣿⣿⣿⣿⠀⣿⣿⣿⡟⠀⠀
+⠀⠀⢸⣿⣿⣿⠀⣿⣿⣿⣿⣿⣿⠀⣿⣿⣿⡇⠀⠀
+⠀⠀⠘⣿⣿⣿⠀⣿⣿⣿⣿⣿⣿⠀⣿⣿⣿⠃⠀⠀
+⠀⠀⠀⢻⣿⣿⠀⢹⣿⣿⣿⣿⡏⠀⣿⣿⡟⠀⠀⠀
+⠀⠀⠀⠀⠙⢿⠀⢸⣿⣿⣿⣿⡇⠀⡿⠋⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀`;
                 const staticGears = `
-     ╭──●──╮       ╭──●──╮
-    ╱  ╱╲  ╲     ╱  ╱╲  ╲
-   ●  ╱  ╲  ●   ●  ╱  ╲  ●
-   │ ╱ ⚙️ ╲ │   │ ╱ ⚙️ ╲ │
-   ●  ╲  ╱  ●───●  ╲  ╱  ●
-    ╲  ╲╱  ╱     ╲  ╲╱  ╱
-     ╰──●──╯       ╰──●──╯
-         ╲           ╱
-          ╲  ╭───╮  ╱
-           ╲ │ ⚙️│ ╱
-            ╲╰───╯╱
-             ╲   ╱
-              ╲ ╱
-               ●`;
+       -  *  -                   |
+    *          *              o     o
+   -            -            |       |
+  *      **      *          o    **   o
+  -     *  *     -          |   o  o   |
+  *      **      *          o    **   o
+   -            -            |       |
+    *          *              o     o
+       -  *  -                   |`;
                 asciiArtElement.textContent = isDark ? staticGears : staticCrystal;
-                asciiArtElement.style.fontSize = "10px";
-                asciiArtElement.style.lineHeight = "1.1";
+                asciiArtElement.style.fontSize = "12px";
+                asciiArtElement.style.lineHeight = "1.2";
                 return;
             }
 
