@@ -2090,10 +2090,48 @@
             const asciiArtElement = document.getElementById("ascii-art");
             if (!asciiArtElement) return;
 
-            // Skip animation on mobile for performance
+            // Skip animation on mobile for performance - show static ASCII instead
             const isMobile = window.matchMedia("(max-width: 768px)").matches;
             if (isMobile) {
-                asciiArtElement.style.display = "none";
+                const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+                // Static crystal (light) or gears (dark)
+                const staticCrystal = `
+        ⬡
+       ╱ ╲
+      ╱   ╲
+     ╱  ◇  ╲
+    ╱ ╱   ╲ ╲
+   ╱ ╱     ╲ ╲
+  ╱ ╱   ◆   ╲ ╲
+ ╱ ╱    │    ╲ ╲
+╱ ╱     │     ╲ ╲
+╲ ╲     │     ╱ ╱
+ ╲ ╲    │    ╱ ╱
+  ╲ ╲   ◆   ╱ ╱
+   ╲ ╲     ╱ ╱
+    ╲ ╲   ╱ ╱
+     ╲  ◇  ╱
+      ╲   ╱
+       ╲ ╱
+        ⬡`;
+                const staticGears = `
+     ╭──●──╮       ╭──●──╮
+    ╱  ╱╲  ╲     ╱  ╱╲  ╲
+   ●  ╱  ╲  ●   ●  ╱  ╲  ●
+   │ ╱ ⚙️ ╲ │   │ ╱ ⚙️ ╲ │
+   ●  ╲  ╱  ●───●  ╲  ╱  ●
+    ╲  ╲╱  ╱     ╲  ╲╱  ╱
+     ╰──●──╯       ╰──●──╯
+         ╲           ╱
+          ╲  ╭───╮  ╱
+           ╲ │ ⚙️│ ╱
+            ╲╰───╯╱
+             ╲   ╱
+              ╲ ╱
+               ●`;
+                asciiArtElement.textContent = isDark ? staticGears : staticCrystal;
+                asciiArtElement.style.fontSize = "10px";
+                asciiArtElement.style.lineHeight = "1.1";
                 return;
             }
 
