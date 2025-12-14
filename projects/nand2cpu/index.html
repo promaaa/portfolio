@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Building a 16-bit CPU from NAND Gates — Marc Duboc</title>
+    <meta name="description"
+        content="Complete 16-bit CPU architecture built from first principles: NAND gates to ALU, register file, control unit, and ISA. Implemented in Verilog with full testbench suite." />
+    <link rel="icon" type="image/png" href="../../pictures/logo.png" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme"></button>
+    <div class="container">
+        <a class="back-link" href="../../">← Back to Portfolio</a>
+        <h1>Building a 16-bit CPU from NAND Gates</h1>
+        <p class="lead">
+            A systematic bottom-up approach: NAND gates → logic synthesis →
+            ALU → register file → control unit → ISA.
+            Implemented in Verilog HDL, synthesizable on Xilinx FPGA.
+        </p>
+        <div class="meta-badges">
+            <span class="badge">Computer Architecture</span>
+            <span class="badge">Digital Logic</span>
+            <span class="badge">Verilog HDL</span>
+            <span class="badge">FPGA</span>
+        </div>
+        <div class="links">
+            <a href="https://github.com/promaaa/nand2cpu" target="_blank" rel="noopener">GitHub ↗</a>
+            <a href="https://www.youtube.com/watch?v=wIBkvQ6MfKQ" target="_blank" rel="noopener">Demo ↗</a>
+        </div>
+
+        <div class="highlight">
+            <strong>Abstract</strong> — A complete 16-bit CPU built from first
+            principles, starting with a single NAND gate. The project demonstrates
+            a systematic bottom-up approach through logic gate synthesis, ALU design,
+            register file architecture, and control unit implementation.
+            Fully implemented in Verilog HDL with custom assembler and testbenches.
+        </div>
+
+        <figure class="hero-illustration">
+            <img src="images/cpu-architecture.svg" alt="16-bit CPU architecture diagram" loading="lazy" />
+            <figcaption>High-level CPU architecture: datapath components and control flow.</figcaption>
+        </figure>
+
+        <div class="toc">
+            <strong>Contents</strong>
+            <a href="#motivation">1. Motivation</a>
+            <a href="#architecture">2. Architecture Overview</a>
+            <a href="#building-blocks">3. Building Blocks</a>
+            <a href="#alu">4. ALU Design</a>
+            <a href="#control">5. Control Unit</a>
+            <a href="#isa">6. Instruction Set</a>
+            <a href="#results">7. Results</a>
+            <a href="#conclusion">8. Conclusion</a>
+        </div>
+
+        <div class="callout">
+            <h3>Key Contributions</h3>
+            <ul>
+                <li>Complete NAND-to-CPU journey with explicit documentation at each abstraction level.</li>
+                <li>Verilog implementation suitable for FPGA synthesis and simulation.</li>
+                <li>Integrated toolchain: assembler, testbenches, and waveform verification.</li>
+                <li>Educational framework balancing simplicity with real-world design principles.</li>
+            </ul>
+        </div>
+
+        <h2 id="motivation">1. Motivation</h2>
+        <p>The assertion that "any digital system can be built from NAND gates" is foundational in computer engineering,
+            yet students rarely witness the complete journey from this primitive to a functioning processor. This
+            project
+            addresses that gap by documenting a systematic, reproducible methodology for constructing a 16-bit CPU
+            from a single universal logic gate.</p>
+
+        <blockquote>Goal: demystify complex systems through hierarchical abstraction and practical Verilog experience.
+        </blockquote>
+
+        <h2 id="architecture">2. Architecture Overview</h2>
+        <p>The CPU follows a simplified Von Neumann architecture with distinct datapath and control components.
+            Key specifications:</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Data Width</td>
+                    <td>16 bits</td>
+                </tr>
+                <tr>
+                    <td>Address Space</td>
+                    <td>64K words</td>
+                </tr>
+                <tr>
+                    <td>Registers</td>
+                    <td>8 general-purpose (R0–R7)</td>
+                </tr>
+                <tr>
+                    <td>Instruction Format</td>
+                    <td>Fixed 16-bit</td>
+                </tr>
+                <tr>
+                    <td>Pipeline</td>
+                    <td>Single-cycle (4 stages)</td>
+                </tr>
+                <tr>
+                    <td>Clock Target</td>
+                    <td>~50 MHz (FPGA)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Block Diagram</h3>
+        <figure class="img-medium">
+            <img src="images/block-diagram.svg" alt="CPU block diagram showing ALU, registers, and control unit"
+                loading="lazy" class="img-zoomable" />
+            <figcaption>CPU block diagram: PC, instruction memory, register file, ALU, control unit, and data memory.
+            </figcaption>
+        </figure>
+
+        <h2 id="building-blocks">3. Building Blocks</h2>
+        <p>Every component is constructed hierarchically from NAND gates:</p>
+
+        <h3>Gate Layer</h3>
+        <ul>
+            <li><strong>NOT:</strong> Single NAND (A NAND A)</li>
+            <li><strong>AND:</strong> NAND + NOT</li>
+            <li><strong>OR:</strong> De Morgan (NOT inputs, then NAND)</li>
+            <li><strong>XOR:</strong> 4 NANDs</li>
+        </ul>
+
+        <h3>Combinational Modules</h3>
+        <ul>
+            <li><strong>Multiplexers:</strong> 2:1, 4:1, 8:1 for data routing</li>
+            <li><strong>Decoders:</strong> 3:8 for register selection</li>
+            <li><strong>Comparators:</strong> Equality and magnitude comparison</li>
+        </ul>
+
+        <h3>Arithmetic Units</h3>
+        <ul>
+            <li><strong>Half Adder:</strong> Sum = XOR, Carry = AND</li>
+            <li><strong>Full Adder:</strong> Two half adders + OR for carry chain</li>
+            <li><strong>Ripple-Carry Adder:</strong> 16-bit chain (educational focus over speed)</li>
+        </ul>
+
+        <h2 id="alu">4. ALU Design</h2>
+        <p>The Arithmetic Logic Unit supports 8 operations selected by a 3-bit opcode:</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Op</th>
+                    <th>Function</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>000</td>
+                    <td>ADD</td>
+                    <td>A + B</td>
+                </tr>
+                <tr>
+                    <td>001</td>
+                    <td>SUB</td>
+                    <td>A − B (two's complement)</td>
+                </tr>
+                <tr>
+                    <td>010</td>
+                    <td>AND</td>
+                    <td>Bitwise AND</td>
+                </tr>
+                <tr>
+                    <td>011</td>
+                    <td>OR</td>
+                    <td>Bitwise OR</td>
+                </tr>
+                <tr>
+                    <td>100</td>
+                    <td>XOR</td>
+                    <td>Bitwise XOR</td>
+                </tr>
+                <tr>
+                    <td>101</td>
+                    <td>NOT</td>
+                    <td>Bitwise NOT(A)</td>
+                </tr>
+                <tr>
+                    <td>110</td>
+                    <td>SHL</td>
+                    <td>Shift left by 1</td>
+                </tr>
+                <tr>
+                    <td>111</td>
+                    <td>SHR</td>
+                    <td>Shift right by 1</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>Status flags: <strong>Zero (Z)</strong>, <strong>Negative (N)</strong>, <strong>Carry (C)</strong>,
+            <strong>Overflow (V)</strong>.
+        </p>
+
+        <figure class="img-medium">
+            <img src="images/ila-alu-basic_sum.png" alt="Vivado ILA showing ALU addition test waveform" loading="lazy"
+                class="img-zoomable" />
+            <figcaption>ILA capture in Vivado: ALU performing basic addition operation with verified output.
+            </figcaption>
+        </figure>
+
+        <h2 id="control">5. Control Unit</h2>
+        <p>Finite state machine decoding instructions and generating control signals:</p>
+
+        <ul>
+            <li><strong>Fetch:</strong> PC → Memory address, increment PC</li>
+            <li><strong>Decode:</strong> Extract opcode, register addresses, immediate values</li>
+            <li><strong>Execute:</strong> ALU operation or memory access</li>
+            <li><strong>Write-back:</strong> Store result to register file</li>
+        </ul>
+
+        <h3>Control Signals</h3>
+        <p>Generated signals include: <code>RegWrite</code>, <code>MemRead</code>, <code>MemWrite</code>,
+            <code>ALUSrc</code>, <code>Branch</code>, <code>Jump</code>.
+        </p>
+
+        <h2 id="isa">6. Instruction Set</h2>
+        <p>Three instruction formats enable diverse operations in fixed 16-bit encoding:</p>
+
+        <h3>Instruction Formats</h3>
+        <ul>
+            <li><strong>R-Type:</strong> Register-register operations (opcode | rd | rs1 | rs2 | func)</li>
+            <li><strong>I-Type:</strong> Immediate operations and memory (opcode | rd | rs1 | imm6)</li>
+            <li><strong>B-Type:</strong> Branches (opcode | rs1 | rs2 | offset6)</li>
+        </ul>
+
+        <h3>Instruction Summary</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Instructions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Arithmetic</td>
+                    <td>ADD, SUB, ADDI</td>
+                </tr>
+                <tr>
+                    <td>Logical</td>
+                    <td>AND, OR, XOR, NOT</td>
+                </tr>
+                <tr>
+                    <td>Memory</td>
+                    <td>LOAD, STORE</td>
+                </tr>
+                <tr>
+                    <td>Control</td>
+                    <td>BEQ, BNE, BLT, JMP, HALT</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 id="results">7. Results</h2>
+
+        <h3>Functional Verification</h3>
+        <p>All unit tests pass with 100% coverage. Programs validated include:</p>
+        <ul>
+            <li>Arithmetic operations (addition, subtraction, multiplication via repeated addition)</li>
+            <li>Logical operations (bitwise AND, OR, XOR, NOT)</li>
+            <li>Memory operations (load, store with various offsets)</li>
+            <li>Control flow (conditional branches, loops, function calls)</li>
+            <li>Complex algorithms (factorial, Fibonacci, array sum)</li>
+        </ul>
+
+        <h3>FPGA Deployment</h3>
+        <p>The CPU was synthesized and deployed on a <strong>PYNQ-Z1</strong> development board (Xilinx Zynq-7000):</p>
+
+        <figure class="img-small">
+            <img src="images/pynqZ1.jpg" alt="PYNQ-Z1 FPGA development board running the 16-bit CPU" loading="lazy"
+                class="img-zoomable" style="transform: rotate(180deg); max-width: 300px;" />
+            <figcaption>PYNQ-Z1 board with the synthesized 16-bit CPU running test programs.</figcaption>
+        </figure>
+
+        <h3>Resource Utilization</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Resource</th>
+                    <th>Utilization</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Logic Cells</td>
+                    <td>~1,200 LUTs</td>
+                </tr>
+                <tr>
+                    <td>Flip-flops</td>
+                    <td>~400 registers</td>
+                </tr>
+                <tr>
+                    <td>Block RAM</td>
+                    <td>128KB (2 BRAMs)</td>
+                </tr>
+                <tr>
+                    <td>Max Clock</td>
+                    <td>~50 MHz</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Performance</h3>
+        <ul>
+            <li><strong>CPI:</strong> ~4.2 average (cycles per instruction)</li>
+            <li><strong>ALU ops:</strong> 4 cycles (fetch-decode-execute-writeback)</li>
+            <li><strong>Memory load:</strong> 5 cycles</li>
+            <li><strong>Branches:</strong> 4–5 cycles</li>
+        </ul>
+
+        <h2 id="conclusion">8. Conclusion</h2>
+        <p>This project demonstrates that a complete, functional CPU can be constructed from first principles using only
+            NAND gates as the universal building block. The systematic bottom-up methodology provides:</p>
+        <ul>
+            <li>Clear understanding of abstraction layers in digital systems</li>
+            <li>Practical experience with Verilog HDL and verification methodologies</li>
+            <li>Foundation for advanced topics in computer architecture</li>
+            <li>Extensible platform for pipelining, caching, and ISA enhancements</li>
+        </ul>
+
+        <blockquote>"Any digital system can be built from NAND gates" — verified through implementation.</blockquote>
+
+        <h3>Future Work</h3>
+        <ul>
+            <li><strong>Pipeline:</strong> 5-stage pipeline with hazard detection and forwarding</li>
+            <li><strong>Cache:</strong> L1 instruction and data caches</li>
+            <li><strong>Interrupts:</strong> Exception handling and peripheral support</li>
+            <li><strong>Toolchain:</strong> C compiler backend targeting the ISA</li>
+        </ul>
+
+        <div class="footer-note">
+            Repo: <a href="https://github.com/promaaa/nand2cpu" target="_blank"
+                rel="noopener">github.com/promaaa/nand2cpu</a>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle
+        (function () {
+            const toggle = document.getElementById('theme-toggle');
+            if (!toggle) return;
+            const html = document.documentElement;
+            const urlTheme = new URLSearchParams(location.search).get('theme');
+            const savedTheme = urlTheme || localStorage.getItem('theme') || 'light';
+            if (urlTheme) localStorage.setItem('theme', urlTheme);
+            html.setAttribute('data-theme', savedTheme);
+            updateToggleIcon(savedTheme);
+
+            toggle.addEventListener('click', function () {
+                const current = html.getAttribute('data-theme');
+                const next = current === 'dark' ? 'light' : 'dark';
+                html.setAttribute('data-theme', next);
+                localStorage.setItem('theme', next);
+                updateToggleIcon(next);
+            });
+
+            function updateToggleIcon(theme) {
+                const sunSvg = `<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="7" y="0" width="2" height="2"/><rect x="13" y="2" width="2" height="2"/><rect x="14" y="7" width="2" height="2"/><rect x="13" y="12" width="2" height="2"/><rect x="7" y="14" width="2" height="2"/><rect x="2" y="12" width="2" height="2"/><rect x="0" y="7" width="2" height="2"/><rect x="2" y="2" width="2" height="2"/><rect x="5" y="5" width="6" height="6"/><rect x="6" y="4" width="4" height="1"/><rect x="4" y="6" width="1" height="4"/><rect x="11" y="6" width="1" height="4"/><rect x="6" y="11" width="4" height="1"/></svg>`;
+                const moonSvg = `<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="8" y="2" width="8" height="2"/><rect x="7" y="4" width="10" height="2"/><rect x="6" y="6" width="11" height="2"/><rect x="6" y="8" width="11" height="2"/><rect x="6" y="10" width="11" height="2"/><rect x="7" y="12" width="10" height="2"/><rect x="8" y="14" width="8" height="2"/><rect x="12" y="4" width="7" height="2" fill="var(--bg)"/><rect x="13" y="6" width="7" height="2" fill="var(--bg)"/><rect x="13" y="8" width="7" height="2" fill="var(--bg)"/><rect x="13" y="10" width="7" height="2" fill="var(--bg)"/><rect x="12" y="12" width="7" height="2" fill="var(--bg)"/></svg>`;
+                toggle.innerHTML = theme === 'dark' ? sunSvg : moonSvg;
+                toggle.title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+            }
+        })();
+
+        // Image zoom
+        document.querySelectorAll('.img-zoomable').forEach(img => {
+            img.style.cursor = 'pointer';
+            img.addEventListener('click', () => img.classList.toggle('img-zoomed'));
+        });
+    </script>
+</body>
+
+</html>

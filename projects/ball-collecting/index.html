@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Autonomous Ball-Collecting Robot — Marc Duboc</title>
+  <meta name="description"
+    content="End-to-end autonomous navigation system with real-time perception pipeline: optical bearing extraction, sensor fusion, and cascaded PI control for low-latency trajectory tracking." />
+  <link rel="icon" type="image/png" href="../../pictures/logo.png" />
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    window.MathJax = { tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]], displayMath: [["$$", "$$"]] }, svg: { fontCache: 'global' } };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+
+<body>
+  <div class="container" id="top">
+    <a href="../../main.html" class="back-link">← Back to Portfolio</a>
+    <h1>Autonomous Table Tennis Ball Collecting Robot</h1>
+    <div class="meta-badges">
+      <div class="badge">Autonomous Navigation</div>
+      <div class="badge">Real-Time Perception</div>
+      <div class="badge">Sensor Fusion</div>
+    </div>
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme"></button>
+    <div class="links">
+      <a href="https://github.com/promaaa/ball-collecting-robots" target="_blank" rel="noopener">GitHub ↗</a>
+      <a href="#conclusions-next">Conclusions ↓</a>
+    </div>
+    <div class="abstract-box" id="abstract">
+      <h2>Abstract</h2>
+      <p>This work details the design, modeling, control synthesis and experimental validation of an autonomous
+        navigation system with real-time perception. The system uses optical bearing extraction with sensor fusion and
+        cascaded PI control for low-latency trajectory tracking. Sub‑centimeter steady‑state accuracy (≤0.5–1 cm) is
+        achieved on static and moving targets while maintaining robust stability margins (Phase ≥ 66°).</p>
+      <ul>
+        <li><strong>Perception Pipeline:</strong> Real-time optical bearing extraction with sensor fusion.</li>
+        <li><strong>Control Stack:</strong> Outer guidance loop + inner wheel speed PI (cascaded architecture).</li>
+        <li><strong>Low-Latency:</strong> Optimized for real-time response with sub-centimeter precision.</li>
+        <li><strong>Outcome:</strong> Hardware redesign migrated bottleneck from actuation to perception—a maturity
+          indicator.</li>
+      </ul>
+    </div>
+    <figure class="hero-illustration">
+      <img src="images/ball-collecting.jpg" alt="Autonomous ball-collecting robot aiming at table tennis balls"
+        loading="lazy" />
+      <figcaption>Prototype ball-collecting robot aligning for pickup during gym floor trials.</figcaption>
+    </figure>
+    <div class="toc" id="toc">
+      <h2>Contents</h2>
+      <ol>
+        <li><a href="#introduction">Introduction</a></li>
+        <li><a href="#core-challenge">Core Challenge</a></li>
+        <li><a href="#architecture-overview">Architecture Overview</a></li>
+        <li><a href="#p1">Prototype 1: Servo Platform</a></li>
+        <li><a href="#p2">Prototype 2: Encoders & Cascaded Control</a></li>
+        <li><a href="#prediction-measurement">Prediction vs Measurement</a></li>
+        <li><a href="#minimal-loop">Minimal Arduino PI Loop</a></li>
+        <li><a href="#conclusions-next">Conclusions & Next Focus</a></li>
+        <li><a href="#faq">Portfolio FAQ</a></li>
+      </ol>
+    </div>
+    <div class="callout">
+      <h3>Key Contributions</h3>
+      <ul>
+        <li>End-to-end autonomous navigation with real-time perception pipeline.</li>
+        <li>Sensor fusion combining optical bearing and encoder feedback.</li>
+        <li>Low-latency control architecture with explicit stability margin targets (66° phase margin).</li>
+        <li>Demonstrated bottleneck migration (actuation → perception) as system maturity indicator.</li>
+      </ul>
+    </div>
+    <!-- KPI grid removed per request -->
+    <figure>
+      <img src="images/robot_overview.jpg" alt="Robot overview" loading="lazy" decoding="async" class="img-zoomable" />
+      <figcaption>Figure 1 — Autonomous robot prototype overview.</figcaption>
+    </figure>
+
+
+    <h2 id="introduction">1. Introduction</h2>
+    <p>Collecting dispersed table tennis balls between multi‑ball drills breaks training flow. Goal: an autonomous
+      ground robot that rapidly detects, approaches, and centers on a (static or slow rolling) ball, emphasizing
+      <strong>accuracy (≤1&nbsp;cm)</strong>, <strong>speed</strong>, and <strong>stability (low oscillation)</strong>.
+    </p>
+    <blockquote>Development loop: Theory ⇄ Simulation ⇄ Experiment ⇄ Gap analysis ⇄ Improvement.</blockquote>
+
+    <h2 id="core-challenge">2. Core Challenge</h2>
+    <p><strong>Core challenge:</strong> Fast, precise, robust interception under variable lighting & friction, with
+      constrained onboard compute.</p>
+    <ul>
+      <li>Reliable ball detection (color, distance ambiguity, lighting)</li>
+      <li>Stable, bias‑free navigation</li>
+      <li>Low‑latency control pipeline</li>
+    </ul>
+
+    <h2 id="architecture-overview">3. Architecture Overview</h2>
+    <figure class="fig-wide">
+      <img src="images/prototype1_architecture.png" alt="Prototype 1 architecture" loading="lazy" decoding="async"
+        class="img-zoomable" />
+      <figcaption>Figure 2 — Prototype 1 architecture (servos, open loop speed).</figcaption>
+    </figure>
+    <figure class="fig-wide">
+      <img src="images/prototype2_architecture.png" alt="Prototype 2 architecture" loading="lazy" decoding="async"
+        class="img-zoomable" />
+      <figcaption>Figure 3 — Prototype 2 architecture (DC motors + encoders + cascaded PI).</figcaption>
+    </figure>
+    <p class="fig-note"><strong>Figure insight (Fig.2–3)</strong> Prototype&nbsp;1 applies the guidance law directly to
+      servos with no wheel‑speed feedback → high sensitivity to servo asymmetry and battery voltage. Prototype&nbsp;2
+      adds an inner PI speed loop (encoders) that linearises actuation so the guidance layer manipulates predictable
+      differential speeds, reducing surface‑dependent response variance.</p>
+
+    <h2 id="p1">4. Prototype 1: Servo Platform</h2>
+    <h3>4.1 Hardware Stack</h3>
+    <ul>
+      <li>Camera (color segmentation → centroid)</li>
+      <li>Arduino UNO (guidance loop)</li>
+      <li>Servomotors (propulsion, asymmetric response)</li>
+      <li>Motion capture (ground truth mm‑level)</li>
+    </ul>
+    <figure>
+      <img src="images/prototype1_hardware.png" alt="Prototype 1 hardware" loading="lazy" decoding="async"
+        class="img-zoomable" />
+      <figcaption>Figure 4 — Prototype 1 hardware.</figcaption>
+    </figure>
+
+
+    <h3>4.2 Vision Bearing Extraction</h3>
+    <p>Processing chain: acquisition → HSV color mask → largest blob → centroid. Horizontal pixel offset becomes bearing
+      error <code>ε</code>. Small‑angle approximation:</p>
+    <div class="eq">$$ \varepsilon \approx \frac{x_{px}-c_x}{f_x} $$<span class="label">Eq. 1 — Bearing error
+        approximation</span></div>
+    <figure>
+      <img src="images/optical_guidance_diagram.png" alt="Optical guidance diagram" loading="lazy" decoding="async"
+        class="img-zoomable" />
+      <figcaption>Figure 5 — Optical guidance flow.</figcaption>
+    </figure>
+    <figure>
+      <img src="images/camera_principle.png" alt="Camera principle" loading="lazy" decoding="async"
+        class="img-zoomable" />
+      <figcaption>Figure 6 — Camera geometry.</figcaption>
+    </figure>
+    <p class="fig-note"><strong>Figure insight (Fig.5–6)</strong> The vision pipeline keeps only one blob centroid
+      (robust vs clutter). The small‑angle approximation (Eq.1) maps horizontal pixel offset to a near‑linear bearing
+      error—adequate bandwidth without heavy intrinsic calibration at this stage.</p>
+    <p>Design choice: keep vision minimal (latency & tunability) before richer perception (depth, learning).</p>
+
+    <h3>4.3 System Modeling & Linearization</h3>
+    <p>The differential-drive robot kinematics progress from nonlinear equations through linearization to Laplace domain
+      for controller design:</p>
+
+    <div class="eq-grid">
+      <div class="eq-col">
+        <h5>Kinematic (Nonlinear)</h5>
+        $$\begin{cases}
+        \dot{y} = V \sin\theta \\
+        \dot{x} = V \cos\theta \\
+        \dot{\theta} = \frac{R}{l}(\Omega_d - \Omega_g) \\
+        \tan(\theta + \delta) = \frac{y_B - y}{x_B - x}
+        \end{cases}$$
+        <span class="eq-label">Eq. 2</span>
+      </div>
+      <div class="eq-col">
+        <h5>Linearized (|θ| ≪ 1)</h5>
+        $$\begin{cases}
+        \dot{y} = V\theta \\
+        \dot{x} = V \\
+        \dot{\theta} = \frac{R}{l}(\Omega_d - \Omega_g) \\
+        \delta = \frac{y_B - y}{x_B} + \frac{x\,y_B}{x_B^2} - \theta
+        \end{cases}$$
+        <span class="eq-label">Eq. 3</span>
+      </div>
+      <div class="eq-col">
+        <h5>Laplace Domain</h5>
+        $$\begin{cases}
+        pY = V\theta + Y_0 \\
+        pX = V + X_0 \\
+        p\theta = \frac{R}{l}(\Omega_d - \Omega_g) + \theta_0 \\
+        \delta = \frac{y_B - Y}{x_B} + \frac{X\,y_B}{x_B^2} - \theta
+        \end{cases}$$
+        <span class="eq-label">Eq. 4</span>
+      </div>
+    </div>
+
+    <p style="font-size:.85rem;color:var(--muted);margin-top:-12px">Where <code>V</code> = forward velocity,
+      <code>θ</code> = heading, <code>δ</code> = bearing error, <code>Ω_d/Ω_g</code> = right/left wheel speeds,
+      <code>R</code> = wheel radius, <code>l</code> = track width.
+    </p>
+
+    <p>This Laplace representation enables analytical transfer function derivation and frequency-domain controller
+      design.</p>
+    <figure class="fig-wide">
+      <img src="images/kinematic_simulation.png" alt="Kinematic simulation" loading="lazy" decoding="async"
+        class="img-zoomable" />
+      <figcaption>Figure 7 — Simulated trajectory under P guidance.</figcaption>
+    </figure>
+
+
+    <h3>4.4 Baseline P Guidance</h3>
+    <p>Wheel command laws for proportional control:</p>
+    <div class="eq">$$ \Omega_{\text{cmd D}} = \Omega_0 + K_p\,\varepsilon \qquad \Omega_{\text{cmd G}} = \Omega_0 -
+      K_p\,\varepsilon $$<span class="label">Eq. 5 — Proportional guidance</span></div>
+    <p>Simulation looked stable → direct deployment.</p>
+    <figure>
+      <img src="images/p_controller_theory.png" alt="P controller theory" loading="lazy" decoding="async"
+        class="img-zoomable" />
+      <figcaption>Figure 8 — P controller (theory).</figcaption>
+    </figure>
+    <figure>
+      <img src="images/p_controller_experiment.png" alt="P controller experiment" loading="lazy" decoding="async"
+        class="img-zoomable" />
+      <figcaption>Figure 9 — P controller (experiment) — oscillations from servo asymmetry.</figcaption>
+    </figure>
+    <p class="fig-note"><strong>Figure insight (Fig.8–9)</strong> Sustained oscillation stems from left/right speed
+      imbalance: the proportional correction repeatedly overshoots because the effective wheel gains differ, injecting a
+      persistent bias. Remedy: add integral action (slow compensation) or redesign actuation.</p>
+
+    <h3>Limitations</h3>
+    <div class="two-up">
+      <figure>
+        <img src="images/servo_asymmetry_left.png" alt="Servo asymmetry left" loading="lazy" decoding="async"
+          class="img-zoomable" />
+        <figcaption>Figure 10a — Raw PWM step responses: left vs right servo actual speed (asymmetry visible).
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="images/servo_asymmetry_right.png" alt="Servo asymmetry right" loading="lazy" decoding="async"
+          class="img-zoomable" />
+        <figcaption>Figure 10b — Linearised (piecewise) speed model used inside simulation.</figcaption>
+      </figure>
+    </div>
+    <figure>
+      <img src="images/experimental_setup.png" alt="Experimental setup" loading="lazy" decoding="async"
+        class="img-zoomable" />
+      <figcaption>Figure 11 — Instrumented test setup.</figcaption>
+    </figure>
+    <p class="fig-note"><strong>Figure insight (Fig.10–11)</strong> (10a) Empirical PWM→speed step responses show right
+      servo higher effective gain (+12–15%) and a wider dead zone on the left. (10b) A simplified piecewise‑linear
+      mapping substitutes the raw non‑linear curves inside simulation to preserve bias magnitude while enabling faster
+      analytical gain sweeps. (11) Instrumented rig ensured repeatable capture of the asymmetric dynamics. This
+      structural mismatch drives steady‑state offset under pure P; integral cancels it but increases time in saturation.
+    </p>
+    <p>Clear unequal speed curves → biased steering & sustained oscillation. Hardware change justified.</p>
+
+    <h3>4.5 PI Enhancement</h3>
+    <p>PI guidance controller:</p>
+    <div class="eq">$$ C(p)=K_p + \frac{K_i}{p} $$<span class="label">Eq. 6 — PI controller form</span></div>
+    <p>Integral removed residual error at cost of hitting servo speed ceiling.</p>
+    <figure>
+      <img src="images/pi_theory.png" alt="PI theory" loading="lazy" decoding="async" class="img-zoomable" />
+      <figcaption>Figure 12 — PI theoretical trajectory.</figcaption>
+    </figure>
+    <figure>
+      <img src="images/p_vs_pi_experiment.png" alt="P vs PI experiment" loading="lazy" decoding="async"
+        class="img-zoomable" />
+      <figcaption>Figure 13 — P vs PI experimental comparison.</figcaption>
+    </figure>
+    <div class="two-up">
+      <figure>
+        <img src="images/static_ball_comparison.png" alt="Static ball comparison" loading="lazy" decoding="async"
+          class="img-zoomable" />
+        <figcaption>Figure 14 — Static ball: P vs PI vs theory.</figcaption>
+      </figure>
+      <figure>
+        <img src="images/moving_ball_comparison.png" alt="Moving ball comparison" loading="lazy" decoding="async"
+          class="img-zoomable" />
+        <figcaption>Figure 15 — Moving ball comparison.</figcaption>
+      </figure>
+    </div>
+    <p class="fig-note"><strong>Figure insight (Fig.12–15)</strong> Integral action cancels bias but enlarges the
+      initial saturation interval (command pinned at servo max), slightly extending capture time. The precision vs speed
+      trade now hits the actuator physics ceiling, justifying the hardware redesign.</p>
+    <p><strong>Findings:</strong> error ≤ 0.5&nbsp;cm; performance now limited by servo saturation & mechanical
+      asymmetry → redesign.</p>
+
+    <h2 id="p2">5. Prototype 2: Encoders & Cascaded Control</h2>
+    <h3>5.1 Redesign Rationale</h3>
+    <p>Address saturation, asymmetry, and limited camera performance. Shift to a cascaded architecture decoupling
+      velocity regulation from outer guidance.</p>
+    <h3>5.2 Actuation & Sensing</h3>
+    <ul>
+      <li>DC motors + 1/24 gearbox (torque & finer speed granularity)</li>
+      <li>Incremental encoders (real wheel speed feedback)</li>
+      <li>H‑bridge (PWM current delivery)</li>
+    </ul>
+    <div class="two-up">
+      <figure><img src="images/dc_motor_gearbox.png" alt="DC motor" loading="lazy" decoding="async"
+          class="img-zoomable" />
+        <figcaption>Figure 16 — DC motor + gearbox.</figcaption>
+      </figure>
+      <figure><img src="images/incremental_encoders.png" alt="Encoders" loading="lazy" decoding="async"
+          class="img-zoomable" />
+        <figcaption>Figure 17 — Incremental encoders.</figcaption>
+      </figure>
+    </div>
+    <figure><img src="images/h_bridge_driver.png" alt="H-bridge driver" loading="lazy" decoding="async"
+        class="img-zoomable" />
+      <figcaption>Figure 18 — H‑bridge driver.</figcaption>
+    </figure>
+
+    <p>Result: guidance loop outputs target differential speeds instead of raw PWM → portability to battery & surface
+      variation.</p>
+
+    <h3>5.3 Motor Model & Transfer Function</h3>
+    <p>Step response identification → first order model:</p>
+    <div class="eq">$$ G(p)=\frac{K_m}{1+T_0 p}, \quad K_m=4,\;T_0=35\,\text{ms} $$<span class="label">Eq. 7 —
+        Identified motor model</span></div>
+    <p>Parameters via least squares fit.</p>
+
+    <h4>Open-Loop Transfer Function (Scilab Analysis)</h4>
+    <p>The complete system open-loop transfer function before controller tuning takes the form:</p>
+    <div class="eq">$$ FTBO_{nc}(p) = \frac{K_0}{p^2} \cdot \frac{1 + \tau_1 p}{1 + \tau_2 p} $$<span class="label">Eq.
+        8 —
+        Open-loop transfer function (uncorrected)</span></div>
+    <p><strong>Numerical values:</strong></p>
+    <ul>
+      <li>$K_0 = 0.19$</li>
+      <li>$\tau_1 = 40\,\text{s}$ (dominant zero)</li>
+      <li>$\tau_2 = 98\,\text{ms}$ (motor time constant)</li>
+    </ul>
+    <p>The corrected open-loop transfer function after adding the PI controller:</p>
+    <div class="eq">$$ FTBO_{corr}(p) = C(p) \cdot FTBO_{nc}(p) $$<span class="label">Eq. 9 —
+        Corrected open-loop transfer function</span></div>
+    <figure class="fig-schema">
+      <img src="images/NEW-schema-bloc-sys-complet.png" alt="Complete system block diagram - Scilab" loading="lazy"
+        decoding="async" class="img-zoomable" />
+      <figcaption>Figure 19 — Complete system block diagram (Scilab) — Shows the cascaded architecture with inner speed
+        loop and outer guidance loop.</figcaption>
+    </figure>
+    <p class="fig-note"><strong>Figure insight (Fig.19)</strong> The Scilab block diagram illustrates the full
+      closed-loop architecture: the guidance law generates differential speed setpoints that feed the inner PI velocity
+      loops. The double integrator ($1/p^2$) in the plant model reflects position output from velocity control.</p>
+    <figure><img src="images/measured_vs_model_speed.png" alt="Measured vs model speed" loading="lazy" decoding="async"
+        class="img-zoomable" />
+      <figcaption>Figure 20 — Model fit vs measured step response.</figcaption>
+    </figure>
+    <p class="fig-note"><strong>Figure insight (Fig.20)</strong> Residual error max &lt; 5% over the operating band →
+      first‑order model sufficient for the speed loop whose goal is mainly slow disturbance rejection (voltage,
+      friction). No immediate derivative term needed.</p>
+
+    <h3>5.4 Speed Loop PI</h3>
+    <p>Speed loop tuning in PySyLic:</p>
+    <div class="eq">$$ K_p=44, \qquad T_i=0.17\,\text{s} $$<span class="label">Eq. 10 — Speed PI parameters</span></div>
+    <p>Target margins (30&nbsp;dB / 45°) surpassed by measured (∞ / 66°) → strong robustness.</p>
+    <figure><img src="images/pi_tuning_pysylic.png" alt="PI tuning" loading="lazy" decoding="async"
+        class="img-zoomable" />
+      <figcaption>Figure 21 — PI tuning workspace.</figcaption>
+    </figure>
+    <p class="fig-note"><strong>Figure insight (Fig.21)</strong> Design tool reports 66° phase margin (> target 45°)
+      giving robustness to friction variability + vision latency (tens of ms). Infinite gain margin (no crossover)
+      signals low risk of destabilising noise amplification.</p>
+    <p>Inner loop shields outer guidance from motor &amp; voltage variation.</p>
+
+    <h3>5.5 Comparative Results</h3>
+    <div class="two-up">
+      <figure><img src="images/p1_vs_p2_trajectories.png" alt="P1 vs P2 trajectories" loading="lazy" decoding="async"
+          class="img-zoomable" />
+        <figcaption>Figure 22 — P1 vs P2 trajectories.</figcaption>
+      </figure>
+      <figure><img src="images/static_ball_nonlinear.png" alt="Static ball nonlinear" loading="lazy" decoding="async"
+          class="img-zoomable" />
+        <figcaption>Figure 23 — Static ball: nonlinear theory vs experiment.</figcaption>
+      </figure>
+    </div>
+    <figure><img src="images/moving_ball_nonlinear.png" alt="Moving ball nonlinear" loading="lazy" decoding="async"
+        class="img-zoomable" />
+      <figcaption>Figure 24 — Moving ball: nonlinear theory vs experiment.</figcaption>
+    </figure>
+    <p class="fig-note"><strong>Figure insight (Fig.22–24)</strong> Prototype&nbsp;2 both shortens capture time and
+      eliminates terminal oscillation. Remaining model vs experiment gaps come mainly from perception latency + speed
+      discretisation; qualitative dynamics (damping, low overshoot) match, validating the model → controller → hardware
+      pipeline.</p>
+    <p>Bottleneck migrated: now vision frame rate &amp; lighting noise, not actuation. Classic maturation signal.</p>
+
+    <h2 id="prediction-measurement">6. Prediction vs Measurement</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Stage</th>
+          <th>Model prediction</th>
+          <th>Reality</th>
+          <th>Gap</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>P / servos</td>
+          <td>Faster, residual error</td>
+          <td>Oscillations ↑</td>
+          <td>Servo asymmetry</td>
+          <td>Add integral</td>
+        </tr>
+        <tr>
+          <td>PI / servos</td>
+          <td>Error removed</td>
+          <td>Speed capped</td>
+          <td>Saturation</td>
+          <td>DC motors + encoders</td>
+        </tr>
+        <tr>
+          <td>PI / DC motors</td>
+          <td>Stable & faster</td>
+          <td>Confirmed</td>
+          <td>Vision noise</td>
+          <td>Plan perception upgrade</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 id="minimal-loop">7. Minimal Arduino PI Loop</h2>
+    <div class="code-wrap" role="region" aria-label="Arduino PI motor control example">
+      <div class="code-header"><span class="title">arduino / motor_pi_control.cpp</span></div>
+      <div class="code-body">
+        <ul class="code-lines">
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+        <div class="code-content">
+          <pre><code><span class="tok-com">// Encoder reading</span>
+  <span class="tok-kw">int</span> ticksG = <span class="tok-fn">readEncoderG</span>();
+  <span class="tok-kw">int</span> ticksD = <span class="tok-fn">readEncoderD</span>();
+
+  <span class="tok-com">// Speed computation</span>
+  <span class="tok-kw">float</span> omegaG = ticksG / T_sample;
+  <span class="tok-kw">float</span> omegaD = ticksD / T_sample;
+
+  <span class="tok-com">// Error</span>
+  <span class="tok-kw">float</span> eG = omegaG_ref - omegaG;
+  <span class="tok-kw">float</span> eD = omegaD_ref - omegaD;
+
+  <span class="tok-com">// PI control</span>
+  uG += Kp * (eG - eG_prev) + Ki * eG * T_sample;
+  uD += Kp * (eD - eD_prev) + Ki * eD * T_sample;
+
+  <span class="tok-com">// Saturation</span>
+  uG = constrain(uG, 0, 255);
+  uD = constrain(uD, 0, 255);
+
+  <span class="tok-com">// Apply PWM</span>
+  <span class="tok-fn">analogWrite</span>(motorG, uG);
+  <span class="tok-fn">analogWrite</span>(motorD, uD);
+
+  <span class="tok-com">// Save errors</span>
+  eG_prev = eG;
+  eD_prev = eD;</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <h2 id="conclusions-next">8. Conclusions & Next Focus</h2>
+    <h3>Conclusions</h3>
+    <ul>
+      <li>Centimeter‑level convergence across static & rolling targets.</li>
+      <li>Structured controller escalation (P → PI → cascaded PI) with measured stability margins.</li>
+      <li>Hardware pivot (servos → DC + encoders) justified by quantified asymmetry & saturation.</li>
+      <li>Bottleneck intentionally migrated to perception; modeling + tuning pipeline reusable.</li>
+    </ul>
+    <h3>Limitations</h3>
+    <ul>
+      <li>Vision latency & lighting sensitivity dominate residual error.</li>
+      <li>No derivative / predictive term in guidance yet.</li>
+      <li>Energy & thermal envelope not modeled.</li>
+    </ul>
+    <h3>Future Improvements</h3>
+    <ul class="future-list">
+      <li><strong>Perception:</strong> depth/stereo or lightweight CNN for robust detection; glare mitigation.</li>
+      <li><strong>Control:</strong> lead / D action + velocity‑aware gain scheduling.</li>
+      <li><strong>Robustness:</strong> battery voltage feedforward; IMU fusion between frames.</li>
+      <li><strong>Prediction:</strong> bounce & rolling decay model for pre‑emptive intercept.</li>
+    </ul>
+
+    <h2 id="faq">9. Portfolio FAQ</h2>
+    <div class="faq">
+      <div class="faq-item">
+        <h4>Why switch from hobby servos to DC motors + encoders instead of “better servos”?</h4>
+        <p>Instrumentation exposed persistent gain & dead‑zone asymmetry; moving to encoders + DC motors converted
+          hidden bias into measurable states the controller can regulate.</p>
+        <span class="hook">Hook: steady‑state bias ≈ 0 cm; rare retunes.</span>
+      </div>
+      <div class="faq-item">
+        <h4>How was the motor model identified & used?</h4>
+        <p>Recorded step data → least‑squares first‑order fit → analytical PI tuning meeting target margins before
+          hardware deployment, avoiding trial‑and‑error gain hunts.</p>
+        <span class="hook">Hook: first hardware test matched 66° phase margin design.</span>
+      </div>
+      <div class="faq-item">
+        <h4>What is the next performance lever?</h4>
+        <p>Perception latency & noise now dominate; roadmap: faster capture/processing, illumination normalization,
+          optional lightweight depth to anticipate motion.</p>
+        <span class="hook">Hook: capture time reductions now vision‑bound.</span>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      Repo: <a href="https://github.com/promaaa/ball-collecting-robots" target="_blank"
+        rel="noopener">github.com/promaaa/ball-collecting-robots</a>
+    </div>
+  </div>
+
+  <script>
+    // Prevent upscaling: adjust each image to natural width if smaller than container
+    function adjustImage(img) {
+      try {
+        const cw = img.parentElement.clientWidth;
+        if (img.naturalWidth && img.naturalWidth < cw) {
+          img.style.width = img.naturalWidth + 'px';
+          img.classList.add('pixel-perfect');
+        }
+      } catch (e) { }
+    }
+    document.querySelectorAll('figure img').forEach(img => {
+      if (img.complete) adjustImage(img); else img.addEventListener('load', () => adjustImage(img));
+      img.addEventListener('click', () => {
+        if (!img.classList.contains('img-zoomable')) return;
+        img.classList.toggle('img-zoomed');
+      });
+    });
+    // Theme Toggle unified with main.html
+    (function () {
+      const toggle = document.getElementById('theme-toggle');
+      if (!toggle) return;
+      const html = document.documentElement;
+      const urlTheme = new URLSearchParams(location.search).get('theme');
+      const savedTheme = urlTheme || localStorage.getItem('theme') || 'light';
+      if (urlTheme) localStorage.setItem('theme', urlTheme);
+      html.setAttribute('data-theme', savedTheme);
+      updateToggleIcon(savedTheme);
+
+      toggle.addEventListener('click', function () {
+        const current = html.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        updateToggleIcon(next);
+      });
+
+      function updateToggleIcon(theme) {
+        const sunSvg = `<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="7" y="0" width="2" height="2"/><rect x="13" y="2" width="2" height="2"/><rect x="14" y="7" width="2" height="2"/><rect x="13" y="12" width="2" height="2"/><rect x="7" y="14" width="2" height="2"/><rect x="2" y="12" width="2" height="2"/><rect x="0" y="7" width="2" height="2"/><rect x="2" y="2" width="2" height="2"/><rect x="5" y="5" width="6" height="6"/><rect x="6" y="4" width="4" height="1"/><rect x="4" y="6" width="1" height="4"/><rect x="11" y="6" width="1" height="4"/><rect x="6" y="11" width="4" height="1"/></svg>`;
+        const moonSvg = `<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="8" y="2" width="8" height="2"/><rect x="7" y="4" width="10" height="2"/><rect x="6" y="6" width="11" height="2"/><rect x="6" y="8" width="11" height="2"/><rect x="6" y="10" width="11" height="2"/><rect x="7" y="12" width="10" height="2"/><rect x="8" y="14" width="8" height="2"/><rect x="12" y="4" width="7" height="2" fill="var(--bg)"/><rect x="13" y="6" width="7" height="2" fill="var(--bg)"/><rect x="13" y="8" width="7" height="2" fill="var(--bg)"/><rect x="13" y="10" width="7" height="2" fill="var(--bg)"/><rect x="12" y="12" width="7" height="2" fill="var(--bg)"/></svg>`;
+        toggle.innerHTML = theme === 'dark' ? sunSvg : moonSvg;
+        toggle.title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+      }
+    })();
+    // Match figcaption width to natural image width if smaller than container
+    function syncCaptionWidth(fig) {
+      const img = fig.querySelector('img');
+      const cap = fig.querySelector('figcaption');
+      if (!img || !cap) return;
+      const natural = img.naturalWidth; if (!natural) return;
+      const displayed = img.getBoundingClientRect().width;
+      // If image is not occupying full figure width because of pixel-perfect adjustment
+      if (img.style.width && natural < fig.clientWidth) {
+        cap.style.maxWidth = img.style.width;
+      } else if (displayed < fig.clientWidth - 4) {
+        cap.style.maxWidth = displayed + 'px';
+      }
+    }
+    window.addEventListener('load', () => { document.querySelectorAll('figure').forEach(syncCaptionWidth); });
+    window.addEventListener('resize', () => { document.querySelectorAll('figure').forEach(syncCaptionWidth); });
+  </script>
+</body>
+
+</html>

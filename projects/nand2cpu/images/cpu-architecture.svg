@@ -1,0 +1,68 @@
+<svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="16-bit CPU Architecture">
+  <defs>
+    <style>
+      .box { fill: var(--surface, #f8f9fa); stroke: var(--line, #495057); stroke-width: 2; }
+      .label { font: bold 13px system-ui, sans-serif; fill: var(--ink, #212529); text-anchor: middle; }
+      .sublabel { font: 10px system-ui, sans-serif; fill: var(--muted, #6c757d); text-anchor: middle; }
+      .arrow { stroke: var(--ink, #495057); stroke-width: 2; fill: none; marker-end: url(#arrow); }
+    </style>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="var(--ink, #495057)"/>
+    </marker>
+  </defs>
+
+  <!-- Row 1: Fetch -->
+  <rect x="40" y="40" width="70" height="50" rx="6" class="box"/>
+  <text x="75" y="62" class="label">PC</text>
+  <text x="75" y="78" class="sublabel">16-bit</text>
+
+  <path d="M 110 65 L 150 65" class="arrow"/>
+
+  <rect x="150" y="40" width="100" height="50" rx="6" class="box"/>
+  <text x="200" y="62" class="label">Instr Memory</text>
+  <text x="200" y="78" class="sublabel">64K words</text>
+
+  <path d="M 250 65 L 290 65" class="arrow"/>
+
+  <rect x="290" y="40" width="90" height="50" rx="6" class="box"/>
+  <text x="335" y="62" class="label">Control</text>
+  <text x="335" y="78" class="sublabel">FSM</text>
+
+  <!-- Row 2: Decode/Execute -->
+  <rect x="150" y="130" width="100" height="50" rx="6" class="box"/>
+  <text x="200" y="152" class="label">Registers</text>
+  <text x="200" y="168" class="sublabel">8 × 16-bit</text>
+
+  <path d="M 250 155 L 320 155" class="arrow"/>
+
+  <polygon points="320,130 400,130 420,155 400,180 320,180" class="box"/>
+  <text x="365" y="160" class="label">ALU</text>
+
+  <path d="M 420 155 L 480 155" class="arrow"/>
+
+  <rect x="480" y="130" width="100" height="50" rx="6" class="box"/>
+  <text x="530" y="152" class="label">Data Memory</text>
+  <text x="530" y="168" class="sublabel">64K words</text>
+
+  <!-- Row 3: Writeback label -->
+  <rect x="290" y="220" width="100" height="40" rx="6" class="box" style="stroke-dasharray: 4,2;"/>
+  <text x="340" y="245" class="label">Writeback</text>
+
+  <!-- Vertical connections -->
+  <path d="M 200 90 L 200 130" class="arrow"/>
+  <path d="M 335 90 L 335 105 L 365 105 L 365 130" class="arrow"/>
+  
+  <!-- Writeback path -->
+  <path d="M 530 180 L 530 240 L 390 240" class="arrow"/>
+  <path d="M 290 240 L 200 240 L 200 180" class="arrow"/>
+
+  <!-- PC feedback -->
+  <path d="M 75 90 L 75 260 L 20 260 L 20 65 L 40 65" class="arrow" style="stroke-dasharray: 4,2;"/>
+
+  <!-- Labels for paths -->
+  <text x="130" y="58" class="sublabel">addr</text>
+  <text x="270" y="58" class="sublabel">opcode</text>
+  <text x="285" y="148" class="sublabel">A, B</text>
+  <text x="448" y="148" class="sublabel">result</text>
+  <text x="245" y="235" class="sublabel">write data</text>
+</svg>

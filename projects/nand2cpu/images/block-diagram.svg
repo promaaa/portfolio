@@ -1,0 +1,109 @@
+<svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CPU Block Diagram">
+  <defs>
+    <style>
+      .box { fill: var(--surface, #f8f9fa); stroke: var(--line, #495057); stroke-width: 2; }
+      .label { font: bold 12px system-ui, sans-serif; fill: var(--ink, #212529); text-anchor: middle; }
+      .sublabel { font: 10px system-ui, sans-serif; fill: var(--muted, #6c757d); text-anchor: middle; }
+      .arrow { stroke: var(--ink, #495057); stroke-width: 1.5; fill: none; marker-end: url(#arr); }
+      .title { font: bold 16px system-ui, sans-serif; fill: var(--ink, #212529); text-anchor: middle; }
+    </style>
+    <marker id="arr" markerWidth="6" markerHeight="5" refX="5" refY="2.5" orient="auto">
+      <polygon points="0 0, 6 2.5, 0 5" fill="var(--ink, #495057)"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="350" y="25" class="title">CPU Block Diagram</text>
+
+  <!-- PC -->
+  <rect x="30" y="80" width="60" height="40" rx="4" class="box"/>
+  <text x="60" y="105" class="label">PC</text>
+
+  <!-- +1 -->
+  <rect x="30" y="140" width="60" height="30" rx="4" class="box"/>
+  <text x="60" y="160" class="sublabel">+1</text>
+
+  <!-- Instruction Memory -->
+  <rect x="120" y="70" width="80" height="60" rx="4" class="box"/>
+  <text x="160" y="95" class="label">Instr</text>
+  <text x="160" y="110" class="label">Mem</text>
+
+  <!-- Control -->
+  <rect x="230" y="50" width="80" height="50" rx="4" class="box"/>
+  <text x="270" y="80" class="label">Control</text>
+
+  <!-- Register File -->
+  <rect x="230" y="120" width="80" height="60" rx="4" class="box"/>
+  <text x="270" y="145" class="label">Reg File</text>
+  <text x="270" y="160" class="sublabel">R0-R7</text>
+
+  <!-- MUX A -->
+  <rect x="340" y="110" width="30" height="30" rx="2" class="box"/>
+  <text x="355" y="130" class="sublabel">M</text>
+
+  <!-- MUX B -->
+  <rect x="340" y="160" width="30" height="30" rx="2" class="box"/>
+  <text x="355" y="180" class="sublabel">M</text>
+
+  <!-- ALU -->
+  <polygon points="400,100 470,100 490,145 470,190 400,190" class="box"/>
+  <text x="440" y="150" class="label">ALU</text>
+
+  <!-- Data Memory -->
+  <rect x="520" y="120" width="80" height="60" rx="4" class="box"/>
+  <text x="560" y="145" class="label">Data</text>
+  <text x="560" y="160" class="label">Mem</text>
+
+  <!-- MUX WB -->
+  <rect x="630" y="135" width="30" height="30" rx="2" class="box"/>
+  <text x="645" y="155" class="sublabel">M</text>
+
+  <!-- Connections -->
+  <!-- PC to Instr Mem -->
+  <path d="M 90 100 L 120 100" class="arrow"/>
+  
+  <!-- PC to +1 -->
+  <path d="M 60 120 L 60 140" class="arrow"/>
+  
+  <!-- +1 back to PC -->
+  <path d="M 30 155 L 15 155 L 15 100 L 30 100" class="arrow"/>
+
+  <!-- Instr Mem to Control -->
+  <path d="M 200 85 L 230 75" class="arrow"/>
+  
+  <!-- Instr Mem to Reg File -->
+  <path d="M 200 110 L 230 140" class="arrow"/>
+
+  <!-- Reg File to MUX A -->
+  <path d="M 310 135 L 340 125" class="arrow"/>
+  
+  <!-- Reg File to MUX B -->
+  <path d="M 310 160 L 340 175" class="arrow"/>
+
+  <!-- MUX to ALU -->
+  <path d="M 370 125 L 400 130" class="arrow"/>
+  <path d="M 370 175 L 400 165" class="arrow"/>
+
+  <!-- ALU to Data Mem -->
+  <path d="M 490 145 L 520 145" class="arrow"/>
+
+  <!-- Data Mem to MUX WB -->
+  <path d="M 600 150 L 630 150" class="arrow"/>
+
+  <!-- ALU to MUX WB -->
+  <path d="M 475 175 L 505 175 L 505 220 L 645 220 L 645 165" class="arrow"/>
+
+  <!-- MUX WB to Reg File (writeback) - routes above Control -->
+  <path d="M 645 135 L 645 35 L 215 35 L 215 150 L 230 150" class="arrow"/>
+
+  <!-- Control signals (dashed) -->
+  <path d="M 270 100 L 270 120" class="arrow" style="stroke-dasharray: 3,2;"/>
+  <path d="M 310 75 L 440 75 L 440 100" class="arrow" style="stroke-dasharray: 3,2;"/>
+  <path d="M 310 75 L 560 75 L 560 120" class="arrow" style="stroke-dasharray: 3,2;"/>
+
+  <!-- Labels -->
+  <text x="105" y="92" class="sublabel">addr</text>
+  <text x="505" y="138" class="sublabel">addr</text>
+  <text x="615" y="143" class="sublabel">data</text>
+  <text x="460" y="45" class="sublabel">writeback</text>
+</svg>

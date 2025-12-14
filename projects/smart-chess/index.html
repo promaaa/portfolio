@@ -1,0 +1,1012 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SmartChess — A Robotic Chessboard Project</title>
+    <meta name="description"
+        content="Full perception-to-action pipeline: CNN-based real-time board detection (96% accuracy, 30ms inference), Lucas-Kanade tracking for frame-to-frame consistency, and robotic actuation." />
+    <link rel="icon" type="image/png" href="pictures/logo.png" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        .zoom-overlay .zoom-prev,
+        .zoom-overlay .zoom-next {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            font-size: 3rem;
+            cursor: pointer;
+            padding: 0 1rem;
+            z-index: 1001;
+            user-select: none;
+        }
+
+        .zoom-overlay .zoom-prev {
+            left: 10px;
+        }
+
+        .zoom-overlay .zoom-next {
+            right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme"></button>
+    <div class="container">
+        <a class="back-link" href="../../">← Back to Portfolio</a>
+        <h1>SmartChess — A Robotic Chessboard</h1>
+        <p class="lead">
+            Full perception-to-action pipeline: CNN-based board detection •
+            Lucas-Kanade tracking • Real-time robotic actuation.
+            Optimized for low-latency inference on embedded platforms.
+        </p>
+        <div class="meta-badges">
+            <span class="badge">Computer Vision</span>
+            <span class="badge">CNN Inference</span>
+            <span class="badge">Real-Time Tracking</span>
+            <span class="badge">Edge AI</span>
+        </div>
+        <div class="links">
+            <a href="https://github.com/promaaa/smart-chess" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+
+        <div class="highlight">
+            <strong>Abstract</strong> — A complete perception-to-action
+            system demonstrating real-time CNN inference and tracking.
+            The pipeline achieves 96% detection accuracy at 30ms per frame,
+            uses Lucas-Kanade optical flow for frame-to-frame consistency,
+            and controls an XY gantry for physical piece manipulation.
+            Emphasis on low-latency processing and edge AI deployment.
+        </div>
+
+        <figure class="hero-illustration">
+            <img src="images/chess-board.png" alt="SmartChess robotic chessboard prototype with embedded electronics"
+                loading="lazy" />
+        </figure>
+
+        <div class="toc">
+            <strong>Contents</strong>
+
+            <a href="#chess-engine">1. Chess Engine Architecture (0x88)</a>
+
+            <a href="#detection-display">2. Piece Detection & LED Display</a>
+
+            <a href="#real-time-detection">3. Real-Time Chessboard Detection & Tracking</a>
+
+            <a href="#electronics-proto">4. Electronics Prototyping (2×2 PoC)</a>
+
+            <a href="#full-board">5. Full 8×8 Board Architecture</a>
+
+            <a href="#mechanical-robot">6. Mechanical Platform & Manipulator</a>
+
+            <a href="#electronics-design">7. Electronics Design & Schematics</a>
+
+            <a href="#game-ai">8. Game AI & Search</a>
+        </div>
+
+        <h2 id="chess-engine">1. Chess Engine Architecture (0x88)</h2>
+        <div class="section">
+            <p class="section-lead">
+                A small, readable engine built on the 0x88 board model:
+                compact indexing, fast bounds checks, simple move
+                generation, and a reversible state with perft validation.
+            </p>
+            <p>
+                For fast, simple move generation I use the classic
+                <strong>0x88</strong> board representation. The idea: store
+                the board in a 128‑element array (8 ranks × 16 files).
+                Playable squares are indices where
+                <code>(sq & 0x88) == 0</code>. Any step that crosses the
+                board boundary flips bit 0x88, so out‑of‑bounds is a single,
+                branch‑cheap check.
+            </p>
+            <figure class="figure-0x88">
+                <div class="svg-card">
+                    <svg viewBox="0 0 504 280" role="img"
+                        aria-label="0x88 chessboard: 8x8 playable grid with off-board columns 8..15">
+                        <defs>
+                            <style>
+                                .grid {
+                                    stroke: var(--line);
+                                    stroke-width: 1;
+                                }
+
+                                .board {
+                                    fill: var(--surface);
+                                }
+
+                                .off {
+                                    fill: var(--surface-alt);
+                                }
+
+                                .label {
+                                    font-family: inherit;
+                                    fill: var(--ink);
+                                    font-size: 10px;
+                                }
+
+                                .axis {
+                                    font-family: inherit;
+                                    fill: var(--muted);
+                                    font-size: 11px;
+                                    font-weight: 600;
+                                }
+
+                                .legend {
+                                    font-family: inherit;
+                                    fill: var(--ink);
+                                    font-size: 12px;
+                                    font-weight: 600;
+                                }
+
+                                .co-line {
+                                    stroke: var(--ink);
+                                    stroke-width: 1;
+                                }
+
+                                .co-box {
+                                    fill: var(--surface);
+                                    stroke: var(--line);
+                                }
+
+                                .co-text {
+                                    font-family: inherit;
+                                    fill: var(--ink);
+                                    font-size: 9.5px;
+                                }
+                            </style>
+                            <pattern id="chk" width="56" height="56" patternUnits="userSpaceOnUse">
+                                <rect width="56" height="56" fill="var(--surface)" />
+                                <rect width="28" height="28" fill="var(--surface-alt)" />
+                                <rect x="28" y="28" width="28" height="28" fill="var(--surface-alt)" />
+                            </pattern>
+                        </defs>
+                        <rect x="36" y="30" width="224" height="224" rx="6" class="board" fill="url(#chk)" />
+                        <rect x="260" y="30" width="224" height="224" rx="6" class="off" />
+                        <g class="grid">
+                            <path d="M36 30 V254" />
+                            <path d="M64 30 V254" />
+                            <path d="M92 30 V254" />
+                            <path d="M120 30 V254" />
+                            <path d="M148 30 V254" />
+                            <path d="M176 30 V254" />
+                            <path d="M204 30 V254" />
+                            <path d="M232 30 V254" />
+                            <path d="M260 30 V254" />
+                            <path d="M288 30 V254" />
+                            <path d="M316 30 V254" />
+                            <path d="M344 30 V254" />
+                            <path d="M372 30 V254" />
+                            <path d="M400 30 V254" />
+                            <path d="M428 30 V254" />
+                            <path d="M456 30 V254" />
+                            <path d="M484 30 V254" />
+                            <path d="M36 30 H484" />
+                            <path d="M36 58 H484" />
+                            <path d="M36 86 H484" />
+                            <path d="M36 114 H484" />
+                            <path d="M36 142 H484" />
+                            <path d="M36 170 H484" />
+                            <path d="M36 198 H484" />
+                            <path d="M36 226 H484" />
+                            <path d="M36 254 H484" />
+                        </g>
+                        <g class="axis">
+                            <text x="50" y="22" text-anchor="middle">
+                                0
+                            </text>
+                            <text x="78" y="22" text-anchor="middle">
+                                1
+                            </text>
+                            <text x="106" y="22" text-anchor="middle">
+                                2
+                            </text>
+                            <text x="134" y="22" text-anchor="middle">
+                                3
+                            </text>
+                            <text x="162" y="22" text-anchor="middle">
+                                4
+                            </text>
+                            <text x="190" y="22" text-anchor="middle">
+                                5
+                            </text>
+                            <text x="218" y="22" text-anchor="middle">
+                                6
+                            </text>
+                            <text x="246" y="22" text-anchor="middle">
+                                7
+                            </text>
+                            <text x="274" y="22" text-anchor="middle">
+                                8
+                            </text>
+                            <text x="302" y="22" text-anchor="middle">
+                                9
+                            </text>
+                            <text x="330" y="22" text-anchor="middle">
+                                10
+                            </text>
+                            <text x="358" y="22" text-anchor="middle">
+                                11
+                            </text>
+                            <text x="386" y="22" text-anchor="middle">
+                                12
+                            </text>
+                            <text x="414" y="22" text-anchor="middle">
+                                13
+                            </text>
+                            <text x="442" y="22" text-anchor="middle">
+                                14
+                            </text>
+                            <text x="470" y="22" text-anchor="middle">
+                                15
+                            </text>
+                            <text x="26" y="44" text-anchor="end">7</text>
+                            <text x="26" y="72" text-anchor="end">6</text>
+                            <text x="26" y="100" text-anchor="end">5</text>
+                            <text x="26" y="128" text-anchor="end">4</text>
+                            <text x="26" y="156" text-anchor="end">3</text>
+                            <text x="26" y="184" text-anchor="end">2</text>
+                            <text x="26" y="212" text-anchor="end">1</text>
+                            <text x="26" y="240" text-anchor="end">0</text>
+                        </g>
+                        <rect x="268" y="36" width="208" height="38" rx="6" fill="var(--surface)"
+                            stroke="var(--line)" />
+                        <text class="legend" x="372" y="54" text-anchor="middle">
+                            Off-board
+                        </text>
+                        <text class="axis" x="372" y="68" text-anchor="middle">
+                            (files 8..15)
+                        </text>
+                        <g class="label">
+                            <text x="50" y="44" text-anchor="middle">
+                                0x70
+                            </text>
+                            <text x="78" y="44" text-anchor="middle">
+                                0x71
+                            </text>
+                            <text x="246" y="44" text-anchor="middle">
+                                0x77
+                            </text>
+                            <text x="50" y="212" text-anchor="middle">
+                                0x10
+                            </text>
+                            <text x="78" y="212" text-anchor="middle">
+                                0x11
+                            </text>
+                            <text x="162" y="212" text-anchor="middle">
+                                0x14
+                            </text>
+                            <text x="50" y="240" text-anchor="middle">
+                                0x00
+                            </text>
+                            <text x="78" y="240" text-anchor="middle">
+                                0x01
+                            </text>
+                            <text x="246" y="240" text-anchor="middle">
+                                0x07
+                            </text>
+                        </g>
+                        <text class="axis" x="252" y="270" text-anchor="middle">
+                            Index = (rank &lt;&lt; 4) | file • Off-board
+                            columns set the 0x88 bit
+                        </text>
+                    </svg>
+                </div>
+                <figcaption>
+                    0x88: an 8×8 board for play; the extra 8 columns (8..15)
+                    are off‑board and flip the 0x88 bit.
+                </figcaption>
+            </figure>
+        </div>
+
+        <h2 id="detection-display">2. Piece Detection & LED Display</h2>
+        <div class="section">
+            <p class="section-lead">
+                A grid of magnetic sensors under the board tracks piece
+                positions, while an LED matrix provides intuitive visual
+                feedback.
+            </p>
+            <h3>Reed Sensor-Based Detection</h3>
+            <p>
+                The system uses 64 reed sensors (Hall effect) placed under
+                each square of the 8x8 grid. A small neodymium magnet is
+                embedded in the base of each chess piece. When a piece is
+                placed on a square, the sensor detects the magnetic field,
+                registering the piece's position. This method provides a
+                reliable, binary state of the entire board at any moment,
+                which is essential for the game logic.
+            </p>
+
+            <figure class="img-large">
+                <img src="images/reed_sensor_principle.png" alt="Reed sensor detection principle diagram"
+                    loading="lazy" />
+                <figcaption>
+                    Piece detection dataflow: magnets trigger reed sensors,
+                    scanned via I2C expanders and compared to the engine's board state.
+                </figcaption>
+            </figure>
+
+            <h3>LED Matrix Display</h3>
+            <p>
+                Visual feedback is handled by two <strong>HT16K33</strong>
+                LED matrix driver modules. This system can:
+            </p>
+            <ul>
+                <li>Indicate possible moves for a selected piece.</li>
+                <li>
+                    Highlight the last move made by the opponent or the
+                    robot.
+                </li>
+                <li>Display suggestions from the AI.</li>
+                <li>
+                    Create visual effects for special events like captures,
+                    promotions, or checkmate.
+                </li>
+            </ul>
+            <p>
+                The HT16K33 modules are connected to the main controller via
+                I2C, each controlling multiple LED segments for board illumination.
+            </p>
+        </div>
+
+        <h2 id="real-time-detection">
+            3. Real-Time Chessboard Detection & Tracking
+        </h2>
+        <div class="section">
+            <p class="section-lead">
+                In this project, I developed a real-time detection and
+                tracking system specifically for video, using a two-step
+                approach that combines the power of Convolutional Neural
+                Networks (CNN) for initial detection with an extremely fast
+                tracking algorithm to maintain localization in successive
+                images. This system complements the reed sensor system,
+                helping to resolve issues with illegal moves or doubts about
+                piece positions by providing visual confirmation.
+            </p>
+            <p>
+                Here are the exact components of this advanced model I
+                implemented:
+            </p>
+            <h3>1. Detection Phase (Step 1)</h3>
+            <p>
+                This phase is used to find the chessboard in the initial
+                image or if tracking has been lost.
+            </p>
+            <ul>
+                <li>
+                    <strong>Neural Network:</strong> The model uses a
+                    Convolutional Neural Network (CNN).
+                </li>
+                <li>
+                    <strong>Architecture:</strong> It is a classic
+                    classification architecture based on a CNN pyramid plus
+                    Max Pool.
+                </li>
+                <li>
+                    <strong>Performance:</strong> This model achieved 96%
+                    accuracy. It typically runs in about 30 milliseconds per
+                    image.
+                </li>
+            </ul>
+            <h3>2. Tracking Phase (Step 2)</h3>
+            <p>
+                Once the chessboard points have been located (by the
+                detection phase), the system switches to the tracking step
+                for subsequent video frames, which generally do not change
+                much.
+            </p>
+            <ul>
+                <li>
+                    <strong>Tracking Algorithm:</strong> It uses a classic
+                    keypoint tracking algorithm.
+                </li>
+                <li>
+                    <strong>Specific Implementation:</strong> The algorithm
+                    I used is the Lucas-Kanade algorithm (LK algorithm).
+                </li>
+                <li>
+                    <strong>Speed:</strong> The LK algorithm is extremely
+                    fast, running on the order of milliseconds.
+                </li>
+                <li>
+                    <strong>Fallback Logic:</strong> If the system loses
+                    track of the chessboard during tracking, it returns to
+                    the first step (CNN detection).
+                </li>
+            </ul>
+            <p>
+                The combination of these two steps allows for a real-time
+                chessboard detector.
+            </p>
+            <h3>Model in Development (YOLO)</h3>
+            <p>
+                At the time of this project, I was also working on a YOLO
+                chessboard detection algorithm. YOLO (You Only Look Once) is
+                a very performant machine learning technique, but the
+                details of its implementation were not yet finalized.
+            </p>
+            <figure class="img-medium">
+                <img src="images/gif_visual_detection.gif" alt="Real-time chessboard detection demo" loading="lazy" />
+                <figcaption>
+                    Real-time detection and tracking with a moving camera.
+                </figcaption>
+            </figure>
+        </div>
+
+        <h2 id="electronics-proto">4. Electronics Prototyping (2×2 PoC)</h2>
+        <div class="section">
+            <p class="section-lead">
+                A 2×2 proof-of-concept tile was built to validate sensing,
+                multiplexing, and firmware timings before scaling to the
+                full 8×8 chessboard.
+            </p>
+            <figure class="img-medium">
+                <img class="zoomable" src="images/2x2/2x2Poc.svg" alt="2x2 PoC schematic" loading="lazy" />
+                <figcaption>
+                    2×2 PoC schematic: LED multiplexing, reed matrix, and RC debouncing.
+                </figcaption>
+            </figure>
+            <figure class="img-medium">
+                <img src="images/2x2/reed-sensors.jpg" alt="2x2 prototype with reed sensors" loading="lazy" />
+                <figcaption>
+                    Final 2×2 tile with reed sensors, LEDs, and ribbon cables.
+                </figcaption>
+            </figure>
+        </div>
+
+        <h2 id="full-board">5. Full 8×8 Board Architecture</h2>
+        <div class="section">
+            <p class="section-lead">
+                The production board is orchestrated by a Raspberry Pi 5,
+                which centralizes game logic, AI, and communication with
+                peripherals, including a dedicated microcontroller for
+                robotics.
+            </p>
+            <h3>3D Design & Modeling</h3>
+            <p>
+                Before fabrication, the entire chessboard structure and
+                enclosure were designed in CAD software to ensure precise
+                fit and alignment of all components.
+            </p>
+            <figure class="img-large">
+                <img class="zoomable" data-gallery="8x8-board" src="images/modelisation3D.png"
+                    alt="3D model of the chessboard" loading="lazy" />
+                <figcaption>
+                    3D CAD model showing layered construction with electronics compartments.
+                </figcaption>
+            </figure>
+            <h3>Electronics Architecture</h3>
+            <p>
+                The final architecture is built on the principles validated
+                in the 2x2 PoC, scaled up for the full board.
+            </p>
+            <figure class="img-large">
+                <img class="zoomable" data-gallery="8x8-board" src="images/8x8/8x8.svg"
+                    alt="Full 8x8 chessboard electronics schematic" loading="lazy" />
+                <figcaption>
+                    Full-board schematic: Raspberry Pi 5, ESP32 for motor control, I/O expanders for sensors/LEDs.
+                </figcaption>
+            </figure>
+            <ul>
+                <li>
+                    <strong>System Brain</strong>: A
+                    <strong>Raspberry Pi 5</strong> running Raspberry Pi OS
+                    and the main Python script. It handles the AI, game
+                    logic, and communicates with other components.
+                </li>
+                <li>
+                    <strong>LED Control</strong>:
+                    Two <strong>HT16K33</strong> LED driver modules are connected
+                    to the Pi via I2C for board illumination.
+                </li>
+                <li>
+                    <strong>Piece Detection</strong>: The 64 reed sensors
+                    are read via <strong>MCP23017</strong> I/O expanders,
+                    which communicate with the motor controller or the Pi.
+                </li>
+                <li>
+                    <strong>Motor Control</strong>: An
+                    <strong>ESP32</strong> microcontroller receives motion
+                    commands from the Pi via a serial (UART) link. It drives
+                    the stepper motors using <strong>A4988</strong> or
+                    <strong>TMC2209</strong> drivers and controls the
+                    electromagnet with a MOSFET.
+                </li>
+            </ul>
+            <h3>Software</h3>
+            <p>
+                The main game logic runs on the Raspberry Pi using Python.
+                Two versions are available: <code>chess_game_v1.py</code> (basic)
+                and <code>chess_game_v2.py</code> (advanced with opening book support).
+            </p>
+            <pre><code># Navigate to the V2 AI directory and install
+cd ia_marc/V2/
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+# Launch the game
+cd prototypes/echiquier_8x8/firmware/ia_embarquee/
+python3 chess_game_v2.py</code></pre>
+            <p>
+                The AI offers <strong>9 difficulty levels</strong> (ELO 200–1800) and
+                supports Polyglot opening books for stronger play. The ESP32 firmware
+                is written in C++ and handles motor control via the AccelStepper library.
+            </p>
+            <h3>Fabrication & Assembly Gallery</h3>
+            <p>
+                The physical board is built from laser-cut MDF, with
+                precision-milled pockets for reed sensors and recesses for
+                LEDs. Each piece is modified to embed a neodymium magnet in
+                its base, ensuring reliable detection.
+            </p>
+            <figure class="media-grid">
+                <figure>
+                    <img class="zoomable" data-gallery="8x8-board" src="images/8x8/led-assemblage.jpg"
+                        alt="LED installation" loading="lazy" />
+                    <figcaption>
+                        648 LEDs installed in laser-cut wooden layers.
+                    </figcaption>
+                </figure>
+                <figure>
+                    <img class="zoomable" data-gallery="8x8-board" src="images/8x8/reed-sensors.jpg"
+                        alt="Reed sensors in carved pockets" loading="lazy" />
+                    <figcaption>
+                        Reed sensors in Dremel-carved pockets, flush with the surface.
+                    </figcaption>
+                </figure>
+                <figure>
+                    <img class="zoomable" data-gallery="8x8-board" src="images/8x8/soudure-back-board.jpg"
+                        alt="Backside wiring" loading="lazy" />
+                    <figcaption>
+                        Completed wiring for reed sensors and LEDs on the back.
+                    </figcaption>
+                </figure>
+                <figure>
+                    <img src="images/percage-piece.gif" alt="Drilling magnet holes in chess pieces" loading="lazy" />
+                    <figcaption>
+                        Each piece is drilled to embed a magnet for detection.
+                    </figcaption>
+                </figure>
+            </figure>
+            <figure class="img-medium">
+                <img src="images/lighting.gif" alt="LED lighting demo" loading="lazy" />
+                <figcaption>
+                    LED lighting demo connected to the Raspberry Pi.
+                </figcaption>
+            </figure>
+            <h3>Real-Time Piece Detection</h3>
+            <p>
+                The system provides real-time visual feedback by detecting
+                piece positions and illuminating the corresponding LEDs at
+                each corner of the occupied square.
+            </p>
+            <figure class="img-medium">
+                <img class="zoomable" data-gallery="8x8-board" src="images/piece-detection.gif"
+                    alt="Real-time piece detection" loading="lazy" />
+                <figcaption>
+                    Real-time detection: piece placement triggers reed sensors and illuminates corner LEDs.
+                </figcaption>
+            </figure>
+            <h3>Final Assembly</h3>
+            <p>
+                The completed chessboard integrates all electronic systems
+                within an elegant wooden enclosure, with a professional
+                finish suitable for exhibition or tournament play.
+            </p>
+            <figure class="media-grid">
+                <figure>
+                    <img class="zoomable" data-gallery="8x8-board" src="images/rendu_final_pieces.jpg"
+                        alt="Final board with pieces" loading="lazy" />
+                    <figcaption>
+                        Finished board with real-time LED feedback.
+                    </figcaption>
+                </figure>
+                <figure>
+                    <img class="zoomable" data-gallery="8x8-board" src="images/rendu_final_coffrage.jpg"
+                        alt="Final enclosure - front view" loading="lazy" />
+                    <figcaption>
+                        Front view with clean wooden enclosure.
+                    </figcaption>
+                </figure>
+                <figure>
+                    <img class="zoomable" data-gallery="8x8-board" src="images/rendu_final_coffrage1.jpg"
+                        alt="Final enclosure - side view" loading="lazy" />
+                    <figcaption>
+                        Side view: power supply and controllers in the base.
+                    </figcaption>
+                </figure>
+            </figure>
+        </div>
+
+        <h2 id="mechanical-robot">6. Mechanical Platform & Manipulator</h2>
+        <div class="section">
+            <p class="section-lead">
+                A two-axis XY gantry system, concealed beneath the playing
+                surface, moves the pieces precisely using an electromagnet.
+            </p>
+            <h3>Architecture & Operation</h3>
+            <p>
+                The robot is a two-axis Cartesian system (X and Y) using
+                MGN12 linear rails and GT2 belts, driven by NEMA17 stepper
+                motors. This design ensures smooth and accurate movement.
+            </p>
+            <ul>
+                <li>The X-axis moves a carriage horizontally.</li>
+                <li>
+                    The Y-axis moves the longitudinal rail supporting the
+                    electromagnet.
+                </li>
+            </ul>
+            <p>
+                To move a piece, the Raspberry Pi sends the start and end
+                coordinates to the microcontroller. The robot positions the
+                electromagnet under the source square, activates it to grip
+                the piece, moves to the target square, and deactivates it to
+                release the piece.
+            </p>
+
+            <figure class="img-large">
+                <img class="zoomable" src="images/schematics/architecture-du-portique.png" alt="XY Gantry Architecture"
+                    loading="lazy" />
+                <figcaption>
+                    XY gantry architecture: electromagnet positioning with sub-millimeter precision.
+                </figcaption>
+            </figure>
+        </div>
+
+        <h2 id="electronics-design">7. Electronics Design & Schematics</h2>
+        <div class="section">
+            <p class="section-lead">
+                Detailed circuit schematics for the sensing matrix, LED
+                drivers, electromagnet control, and stepper motor drivers.
+            </p>
+
+            <h3>Reed Sensor Matrix (8×8)</h3>
+            <p>
+                The 64 reed switches are arranged in a keyboard-style matrix
+                with anti-ghosting diodes. This reduces the required GPIO
+                pins from 64 to just 16 (8 rows + 8 columns), while
+                preventing false detections when multiple pieces are
+                present.
+            </p>
+
+            <h3>LED Matrix Driver Architecture</h3>
+            <p>
+                Two HT16K33 LED matrix driver modules are controlled via I2C,
+                each with a unique address. The HT16K33 provides 16×8 LED
+                driving capability with built-in key scanning and PWM dimming,
+                simplifying the board illumination system.
+            </p>
+
+            <h3>XY Gantry Stepper Drivers</h3>
+            <p>
+                Two A4988 (or DRV8825) stepper drivers independently control
+                the X and Y axis NEMA 17 motors. Configured for 1/16
+                microstepping, they provide smooth motion with 3200 steps
+                per revolution. The ESP32 generates step pulses and
+                direction signals.
+            </p>
+            <figure class="img-medium">
+                <img class="zoomable" src="images/stepper_driver_schematics.png" alt="Stepper drivers schematic"
+                    loading="lazy" />
+                <figcaption>
+                    Dual stepper drivers with 1/16 microstepping for precision.
+                </figcaption>
+            </figure>
+
+            <h3>Bill of Materials (BOM)</h3>
+            <p>Key components used in the electronics subsystems:</p>
+            <ul>
+                <li>
+                    <strong>Controllers:</strong> Raspberry Pi 5 (4GB),
+                    ESP32-DevKit-V1
+                </li>
+                <li>
+                    <strong>LED Drivers:</strong> 2× HT16K33 LED matrix modules
+                </li>
+                <li>
+                    <strong>Motor Drivers:</strong> 2× A4988 or DRV8825
+                    stepper drivers
+                </li>
+                <li>
+                    <strong>Sensors:</strong> 64× KSK-1A85 reed switches,
+                    64× 1N4148 diodes
+                </li>
+                <li>
+                    <strong>Actuators:</strong> 2× NEMA 17 steppers
+                    (1.2A/phase), 1× 12V electromagnet (2kg holding force)
+                </li>
+                <li>
+                    <strong>Power:</strong> IRLZ44N MOSFET, 1N4007 flyback
+                    diode, 100µF decoupling caps
+                </li>
+                <li>
+                    <strong>LEDs:</strong> 648× 3mm red LEDs (8 matrices ×
+                    81 LEDs)
+                </li>
+            </ul>
+
+            <h3>Power Budget</h3>
+            <p>The system requires two voltage rails:</p>
+            <ul>
+                <li>
+                    <strong>5V Rail:</strong> Raspberry Pi 5 (3A), ESP32
+                    (0.5A), LED matrices (1-3A) = ~6.5A max → Buck converter
+                    12V→5V (8A rated)
+                </li>
+                <li>
+                    <strong>12V Rail:</strong> 2× NEMA 17 steppers (2.4A),
+                    electromagnet (0.8A) = ~3.2A → 12V 4A power supply
+                </li>
+                <li>
+                    <strong>Total power consumption:</strong> ~55W typical,
+                    ~71W maximum
+                </li>
+            </ul>
+        </div>
+
+        <h2 id="game-ai">8. Game AI &amp; Search</h2>
+        <div class="section">
+            <p class="section-lead">
+                IA-Marc V2: a Python chess engine optimized for Raspberry Pi 5,
+                implementing 44 techniques for ELO 400–2400 across 8 levels.
+            </p>
+
+            <h3>Core Techniques</h3>
+            <p>
+                The engine uses <strong>NegaMax + Alpha-Beta</strong> pruning as the core search algorithm:
+            </p>
+            <ul>
+                <li><strong>Search:</strong> Progressive deepening with time control. PVS uses narrow windows on
+                    non-principal moves. Null Move skips a turn to detect strong positions quickly.</li>
+                <li><strong>Pruning:</strong> Eliminates unpromising branches early. Futility skips quiet moves unlikely
+                    to improve. Check extensions ensure tactical lines are fully explored.</li>
+                <li><strong>Caching:</strong> Zobrist hashing stores evaluated positions in a 256–512 MB table. Avoids
+                    re-computation, yielding 3–5× speedup.</li>
+                <li><strong>Ordering:</strong> Better move ordering = more cutoffs. TT move first, then captures by
+                    MVV-LVA, then killer moves that worked at same depth.</li>
+                <li><strong>Evaluation:</strong> PeSTO piece-square tables give positional scores. Tapered evaluation
+                    blends middlegame/endgame values. Adds mobility, pawn structure, king safety.</li>
+            </ul>
+
+            <h3>Difficulty Levels</h3>
+            <figure style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid var(--line);">
+                            <th style="text-align: left; padding: 0.4rem;">Level</th>
+                            <th style="text-align: center; padding: 0.4rem;">ELO</th>
+                            <th style="text-align: center; padding: 0.4rem;">Depth</th>
+                            <th style="text-align: center; padding: 0.4rem;">Error%</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid var(--line);">
+                            <td style="padding: 0.3rem;">Child</td>
+                            <td style="text-align: center;">400</td>
+                            <td style="text-align: center;">1</td>
+                            <td style="text-align: center;">40%</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--line);">
+                            <td style="padding: 0.3rem;">Beginner</td>
+                            <td style="text-align: center;">600</td>
+                            <td style="text-align: center;">2</td>
+                            <td style="text-align: center;">30%</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--line);">
+                            <td style="padding: 0.3rem;">Amateur</td>
+                            <td style="text-align: center;">1000</td>
+                            <td style="text-align: center;">3</td>
+                            <td style="text-align: center;">20%</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--line);">
+                            <td style="padding: 0.3rem;">Club</td>
+                            <td style="text-align: center;">1400</td>
+                            <td style="text-align: center;">4</td>
+                            <td style="text-align: center;">10%</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--line);">
+                            <td style="padding: 0.3rem;">Tournament</td>
+                            <td style="text-align: center;">1800</td>
+                            <td style="text-align: center;">6</td>
+                            <td style="text-align: center;">5%</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--line);">
+                            <td style="padding: 0.3rem;">Expert</td>
+                            <td style="text-align: center;">2000</td>
+                            <td style="text-align: center;">8</td>
+                            <td style="text-align: center;">2%</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--line);">
+                            <td style="padding: 0.3rem;">Master</td>
+                            <td style="text-align: center;">2200</td>
+                            <td style="text-align: center;">10</td>
+                            <td style="text-align: center;">0%</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.3rem;">Maximum</td>
+                            <td style="text-align: center;">2400</td>
+                            <td style="text-align: center;">20</td>
+                            <td style="text-align: center;">0%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+
+            <h3>Additional Features</h3>
+            <ul>
+                <li><strong>Personalities:</strong> Aggressive, Defensive, Positional, Tactical, Materialist — adjust
+                    evaluation weights for varied play styles.</li>
+                <li><strong>Opening Books:</strong> Polyglot format (.bin) + custom JSON for theory-accurate openings.
+                </li>
+            </ul>
+
+            <h3>Performance</h3>
+            <p>
+                <strong>+1,000–1,200 ELO</strong> vs basic alpha-beta.
+                On RPi 5: 8–10K nodes/sec, &lt;5s response at high levels.
+            </p>
+        </div>
+
+        <div class="footer-note">
+            Repo: <a href="https://github.com/promaaa/smart-chess" target="_blank"
+                rel="noopener">github.com/promaaa/smart-chess</a>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle script (unchanged)
+        (function () {
+            var toggle = document.getElementById("theme-toggle");
+            var html = document.documentElement;
+            if (!toggle) return;
+            var urlTheme = new URLSearchParams(location.search).get(
+                "theme",
+            );
+            var saved =
+                urlTheme || localStorage.getItem("theme") || "light";
+            if (urlTheme) localStorage.setItem("theme", urlTheme);
+            html.setAttribute("data-theme", saved);
+            function updateIcon(theme) {
+                toggle.innerHTML =
+                    theme === "dark"
+                        ? '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="7" y="0" width="2" height="2"/><rect x="13" y="2" width="2" height="2"/><rect x="14" y="7" width="2" height="2"/><rect x="13" y="12" width="2" height="2"/><rect x="7" y="14" width="2" height="2"/><rect x="2" y="12" width="2" height="2"/><rect x="0" y="7" width="2" height="2"/><rect x="2" y="2" width="2" height="2"/><rect x="5" y="5" width="6" height="6"/><rect x="6" y="4" width="4" height="1"/><rect x="4" y="6" width="1" height="4"/><rect x="11" y="6" width="1" height="4"/><rect x="6" y="11" width="4" height="1"/></svg>'
+                        : '<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="8" y="2" width="8" height="2"/><rect x="7" y="4" width="10" height="2"/><rect x="6" y="6" width="11" height="2"/><rect x="6" y="8" width="11" height="2"/><rect x="6" y="10" width="11" height="2"/><rect x="7" y="12" width="10" height="2"/><rect x="8" y="14" width="8" height="2"/><rect x="12" y="4" width="7" height="2" fill="var(--bg)"/><rect x="13" y="6" width="7" height="2" fill="var(--bg)"/><rect x="13" y="8" width="7" height="2" fill="var(--bg)"/><rect x="13" y="10" width="7" height="2" fill="var(--bg)"/><rect x="12" y="12" width="7" height="2" fill="var(--bg)"/></svg>';
+            }
+            updateIcon(saved);
+            toggle.addEventListener("click", function () {
+                var cur =
+                    html.getAttribute("data-theme") === "dark"
+                        ? "light"
+                        : "dark";
+                html.setAttribute("data-theme", cur);
+                localStorage.setItem("theme", cur);
+                updateIcon(cur);
+            });
+        })();
+    </script>
+    <script>
+        // Image Zoom & Gallery Script
+        document.addEventListener("DOMContentLoaded", function () {
+            var zoomableImgs = document.querySelectorAll(".zoomable");
+            if (!zoomableImgs.length) return;
+
+            var overlay = document.createElement("div");
+            overlay.className = "zoom-overlay";
+            overlay.setAttribute("role", "dialog");
+            overlay.setAttribute("aria-modal", "true");
+            overlay.innerHTML = `
+                <button class="zoom-close" type="button" aria-label="Close zoomed image">×</button>
+                <button class="zoom-prev" type="button" aria-label="Previous image">‹</button>
+                <button class="zoom-next" type="button" aria-label="Next image">›</button>
+                <img alt="Zoomed content" />
+              `;
+            document.body.appendChild(overlay);
+
+            var overlayImg = overlay.querySelector("img");
+            var closeBtn = overlay.querySelector(".zoom-close");
+            var prevBtn = overlay.querySelector(".zoom-prev");
+            var nextBtn = overlay.querySelector(".zoom-next");
+
+            var galleryGroups = {};
+            var currentGallery = null;
+            var currentIndex = -1;
+            var lastTrigger = null;
+
+            zoomableImgs.forEach(function (el) {
+                var galleryName = el.getAttribute("data-gallery");
+                if (galleryName) {
+                    if (!galleryGroups[galleryName]) {
+                        galleryGroups[galleryName] = [];
+                    }
+                    galleryGroups[galleryName].push(el);
+                }
+                if (!el.hasAttribute("tabindex"))
+                    el.setAttribute("tabindex", "0");
+                el.addEventListener("click", function () {
+                    open(el);
+                });
+                el.addEventListener("keydown", function (ev) {
+                    if (ev.key === "Enter" || ev.key === " ") {
+                        ev.preventDefault();
+                        open(el);
+                    }
+                });
+            });
+
+            function close() {
+                overlay.classList.remove("active");
+                document.body.classList.remove("no-scroll");
+                if (lastTrigger) {
+                    lastTrigger.focus();
+                }
+            }
+
+            function showImage(index) {
+                if (
+                    !currentGallery ||
+                    index < 0 ||
+                    index >= currentGallery.length
+                ) {
+                    return;
+                }
+                currentIndex = index;
+                overlayImg.src = currentGallery[currentIndex].src;
+                prevBtn.style.display = index > 0 ? "block" : "none";
+                nextBtn.style.display =
+                    index < currentGallery.length - 1 ? "block" : "none";
+            }
+
+            function showNext() {
+                if (currentGallery) showImage(currentIndex + 1);
+            }
+
+            function showPrev() {
+                if (currentGallery) showImage(currentIndex - 1);
+            }
+
+            function open(triggerEl) {
+                lastTrigger = triggerEl;
+                var galleryName = triggerEl.getAttribute("data-gallery");
+
+                if (galleryName && galleryGroups[galleryName]) {
+                    currentGallery = galleryGroups[galleryName];
+                    var triggerIndex = currentGallery.indexOf(triggerEl);
+                    showImage(triggerIndex);
+                } else {
+                    currentGallery = null;
+                    currentIndex = -1;
+                    overlayImg.src = triggerEl.src;
+                    prevBtn.style.display = "none";
+                    nextBtn.style.display = "none";
+                }
+
+                overlay.classList.add("active");
+                document.body.classList.add("no-scroll");
+                closeBtn.focus();
+            }
+
+            overlay.addEventListener("click", function (ev) {
+                if (ev.target === overlay) close();
+            });
+            closeBtn.addEventListener("click", close);
+            nextBtn.addEventListener("click", showNext);
+            prevBtn.addEventListener("click", showPrev);
+            document.addEventListener("keydown", function (ev) {
+                if (overlay.classList.contains("active")) {
+                    if (ev.key === "Escape") close();
+                    if (ev.key === "ArrowRight") showNext();
+                    if (ev.key === "ArrowLeft") showPrev();
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
