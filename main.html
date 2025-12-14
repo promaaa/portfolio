@@ -342,6 +342,42 @@
             display: block;
         }
 
+        /* Mobile performance: disable heavy animations */
+        @media (max-width: 768px) {
+
+            .crystal,
+            .gear {
+                animation: none !important;
+            }
+
+            .bg-crystals,
+            .bg-gears {
+                display: none !important;
+            }
+
+            .nav,
+            .card,
+            .skill-category,
+            .background-item {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+            }
+
+            * {
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* Respect reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+
+            .crystal,
+            .gear,
+            .marker {
+                animation: none !important;
+            }
+        }
+
         /* NAV */
         .nav {
             display: flex;
