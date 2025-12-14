@@ -2129,37 +2129,8 @@
             // Skip animation on mobile for performance - show static ASCII instead
             const isMobile = window.matchMedia("(max-width: 768px)").matches;
             if (isMobile) {
-                const isDark = document.documentElement.getAttribute("data-theme") === "dark";
-                // Static crystal (light) or gears (dark)
-                const staticCrystal = `
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⣠⡶⠀⣸⣇⠀⢶⣄⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⢀⣠⣾⣿⠃⢠⣿⣿⡄⠘⣿⣷⣄⡀⠀⠀⠀
-⠀⢀⣴⣿⣿⣿⡿⠀⣼⣿⣿⣧⠀⢿⣿⣿⣿⣦⡀⠀
-⠠⣈⠙⠻⢿⣿⠃⢰⣿⣿⣿⣿⡆⠘⣿⡿⠟⠋⣁⠄
-⠀⣿⣿⣶⣤⡀⠀⠉⠉⠉⠉⠉⠉⠀⢀⣤⣶⣿⣿⠀
-⠀⢹⣿⣿⣿⣧⠀⣿⣿⣿⣿⣿⣿⠀⣼⣿⣿⣿⡏⠀
-⠀⢸⣿⣿⣿⣿⠀⣿⣿⣿⣿⣿⣿⠀⣿⣿⣿⣿⡇⠀
-⠀⠈⣿⣿⣿⣿⠀⣿⣿⣿⣿⣿⣿⠀⣿⣿⣿⣿⠁⠀
-⠀⠀⢻⣿⣿⣿⠀⣿⣿⣿⣿⣿⣿⠀⣿⣿⣿⡟⠀⠀
-⠀⠀⢸⣿⣿⣿⠀⣿⣿⣿⣿⣿⣿⠀⣿⣿⣿⡇⠀⠀
-⠀⠀⠘⣿⣿⣿⠀⣿⣿⣿⣿⣿⣿⠀⣿⣿⣿⠃⠀⠀
-⠀⠀⠀⢻⣿⣿⠀⢹⣿⣿⣿⣿⡏⠀⣿⣿⡟⠀⠀⠀
-⠀⠀⠀⠀⠙⢿⠀⢸⣿⣿⣿⣿⡇⠀⡿⠋⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀`;
-                const staticGears = `
-       -  *  -                   |
-    *          *              o     o
-   -            -            |       |
-  *      **      *          o    **   o
-  -     *  *     -          |   o  o   |
-  *      **      *          o    **   o
-   -            -            |       |
-    *          *              o     o
-       -  *  -                   |`;
-                asciiArtElement.textContent = isDark ? staticGears : staticCrystal;
-                asciiArtElement.style.fontSize = "12px";
-                asciiArtElement.style.lineHeight = "1.2";
+                // Hide ASCII completely on mobile for performance
+                asciiArtElement.parentElement.style.display = "none";
                 return;
             }
 
