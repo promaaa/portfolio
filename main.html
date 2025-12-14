@@ -2090,6 +2090,13 @@
             const asciiArtElement = document.getElementById("ascii-art");
             if (!asciiArtElement) return;
 
+            // Skip animation on mobile for performance
+            const isMobile = window.matchMedia("(max-width: 768px)").matches;
+            if (isMobile) {
+                asciiArtElement.style.display = "none";
+                return;
+            }
+
             const width = 48,
                 height = 24;
             const grid = Array.from({ length: height }, () =>
